@@ -5,6 +5,13 @@ OpenAPI model to implement application layer gateway functionality
 relating to control of non-IP devices.  These devices might include
 BLE, Zigbee, and other vertical stacks.
 
+Vendors may introduce their own changes in open-api/vendor by creating
+new branches.  Just create a PR, and we'll import.
+
+# Caveat Emptor
+
+Correctness of vendor models are the responsibility of the vendor.
+
 **This work falls under the Internet Engineering Task Force's policeies.**
 
 # Note Well
