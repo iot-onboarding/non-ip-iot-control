@@ -163,7 +163,14 @@ Too early.
 OpenAPI definitions
 ===================
 
-Here provide the OpenAPI definitions for control interface.
+The following non-normative model is provide for convenience of
+the implementor.
+
+~~~~~~
+<CODE BEGINS>file "openapi.yml"
+{::include nipc-openapi/NIPC_operations.yaml}
+<CODE ENDS>
+~~~~~~
 
 Protobufs definitions
 =====================

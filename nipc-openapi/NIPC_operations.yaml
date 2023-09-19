@@ -2,14 +2,26 @@ openapi: 3.0.3
 info:
   title: Non IP Device Control (NIPC) API
   description: |-
-    There has been an large influx of non-IP devices supporting processes in manufacturing, healthcare, hospitality, retail, the home, and the office.  At the same time, wireless access points have been deployed nearly everywhere, many of which have radios that can transmit and receive different frame types, such as BLE, Zigbee. To integrate multiple of these use cases leveraging a single wireless infrastructure and avoid the need for parallel infrastructure, a Non IP device gateway function is necessary.
+    There has been an large influx of non-IP devices supporting
+    processes in manufacturing, healthcare, hospitality, retail, the
+    home, and the office.  At the same time, wireless access points
+    have been deployed nearly everywhere, many of which have radios
+    that can transmit and receive different frame types, such as BLE,
+    Zigbee. To integrate multiple of these use cases leveraging a
+    single wireless infrastructure and avoid the need for parallel
+    infrastructure, a Non IP device gateway function is necessary.
     The gateway provides the following functions:
-       - authentication and authorization of application clients that will communicate with devices
-       - API's that onboard a device on the network (out of scope for this specification, but covered in SCIM for devices)
+       - authentication and authorization of application clients that
+         will communicate with devices 
+       - API's that onboard a device on the network (out of scope for
+       this specification, but covered in SCIM for devices)
        - API's that allow an app to set up a connection with a device
        - API's that allow an app to exchange data with a device
-       - API's that allow a device to create registrations in the network for a device
-    These collection of these API's, in combination with hte onboarding API (SCIM for devices) will allow an application to perform a complete set of operations on Non-IP devices.
+       - API's that allow a device to create registrations in the
+         network for a device 
+    These collection of these API's, in combination with hte
+    onboarding API (SCIM for devices) will allow an application to
+    perform a complete set of operations on Non-IP devices. 
   termsOfService: http://swagger.io/terms/
   contact:
     email: bbrinckm@cisco.com
@@ -28,13 +40,19 @@ servers:
         description: Gateway Host
 tags:
   - name: connectivity
-    description: API's that allow apps to manage device connections
+    description: APIs that allow apps to manage device connections
   - name: data
-    description: API's that allow apps to exchange data with non-IP devices
+    description: |-
+                   APIs that allow apps to exchange data with non-IP
+                   devices
   - name: registrations
-    description: API's that allow apps to make registrations in the network for devices
+    description: |-
+                    APIs that allow apps to make registrations in the
+                    network for devices 
   - name: bulk
-    description: compound API that allows apps to combine requests into a single call
+    description: |-
+                    compound API that allows apps to combine requests
+                    into a single call 
 
 paths:
 # API
@@ -264,8 +282,12 @@ paths:
     post:
       tags:
         - data
-      summary: Subscribe to streaming data from an attribute on a device
-      description: Subscribe to streaming data from an attribute on a device
+      summary: |-
+               Subscribe to streaming data from an attribute on a
+               device
+      description: |-
+               Subscribe to streaming data from an attribute on a
+               device 
       operationId: dataSubscribe
       requestBody:
         content:
@@ -307,8 +329,10 @@ paths:
     post:
       tags:
         - data
-      summary: Unsubscribe to streaming data from an attribute on a device
-      description: Unsubscribe to streaming data from an attribute on a device
+      summary: |-
+         Unsubscribe to streaming data from an attribute on a device
+      description: |-
+         Unsubscribe to streaming data from an attribute on a device
       operationId: dataUnsubscribe
       requestBody:
         content:
@@ -924,7 +948,8 @@ components:
         name: ZigbeeAttributes 
 
 # Common objects
-## An object can be a SCIM device or a SCIM group, both identified with an ID
+## An object can be a SCIM device or a SCIM group,
+## both identified with an ID
     Object:
       required:
         - id
