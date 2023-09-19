@@ -103,6 +103,21 @@ of the ALG is to select the appropriate AP.  MQTT is used to send
 unsolicited messages generated from devices.  These messages can be
 subscribed to using the control interface.
 
+The flow of operations is as follows:
+
+1. Get SCIM endpoint authorized.  This occurs out of band but may
+   be accomplished manually, via a federated transaction, or through
+   other means.
+2. Provision applications that may control devices.
+3. Provision applications that may receive telemetry.
+4. Provision one or more devices.
+
+Steps 1-4 are not within the scope of this specification, but are
+provided for context.
+
+5. Transmit appropriate GATT requests and await replies via this
+   specification.
+
 This specification is organized into three sections:
 
 - Basic control functions described in narrative.
@@ -130,13 +145,30 @@ may be based on a device certificate or via a token.
 
 What follows is a narrative description of each RESTful endpoint
 and the parameters that follow at a coarse level.  Additional information
-may be necessary based on what non-IP technology is in use.  
+may be necessary based on what non-IP technology is in use.  There are
+several groupings available through this model:
 
-Common elements
----------------
+ - /connectivity establishes and ends bidirectional communciations
+ - /data processes basic protocol operations (reads, writes,
+   subscriptions, and device schema discovery)
+ - /registration registers interest in an MQTT topic for telemetry
+ 
+## Connectivity Elements
 
-Each object (sent or returned) has the following common elements:
+All connectivity elements are accessed within the /connectivity
+hierarchy.  New connections are established with POST.  Connections
+may be removed using DELETE.  Information about a connection may be
+retrieved using GET.
 
+## /data
+
+
+
+## registration
+
+Registration elements do not invoke direct communication to a device,
+but instead create MQTT topics based on the parameters given in a POST.
+The topic can be removed using DELETE.
 
 
 
