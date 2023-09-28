@@ -16,7 +16,7 @@ info:
   license:
     name: TBD
     url: TBD
-  version: 0.3.6
+  version: 0.3.7
 externalDocs:
   description: NIPC IETF draft
   url: TBD
@@ -1808,9 +1808,6 @@ components:
           type: string
           format: uuid
           example: 12345678-1234-5678-1234-56789abcdef4
-        controlApp:
-          type: string
-          example: https://control-app-1
         technology:
           type: string
           example: ble
@@ -1884,7 +1881,7 @@ components:
           type: string
           format: byte
           example: 0001
-        forced_response:
+        forcedResponse:
           type: string
           format: boolean
           example: yes
@@ -1951,11 +1948,11 @@ components:
             - single
             - repeat
         # broadcast time in ms
-        broadcast_time:
+        broadcastTime:
           type: integer
           example: 3000
         # interval between broadcasts in ms
-        broadcast_interval:
+        broadcastInterval:
           type: integer
           example: 500 
       xml:
