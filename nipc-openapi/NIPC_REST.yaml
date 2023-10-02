@@ -16,7 +16,7 @@ info:
   license:
     name: TBD
     url: TBD
-  version: 0.3.7
+  version: 0.4.0
 externalDocs:
   description: NIPC IETF draft
   url: TBD
@@ -747,6 +747,96 @@ paths:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
   
+  /data/attribute/write:
+    post:
+      tags:
+        - data
+      summary: Write a value to an attribute on a device
+      description: Write a value to an attribute on a device
+      operationId: dataAttrWrite
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AttributeValue'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/AttributeValue'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AttributeValue'
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttributeValueResponse'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/AttributeValueResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request       
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse' 
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+  
+  /data/attribute/read:
+    post:
+      tags:
+        - data
+      summary: Write a value to an attribute on a device
+      description: Write a value to an attribute on a device
+      operationId: dataAttrRead
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Attribute'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Attribute'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Attribute'
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttributeValueResponse'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/AttributeValueResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request       
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse' 
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+      
   /data/subscription:
     post:
       tags:
@@ -1372,9 +1462,7 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
-  
-  ## todo
-  # SCIM subscription
+
   
   /bulk:
     post:
@@ -2035,8 +2123,8 @@ components:
               enum:
                 - /connectivity/connect
                 - /connectivity/disconnect
-                - /data/read
-                - /data/write
+                - /data/attribute/read
+                - /data/attribute/write
         - oneOf:
             - $ref: '#/components/schemas/Service'
             - $ref: '#/components/schemas/Attribute'
@@ -2045,8 +2133,8 @@ components:
             propertyName: operation
             mapping:
               /connectivity/connect: '#/components/schemas/Service'
-              /data/read: '#/components/schemas/Attribute'
-              /data/write: '#/components/schemas/AttributeValue'
+              /data/attribute/read: '#/components/schemas/Attribute'
+              /data/attribute/write: '#/components/schemas/AttributeValue'
       xml:
         name: Operation
 
@@ -2278,8 +2366,8 @@ components:
               enum:
                 - /connectivity/connect
                 - /connectivity/disconnect
-                - /data/read
-                - /data/write
+                - /data/attribute/read
+                - /data/attribute/write
         - oneOf:
           - $ref: '#/components/schemas/ServiceResponse'
           - $ref: '#/components/schemas/SuccessResponse'
@@ -2289,8 +2377,8 @@ components:
             mapping:
               /connectivity/connect: '#/components/schemas/ServiceResponse'
               /connectivity/disconnect: '#/components/schemas/SuccessResponse' 
-              /data/read: '#/components/schemas/AttributeValueResponse'
-              /data/write: '#/components/schemas/AttributeValueResponse'
+              /data/attribute/read: '#/components/schemas/AttributeValueResponse'
+              /data/attribute/write: '#/components/schemas/AttributeValueResponse'
       xml:
         name: Operation
  
