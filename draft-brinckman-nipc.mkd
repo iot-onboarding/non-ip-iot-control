@@ -121,7 +121,7 @@ provided for context.
 This specification is organized into three sections:
 
 - Basic control functions described in narrative.
-- A specifation that can be mapped to a publication/subscribe
+- A specification that can be mapped to a publication/subscribe
   interface, such as MQTT.
 - OpenAPI and Protobufs definitions for the above
 
@@ -133,7 +133,19 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
 14 {{!RFC2119}} {{!RFC8174}} when, and only when, they appear in all
 capitals, as shown here.
 
-# Connecting to The Control Interface
+# Basic Operations and concepts
+
+The general flow of operations is as follows:
+
+1. Introduce device using /introduce
+2. Connect to device if bidirectional communications are desired,
+   POSTing the /connection object. 
+3. Send GATT reads and writes, establish indications and notifications
+   using the /data operations.
+4. Receive those indications and notifications via MQTT
+5. Disconnect DELETEing the /connection object.
+
+## Connecting to The Control Interface
 
 The control interface makes use of RESTful HTTP{{!RFC9114}}.  The
 connection endpoint is provided out of band, most likely through
@@ -151,14 +163,54 @@ several groupings available through this model:
  - /connectivity establishes and ends bidirectional communciations
  - /data processes basic protocol operations (reads, writes,
    subscriptions, and device schema discovery)
- - /registration registers interest in an MQTT topic for telemetry
- 
+ - /registrations registers interest in an MQTT topic for telemetry
+ - /bulk handles bulk operations
+
+## Common definitions
+
+Many of RESTful operations refer to or return an "Object".  This is defined in the schema as having the following properties:
+
+
+| Attribute     | Req |   Type   |          Example                    |
++---------------+----------+-------------------------------------------|
+| id            |  T  |  uuid   | 12345678-1234-5678-1234-56789abcdef4 |
+| controlApp    |  T  |  url    | https://control-app-1.example.com    |
+| objectType    |  T  |  enum   | device                               |
+| technology    |  F  |  enum   | ble                                  |
+{: #objectdef title="Definition of an Object"}
+
+where-
+
+ - id is the id returned in a SCIM request.
+ - objectType is either "group" or "device".
+ - technology is either "ble" or "zigbee".
+ - controlApp is the URI to refer to this device. XXX
+
+Other elements are explained in line.
+
+~~~
+
 ## Connectivity Elements
 
-All connectivity elements are accessed within the /connectivity
-hierarchy.  New connections are established with POST.  Connections
-may be removed using DELETE.  Information about a connection may be
-retrieved using GET.
+Connectivity elements are accessed from this group of operations.
+
+### /introduce
+
+This endpoint notifies the network that the device should be
+accessible.  The only operation supported is POST.  A single Object
+is transmitted in the content.  This operation MUST be performed before
+the applications may connect to a device.
+
+### /connection
+
+Devices are New connections are established via the "connection"
+endpoint with POST.  Connections may be removed using DELETE.
+Information about a connection may be retrieved using GET.  /
+
+#### POST
+
+
+
 
 ## /data
 

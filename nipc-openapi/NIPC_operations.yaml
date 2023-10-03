@@ -966,6 +966,7 @@ components:
       required:
         - id
         - controlApp
+        - objectType
       type: object
       properties:
         id:
@@ -974,7 +975,13 @@ components:
           example: 12345678-1234-5678-1234-56789abcdef4
         controlApp:
           type: string
-          example: https://control-app-1
+          example: https://control-app-1.example.com
+        objectType:
+          type: string
+          example: device
+          enum:
+            - device
+            - group
         technology:
           type: string
           example: ble
