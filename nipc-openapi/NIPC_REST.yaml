@@ -16,7 +16,7 @@ info:
   license:
     name: TBD
     url: TBD
-  version: 0.4.0
+  version: 0.4.1
 externalDocs:
   description: NIPC IETF draft
   url: TBD
@@ -1896,6 +1896,12 @@ components:
           type: string
           format: uuid
           example: 12345678-1234-5678-1234-56789abcdef4
+        type:
+          type: string
+          example: device
+          enum:
+            - device
+            - group
         technology:
           type: string
           example: ble
