@@ -16,7 +16,7 @@ info:
   license:
     name: TBD
     url: TBD
-  version: 0.4.1
+  version: 0.4.2
 externalDocs:
   description: NIPC IETF draft
   url: TBD
@@ -1626,6 +1626,13 @@ components:
               type: string
               format: uuid
               example: 12345678-1234-5678-1234-56789abcdef4
+            long:
+              type: string
+              format: boolean
+              example: no
+              enum:
+                - yes # attribute is of type long 
+                - no # attrribute is of type normal, default
       xml:
         name: BLEAttributes     
 
@@ -1927,6 +1934,23 @@ components:
                 wrapped: true
               items:
                 $ref: '#/components/schemas/BLEServiceID'
+            cached:
+              type: string
+              format: boolean
+              example: no
+              enum:
+                - no # do not cache services, needs rediscovery at every connect, default
+                - yes # cache services, no rediscovery at every connect (unless cache updated by explicit service discovery)
+            cacheIdlePurge:
+              type: integer
+              example: 3600 # in seconds, default cache expires in 1 hour
+            autoUpdate:
+              type: string
+              format: boolean
+              example: yes
+              enum:
+                - yes # autoUpdate services if device supports it, default
+                - no # do not autoUpdate services
           xml:
             name: ble
       xml:
@@ -2005,10 +2029,11 @@ components:
             - payload #just payload
         replay:
           type: string
-          example: off
+          format: boolean
+          example: no
           enum:
-            - off #default
-            - on
+            - no #default
+            - yes
         forced_ack:
           type: string
           format: boolean
@@ -2150,6 +2175,13 @@ components:
         - $ref: '#/components/schemas/Object'
       type: object
       properties:
+        autoDisconnect:
+          type: string
+          format: boolean
+          example: no
+          enum:
+            - no # do not automatically disconnect after successful or failed operations
+            - yes # automatically disconnect after successful or failed operations, default
         operations:
           type: array
           xml:
