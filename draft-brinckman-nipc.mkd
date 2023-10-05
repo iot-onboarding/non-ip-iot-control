@@ -188,8 +188,6 @@ where-
 
 Other elements are explained in line.
 
-~~~
-
 ## Connectivity Elements
 
 Connectivity elements are accessed from this group of operations.
