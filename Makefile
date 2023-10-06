@@ -4,11 +4,11 @@ DOCS=	draft-brinckman-nipc.txt \
 
 FTXT=
 
-YAML=  nipc-openapi/NIPC_SCIM.yaml
+YAML=  nipc-openapi/NIPC_REST.yaml
 
 all: $(DOCS)
 
-%.xml:	%.mkd
+%.xml:	%.mkd $(YAML)
 	kramdown-rfc2629 $< > $@
 
 %.html:	%.xml

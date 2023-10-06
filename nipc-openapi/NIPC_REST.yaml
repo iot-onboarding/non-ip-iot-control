@@ -46,8 +46,8 @@ tags:
       API's that allow apps to exchange data with non-IP devices
   - name: registrations
     description: |-
-    API's that allow apps to make registrations in the network for
-    devices.
+      APIs that allow apps to make registrations in the network for
+      devices.
   - name: bulk
     description: |-
       compound API that allows apps to combine requests into a single
@@ -106,7 +106,7 @@ paths:
       description: |-
         Get all bindings control app made (no parameter) or binding
         by object ID, Multiple id's can be provided with comma
-	separated strings, or a group id can be provided 
+        separated strings, or a group id can be provided 
       operationId: GetBindings
       parameters:
         - name: id
@@ -142,8 +142,7 @@ paths:
                 $ref: '#/components/schemas/FailureResponse' 
             application/xml:
               schema:
-                $ref: '#/components/schemas/FailureResponse'
-                
+                $ref: '#/components/schemas/FailureResponse'                
     delete:
       tags:
         - connectivity
@@ -151,7 +150,7 @@ paths:
         Delete bindings for a device or group of devices
       description: |-
         Delete all bindings control app made or bindings by object
-	ID, Multiple id's can be provided with comma separated
+        ID, Multiple id's can be provided with comma separated
         strings, or a group id can be provided 
       operationId: DeleteBindings
       parameters:
@@ -374,7 +373,7 @@ paths:
         - connectivity
       summary: |-
         Get connection state devices for a device or group of
-	devices
+        devices
       description: |-
         Get all connection status for connections made by control ap
         or connection status by object ID, Multiple id's can be
@@ -424,7 +423,7 @@ paths:
       description: |-
         Disconnect a device or device group by object ID, Multiple
         ids can be provided with comma separated strings, or a
-	group id can be provided 
+        group id can be provided 
       operationId: DeleteConnections
       parameters:
         - name: id
@@ -939,10 +938,10 @@ paths:
         - data
       summary: |-
         update streaming data subscription from an attribute on a
-	device
+        device
       description: |-
-        update streaming data subscription from an attribute on a
-	device
+        update streaming data subscription from an attribute on a 
+        device
       operationId: dataUpdateSubscribe
       requestBody:
         content:
@@ -1370,7 +1369,8 @@ paths:
       tags:
         - registrations
       summary: delete all publish/subscribe topics by data-app
-      description: unregister all publish/subscribe topics by data-app
+      description: |-
+        unregister all publish/subscribe topics by data-app
       operationId: deleteTopicbyDataApp
       parameters:
         - name: data-app
@@ -1982,7 +1982,7 @@ components:
       xml:
         name: Object
 
-## A Service is a device with optional service ID's
+## A Service is a device with optional service IDs
     Service:
       allOf:
         - $ref: '#/components/schemas/Object'
@@ -1999,28 +1999,34 @@ components:
               items:
                 $ref: '#/components/schemas/BLEServiceID'
             cached:
+              description: |-
+                If we can cache information, then device doesn't need
+                to be rediscovered before every connected.
               type: string
               format: boolean
               example: no
               enum:
-                - no # do not cache services, needs rediscovery at every connect, default
-                - yes # cache services, no rediscovery at every connect (unless cache updated by explicit service discovery)
+                - no #  default
+                - yes
             cacheIdlePurge:
+              description: cache expiry period, when device allows
               type: integer
-              example: 3600 # in seconds, default cache expires in 1 hour
+              example: 3600 # default 1 hour
             autoUpdate:
+              description: |-
+                autoupdate services if device supports it (default)
               type: string
               format: boolean
               example: yes
               enum:
-                - yes # autoUpdate services if device supports it, default
-                - no # do not autoUpdate services
+                - yes
+                - no
           xml:
             name: ble
       xml:
         name: Service
 
-## A Service is an object with optional service ID's
+## A Service is an object with optional service IDs
     Connection:
       allOf:
         - $ref: '#/components/schemas/Service'
@@ -2064,12 +2070,13 @@ components:
           format: byte
           example: 0001
         forcedResponse:
+          description: do or do not wait for a response?
           type: string
           format: boolean
           example: yes
           enum:
-            - yes #do not look at device/attribute support, but wait for response
-            - no #do not look at device/attribute support, but do not wait for response
+            - yes
+            - no
       xml:
         name: AttributeValue
 
@@ -2084,13 +2091,16 @@ components:
         topic:
           type: string
           example: enterprise/hospital/pulse_oximeter
-        dataFormat: #if topic is to be automatically created on on-existent topic
+        dataFormat:
+          description: |-
+            how is information decorated? default: timestamped and 
+            attribute ids.
           type: string
           example: default
           enum:
-            - default #decorated with device and attribute ids
-            - timestamped #decorated with timestamp, device and attribute ids
-            - payload #just payload
+            - default # XXX
+            - timestamped
+            - payload
         replay:
           type: string
           format: boolean
@@ -2099,12 +2109,15 @@ components:
             - no #default
             - yes
         forced_ack:
+          description: |-
+            When not looking at device/attribute support MUST we
+            ackhnowledge?
           type: string
           format: boolean
           example: yes
           enum:
-            - yes #do not look at device/attribute support, but always acknowledge message
-            - no #do not look at device/attribute support, but never acknowledge message
+            - yes
+            - no
       xml:
         name: Subscription
 
@@ -2177,12 +2190,15 @@ components:
           type: string
           example: enterprise/hospital/pulse_oximeter
         dataFormat:
+          description: |-
+            How is information decorated?  Default: device
+            and attribute ids.
           type: string
           example: default
           enum:
-            - default #decorated with device and attribute ids
-            - timestamped #decorated with timestamp, device and attribute ids
-            - payload #just payload
+            - default
+            - timestamped
+            - payload
         replay:
           type: string
           example: off
@@ -2229,7 +2245,8 @@ components:
             mapping:
               /connectivity/connect: '#/components/schemas/Service'
               /data/attribute/read: '#/components/schemas/Attribute'
-              /data/attribute/write: '#/components/schemas/AttributeValue'
+              /data/attribute/write: |-
+                '#/components/schemas/AttributeValue'
       xml:
         name: Operation
 
@@ -2240,12 +2257,14 @@ components:
       type: object
       properties:
         autoDisconnect:
+          description: |- 
+            do we automatically disconnect after a RESTful operation?
           type: string
           format: boolean
           example: no
           enum:
-            - no # do not automatically disconnect after successful or failed operations
-            - yes # automatically disconnect after successful or failed operations, default
+            - no
+            - yes # default
         operations:
           type: array
           xml:
@@ -2477,10 +2496,14 @@ components:
           discriminator:
             propertyName: operation
             mapping:
-              /connectivity/connect: '#/components/schemas/ServiceResponse'
-              /connectivity/disconnect: '#/components/schemas/SuccessResponse'
-              /data/attribute/read: '#/components/schemas/AttributeValueResponse'
-              /data/attribute/write: '#/components/schemas/AttributeValueResponse'
+              /connectivity/connect: |-
+                '#/components/schemas/ServiceResponse'
+              /connectivity/disconnect: |-
+                '#/components/schemas/SuccessResponse'
+              /data/attribute/read: |-
+                '#/components/schemas/AttributeValueResponse'
+              /data/attribute/write: |-
+                '#/components/schemas/AttributeValueResponse'
       xml:
         name: Operation
 

@@ -205,14 +205,10 @@ Devices are New connections are established via the "connection"
 endpoint with POST.  Connections may be removed using DELETE.
 Information about a connection may be retrieved using GET.  /
 
-#### POST
-
-
-
-
 ## /data
 
-
+Reads and writes are supported.  The form of the read or the write
+is polymorphic, depending on the technology in use.
 
 ## registration
 
