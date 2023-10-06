@@ -2,14 +2,26 @@ openapi: 3.0.3
 info:
   title: Non IP Device Control (NIPC) API
   description: |-
-    There has been an large influx of non-IP devices supporting processes in manufacturing, healthcare, hospitality, retail, the home, and the office.  At the same time, wireless access points have been deployed nearly everywhere, many of which have radios that can transmit and receive different frame types, such as BLE, Zigbee. To integrate multiple of these use cases leveraging a single wireless infrastructure and avoid the need for parallel infrastructure, a Non IP device gateway function is necessary.
+    There has been a large influx of non-IP devices supporting
+    processes in manufacturing, healthcare, hospitality, retail, the
+    home, and the office.  At the same time, wireless access points
+    have been deployed nearly everywhere, many of which have radios
+    that can transmit and receive different frame types, such as BLE,
+    Zigbee. To integrate multiple of these use cases leveraging a
+    single wireless infrastructure and avoid the need for parallel
+    infrastructure, a Non IP device gateway function is necessary.
     The gateway provides the following functions:
-       - authentication and authorization of application clients that will communicate with devices
-       - API's that onboard a device on the network (out of scope for this specification, but covered in SCIM for devices)
+       - authentication and authorization of application clients that
+         will communicate with devices 
+       - API's that onboard a device on the network (out of scope for
+         this specification, but covered in SCIM for devices)
        - API's that allow an app to set up a connection with a device
        - API's that allow an app to exchange data with a device
-       - API's that allow a device to create registrations in the network for a device
-    These collection of these API's, in combination with hte onboarding API (SCIM for devices) will allow an application to perform a complete set of operations on Non-IP devices.
+       - API's that allow a device to create registrations in the
+         network for a device 
+    These collection of these API's, in combination with hte
+    onboarding API (SCIM for devices) will allow an application to
+    perform a complete set of operations on Non-IP devices.
   termsOfService: http://swagger.io/terms/
   contact:
     email: bbrinckm@cisco.com
@@ -30,11 +42,16 @@ tags:
   - name: connectivity
     description: API's that allow apps to manage device connections
   - name: data
-    description: API's that allow apps to exchange data with non-IP devices
+    description: |-
+      API's that allow apps to exchange data with non-IP devices
   - name: registrations
-    description: API's that allow apps to make registrations in the network for devices
+    description: |-
+    API's that allow apps to make registrations in the network for
+    devices.
   - name: bulk
-    description: compound API that allows apps to combine requests into a single call
+    description: |-
+      compound API that allows apps to combine requests into a single
+      call
 
 paths:
   /connectivity/binding:
@@ -86,7 +103,10 @@ paths:
       tags:
         - connectivity
       summary: Get bindings for a device
-      description: Get all bindings control app made (no parameter) or bindings by object ID, Multiple id's can be provided with comma separated strings, or a group id can be provided
+      description: |-
+        Get all bindings control app made (no parameter) or binding
+        by object ID, Multiple id's can be provided with comma
+	separated strings, or a group id can be provided 
       operationId: GetBindings
       parameters:
         - name: id
@@ -104,7 +124,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MultiBindingsResponse'          
+                $ref: '#/components/schemas/MultiBindingsResponse'
             application/xml:
               schema:
                 $ref: '#/components/schemas/MultiBindingsResponse'
@@ -127,8 +147,12 @@ paths:
     delete:
       tags:
         - connectivity
-      summary: Delete bindings for a device or group of devices
-      description: Delete all bindings control app made or bindings by object ID, Multiple id's can be provided with comma separated strings, or a group id can be provided
+      summary: |-
+        Delete bindings for a device or group of devices
+      description: |-
+        Delete all bindings control app made or bindings by object
+	ID, Multiple id's can be provided with comma separated
+        strings, or a group id can be provided 
       operationId: DeleteBindings
       parameters:
         - name: id
@@ -170,8 +194,12 @@ paths:
     post:
       tags:
         - connectivity
-      summary: Create a binding for a device id (device technology needs to support binding)
-      description: Create a binding for a device id, will fail if device has multiple technologies defined
+      summary: |-
+        Create a binding for a device id (device technology needs to
+        support binding) 
+      description: |-
+        Create a binding for a device id, will fail if device has
+        multiple technologies defined 
       operationId: CreateBindingbyID
       parameters:
         - name: id
@@ -212,7 +240,9 @@ paths:
       tags:
         - connectivity
       summary: Get binding by id for a device
-      description: Get binding by id for a device, success when binding found, failure when no binding
+      description: |-
+        Get binding by id for a device, success when binding found,
+        failure when no binding 
       operationId: GetBindingbyId
       parameters:
         - name: id
@@ -294,8 +324,12 @@ paths:
     post:
       tags:
         - connectivity
-      summary: Connect a device to the network, optionally with service discovery
-      description: Connect a device to the network, optionally with service discovery
+      summary: |-
+        Connect a device to the network, optionally with service
+        discovery 
+      description: |-
+        Connect a device to the network, optionally with service
+        discovery 
       operationId: connConnect
       requestBody:
         content:
@@ -338,8 +372,14 @@ paths:
     get:
       tags:
         - connectivity
-      summary: Get connection state devices for a device or group of devices
-      description: Get all connection status for connections made by control ap or connection status by object ID, Multiple id's can be provided with comma separated strings, or a group id can be provided
+      summary: |-
+        Get connection state devices for a device or group of
+	devices
+      description: |-
+        Get all connection status for connections made by control ap
+        or connection status by object ID, Multiple id's can be
+        provided with comma separated strings, or a group id can be
+        provided  
       operationId: GetConnections
       parameters:
         - name: id
@@ -357,7 +397,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MultiConnectionsResponse'          
+                $ref: '#/components/schemas/MultiConnectionsResponse'
             application/xml:
               schema:
                 $ref: '#/components/schemas/MultiConnectionsResponse'
@@ -381,7 +421,10 @@ paths:
       tags:
         - connectivity
       summary: Disconnect a device or group of devices
-      description: Disconnect a devcie or device group by object ID, Multiple id's can be provided with comma separated strings, or a group id can be provided
+      description: |-
+        Disconnect a device or device group by object ID, Multiple
+        ids can be provided with comma separated strings, or a
+	group id can be provided 
       operationId: DeleteConnections
       parameters:
         - name: id
@@ -423,8 +466,13 @@ paths:
     post:
       tags:
         - connectivity
-      summary: Connect a device by device id (device technology needs to support connection)
-      description: Connect a device by device id, Serivce discovery not supported, will fail if device has multiple technologies defined
+      summary: |-
+        Connect a device by device id (device technology needs to
+        support connection) 
+      description: |-
+        Connect a device by device id, Serivce discovery not
+        supported, will fail if device has multiple technologies
+        defined.
       operationId: CreateConnectionbyID
       parameters:
         - name: id
@@ -465,7 +513,9 @@ paths:
       tags:
         - connectivity
       summary: Get connection by id for a device
-      description: Get connection by id for a device, success when device connected, failure when device not connected
+      description: |-
+        Get connection by id for a device, success when device
+        connected, failure when device not connected 
       operationId: GetConnectionbyId
       parameters:
         - name: id
@@ -649,7 +699,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AttributeValueResponse'          
+                $ref: '#/components/schemas/AttributeValueResponse'
             application/xml:
               schema:
                 $ref: '#/components/schemas/AttributeValueResponse'
@@ -688,7 +738,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AttributeValueResponse'          
+                $ref: '#/components/schemas/AttributeValueResponse'
             application/xml:
               schema:
                 $ref: '#/components/schemas/AttributeValueResponse'
@@ -727,7 +777,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AttributeValueResponse'          
+                $ref: '#/components/schemas/AttributeValueResponse'
             application/xml:
               schema:
                 $ref: '#/components/schemas/AttributeValueResponse'
@@ -772,7 +822,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AttributeValueResponse'          
+                $ref: '#/components/schemas/AttributeValueResponse'
             application/xml:
               schema:
                 $ref: '#/components/schemas/AttributeValueResponse'
@@ -817,7 +867,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AttributeValueResponse'          
+                $ref: '#/components/schemas/AttributeValueResponse'
             application/xml:
               schema:
                 $ref: '#/components/schemas/AttributeValueResponse'
@@ -841,8 +891,10 @@ paths:
     post:
       tags:
         - data
-      summary: Subscribe to streaming data from an attribute on a device
-      description: Subscribe to streaming data from an attribute on a device
+      summary: |-
+         Subscribe to streaming data from an attribute on a device
+      description: |-
+        Subscribe to streaming data from an attribute on a device
       operationId: dataSubscribe
       requestBody:
         content:
@@ -885,8 +937,12 @@ paths:
     put:
       tags:
         - data
-      summary: update streaming data subscription from an attribute on a device
-      description: update streaming data subscription from an attribute on a device
+      summary: |-
+        update streaming data subscription from an attribute on a
+	device
+      description: |-
+        update streaming data subscription from an attribute on a
+	device
       operationId: dataUpdateSubscribe
       requestBody:
         content:
@@ -929,8 +985,10 @@ paths:
     delete:
       tags:
         - data
-      summary: Unsubscribe to streaming data from an attribute on a device
-      description: Unsubscribe to streaming data from an attribute on a device
+      summary: |-
+        Unsubscribe to streaming data from an attribute on a device
+      description: |-
+        Unsubscribe to streaming data from an attribute on a device
       operationId: dataUnsubscribe
       parameters:
       - name: subscription
@@ -1142,7 +1200,10 @@ paths:
       tags:
         - registrations
       summary: unregister a publish/subscribe topic
-      description: unregister a publish/subscribe topic, Multiple topics can be provided with comma separate strings, or a group id can be provided
+      description: |-
+        unregister a publish/subscribe topic, Multiple topics can
+        be provided with comma separate strings, or a group id can
+        be provided.
       operationId: unregisterTopic
       parameters:
         - name: topic
@@ -1159,7 +1220,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MultiTopicsResponse'          
+                $ref: '#/components/schemas/MultiTopicsResponse'
             application/xml:
               schema:
                 $ref: '#/components/schemas/MultiTopicsResponse'
@@ -1183,7 +1244,10 @@ paths:
       tags:
         - registrations
       summary: get one or multiple publish/subscribe topic
-      description: unregister a publish/subscribe topic, Multiple topics can be provided with comma separate strings, or a group id can be provided
+      description: |-
+        unregister a publish/subscribe topic, Multiple topics can be
+        provided with comma separate strings, or a group id can be
+        provided 
       operationId: getTopic
       parameters:
         - name: topic
@@ -1200,7 +1264,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MultiTopicsResponse'          
+                $ref: '#/components/schemas/MultiTopicsResponse'
             application/xml:
               schema:
                 $ref: '#/components/schemas/MultiTopicsResponse'
@@ -1322,7 +1386,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MultiTopicsResponse'          
+                $ref: '#/components/schemas/MultiTopicsResponse'
             application/xml:
               schema:
                 $ref: '#/components/schemas/MultiTopicsResponse'
@@ -1337,11 +1401,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse' 
+                $ref: '#/components/schemas/FailureResponse'
             application/xml:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
-                
+
     get:
       tags:
         - registrations
@@ -1362,7 +1426,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MultiTopicsResponse'          
+                $ref: '#/components/schemas/MultiTopicsResponse'
             application/xml:
               schema:
                 $ref: '#/components/schemas/MultiTopicsResponse'
@@ -1377,12 +1441,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse' 
+                $ref: '#/components/schemas/FailureResponse'
             application/xml:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
-  
-  /registration/topic/{id}:    
+
+  /registration/topic/{id}:
     delete:
       tags:
         - registrations
@@ -1403,7 +1467,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MultiTopicsResponse'          
+                $ref: '#/components/schemas/MultiTopicsResponse'
             application/xml:
               schema:
                 $ref: '#/components/schemas/MultiTopicsResponse'
@@ -1418,11 +1482,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse' 
+                $ref: '#/components/schemas/FailureResponse'
             application/xml:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
-                
+
     get:
       tags:
         - registrations
@@ -1443,7 +1507,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MultiTopicsResponse'          
+                $ref: '#/components/schemas/MultiTopicsResponse'
             application/xml:
               schema:
                 $ref: '#/components/schemas/MultiTopicsResponse'
@@ -1458,12 +1522,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse' 
+                $ref: '#/components/schemas/FailureResponse'
             application/xml:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
 
-  
+
   /bulk:
     post:
       tags:
@@ -1489,7 +1553,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BulkResponse'          
+                $ref: '#/components/schemas/BulkResponse'
             application/xml:
               schema:
                 $ref: '#/components/schemas/BulkResponse'
@@ -1504,15 +1568,15 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse' 
+                $ref: '#/components/schemas/FailureResponse'
             application/xml:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
-          
+
 components:
   schemas:
-# BLE objects    
-##  An array for BLE services 
+# BLE objects
+##  An array for BLE services
     BLEServiceslist:
       required:
         - services
@@ -1528,9 +1592,9 @@ components:
       xml:
         name: BLEServiceslist
 
-## A BLE service with its characteristics      
+## A BLE service with its characteristics
     BLEService:
-      required:  
+      required:
         - serviceID
         - characteristics
       type: object
@@ -1547,8 +1611,8 @@ components:
           items:
             $ref: '#/components/schemas/BLECharacteristic'
       xml:
-        name: BLEService        
-        
+        name: BLEService
+
 ## A BLE characteristics with its descriptors
     BLECharacteristic:
       required:
@@ -1580,9 +1644,9 @@ components:
           items:
             $ref: '#/components/schemas/BLEDescriptor'
       xml:
-        name: BLECharacteristic  
-        
-## A BLE descriptor      
+        name: BLECharacteristic
+
+## A BLE descriptor
     BLEDescriptor:
       required:
         - descriptorID
@@ -1593,7 +1657,7 @@ components:
           format: uuid
           example: 12345678-1234-5678-1234-56789abcdef4
       xml:
-        name: BLEDescriptor 
+        name: BLEDescriptor
 
 ## BLE service ID only
     BLEServiceID:
@@ -1612,8 +1676,8 @@ components:
         - ble
       type: object
       properties:
-        ble: 
-          required:  
+        ble:
+          required:
             - serviceID
             - characteristicID
           type: object
@@ -1631,10 +1695,10 @@ components:
               format: boolean
               example: no
               enum:
-                - yes # attribute is of type long 
+                - yes # attribute is of type long
                 - no # attrribute is of type normal, default
       xml:
-        name: BLEAttributes     
+        name: BLEAttributes
 
 ## Defines different types of BLE topics
     BLETopic:
@@ -1649,8 +1713,8 @@ components:
             - $ref: '#/components/schemas/BLEAdvTopic'
       xml:
         name: BLETopic
- 
-## BLE Gatt Topic definition      
+
+## BLE Gatt Topic definition
     BLEGattTopic:
       required:
         - type
@@ -1670,9 +1734,9 @@ components:
           type: string
           example: 12345678-1234-5678-1234-56789abcdef1
       xml:
-        name: BLEGattTopic 
+        name: BLEGattTopic
 
-## BLE Connection event Topic definition      
+## BLE Connection event Topic definition
     BLEConnTopic:
       required:
         - type
@@ -1684,9 +1748,9 @@ components:
           enum:
             - connection_events
       xml:
-        name: BLEConnTopic 
+        name: BLEConnTopic
 
-## BLE Advertisement Topic definition   
+## BLE Advertisement Topic definition
     BLEAdvTopic:
       required:
         - type
@@ -1711,9 +1775,9 @@ components:
           items:
             $ref: '#/components/schemas/BLEAdvertisement'
       xml:
-        name: BLEAdvTopic 
-        
-## BLE Advertisement attributes  
+        name: BLEAdvTopic
+
+## BLE Advertisement attributes
     BLEAdvertisement:
       type: object
       properties:
@@ -1727,14 +1791,14 @@ components:
           example: 4c00*
       xml:
         name: BLEAdvertisement
-        
+
 ## Attributes that define a BLE broadcast
     BLEBroadcast:
       required:
         - ble
       type: object
       properties:
-        ble: 
+        ble:
           required:
             - advertisement
           type: array
@@ -1749,7 +1813,7 @@ components:
 # Zigbee objects
 ## An array for Zigbee Endpoints
     ZigbeeEndpointlist:
-      required:    
+      required:
         - endpoints
       type: object
       properties:
@@ -1762,7 +1826,7 @@ components:
             $ref: '#/components/schemas/ZigbeeEndpoint'
       xml:
         name: ZigbeeEndpointlist
-        
+
 ## A Zigbee endpoint with its clusters
     ZigbeeEndpoint:
       required:
@@ -1783,7 +1847,7 @@ components:
             $ref: '#/components/schemas/ZigbeeCluster'
       xml:
         name: ZigbeeEndpoint
-        
+
 ## A Zigbee cluster with its attributes
     ZigbeeCluster:
       required:
@@ -1804,7 +1868,7 @@ components:
             $ref: '#/components/schemas/ZigbeeAttribute'
       xml:
         name: ZigbeeCluster
-        
+
 ## A Zigbee attribute
     ZigbeeAttribute:
       required:
@@ -1821,15 +1885,15 @@ components:
           format: int32
           example: 32
       xml:
-        name: ZigbeeAttribute 
-        
+        name: ZigbeeAttribute
+
 ## Attributes that define a Zigbee attribute
     ZigbeeAttributes:
       required:
         - zigbee
       type: object
       properties:
-        zigbee: 
+        zigbee:
           required:
             - endpointID
             - clusterID
@@ -1853,15 +1917,15 @@ components:
               format: int32
               example: 1
       xml:
-        name: ZigbeeAttributes 
-        
+        name: ZigbeeAttributes
+
 ## Attributes that define a Zigbee broadcast
     ZigbeeBroadcast:
       required:
         - zigbee
       type: object
       properties:
-        zigbee: 
+        zigbee:
           required:
             - endpointID
             - clusterID
@@ -1893,7 +1957,7 @@ components:
         name: ZigbeeBroadcast
 
 # Common objects
-## A SCIM object, can be a SCIM device or a SCIM group, both identified with an ID
+## A SCIM object, can be a  device or a group
     Object:
       required:
         - id
@@ -1917,16 +1981,16 @@ components:
             - zigbee
       xml:
         name: Object
-        
+
 ## A Service is a device with optional service ID's
     Service:
-      allOf:    
+      allOf:
         - $ref: '#/components/schemas/Object'
       type: object
       properties:
         ble:
           type: object
-          properties: 
+          properties:
             services:
               type: array
               xml:
@@ -1955,10 +2019,10 @@ components:
             name: ble
       xml:
         name: Service
-        
+
 ## A Service is an object with optional service ID's
     Connection:
-      allOf:    
+      allOf:
         - $ref: '#/components/schemas/Service'
       type: object
       properties:
@@ -1971,10 +2035,10 @@ components:
           example: true
       xml:
         name: Connection
-        
-## A specific attribute of an Device    
+
+## A specific attribute of an Device
     Attribute:
-      allOf:    
+      allOf:
         - $ref: '#/components/schemas/Object'
       oneOf:
         - $ref: '#/components/schemas/BLEAttributes'
@@ -1989,7 +2053,7 @@ components:
 
 ## A value of an attribute of an Device
     AttributeValue:
-      allOf:    
+      allOf:
         - $ref: '#/components/schemas/Attribute'
       required:
         - value
@@ -2004,11 +2068,11 @@ components:
           format: boolean
           example: yes
           enum:
-            - yes #do not look at device/attribute support, but wait for response 
+            - yes #do not look at device/attribute support, but wait for response
             - no #do not look at device/attribute support, but do not wait for response
       xml:
         name: AttributeValue
-    
+
 ## A subscription attribute of an Device
     Subscription:
       allOf:
@@ -2019,7 +2083,7 @@ components:
       properties:
         topic:
           type: string
-          example: enterprise/hospital/pulse_oximeter       
+          example: enterprise/hospital/pulse_oximeter
         dataFormat: #if topic is to be automatically created on on-existent topic
           type: string
           example: default
@@ -2043,10 +2107,10 @@ components:
             - no #do not look at device/attribute support, but never acknowledge message
       xml:
         name: Subscription
-        
-## A broadcast    
+
+## A broadcast
     Broadcast:
-      allOf:    
+      allOf:
         - $ref: '#/components/schemas/Object'
       oneOf:
         - $ref: '#/components/schemas/BLEBroadcast'
@@ -2073,7 +2137,7 @@ components:
         # interval between broadcasts in ms
         broadcastInterval:
           type: integer
-          example: 500 
+          example: 500
       xml:
         name: Broadcast
 
@@ -2092,8 +2156,8 @@ components:
               enum:
                 - scim_events
       xml:
-        name: BLETopic   
-        
+        name: BLETopic
+
 ## DataStream Topic
     Topic:
       oneOf:
@@ -2111,7 +2175,7 @@ components:
       properties:
         topic:
           type: string
-          example: enterprise/hospital/pulse_oximeter  
+          example: enterprise/hospital/pulse_oximeter
         dataFormat:
           type: string
           example: default
@@ -2124,7 +2188,7 @@ components:
           example: off
           enum:
             - off #default
-            - on 
+            - on
         controlApp:
           type: string
           example: https://control-app-1
@@ -2142,7 +2206,7 @@ components:
       xml:
         name: Topic
 
-## Defines an operation in a bulk API      
+## Defines an operation in a bulk API
     Operation:
       required:
         - operation
@@ -2169,9 +2233,9 @@ components:
       xml:
         name: Operation
 
-## Bulk schema 
+## Bulk schema
     Bulk:
-      allOf:    
+      allOf:
         - $ref: '#/components/schemas/Object'
       type: object
       properties:
@@ -2191,8 +2255,8 @@ components:
             $ref: '#/components/schemas/Operation'
       xml:
         name: Bulk
-    
-# responses    
+
+# responses
 ## Baseline success reponse
     Success:
       required:
@@ -2207,7 +2271,7 @@ components:
         requestID:
           type: string
           example: 12345678-5678-1234-5578-abcdef1234
-          
+
     SuccessResponse:
       allOf:
         - $ref: '#/components/schemas/Success'
@@ -2240,7 +2304,7 @@ components:
         requestID:
           type: string
           example: 12345678-5678-1234-5578-abcdef1234
-          
+
 ## Response, success or failure
     Response:
       oneOf:
@@ -2248,7 +2312,7 @@ components:
         - $ref: '#/components/schemas/FailureResponse'
       xml:
         name: Response
- 
+
 ## Success response for binding API
     BindingResponse:
       oneOf:
@@ -2275,10 +2339,10 @@ components:
             $ref: '#/components/schemas/BindingResponse'
       xml:
         name: MultiBindingsResponse
-        
+
 ## Returns Zigbee node & pan ID
     ZigbeeBindingResponse:
-      allOf:    
+      allOf:
         - $ref: '#/components/schemas/SuccessResponse'
       type: object
       properties:
@@ -2292,10 +2356,10 @@ components:
           example: 48734
       xml:
         name: ZigbeeBindgingResponse
-        
+
  ## Returns discovered services
     ServiceResponse:
-      allOf:    
+      allOf:
         - $ref: '#/components/schemas/SuccessResponse'
       oneOf:
         - $ref: '#/components/schemas/BLEServiceslist'
@@ -2303,7 +2367,7 @@ components:
       xml:
         name: ConnectionResponse
 
-## Response to multiple connections   
+## Response to multiple connections
     MultiConnectionsResponse:
       allOf:
         - $ref: '#/components/schemas/Success'
@@ -2335,7 +2399,7 @@ components:
           format: byte
       xml:
         name: AttributeValueResponse
-        
+
 ## Returns a topic
     TopicResponse:
       allOf:
@@ -2346,7 +2410,7 @@ components:
       properties:
         topic:
           type: string
-          example: enterprise/hospital/pulse_oximeter  
+          example: enterprise/hospital/pulse_oximeter
       xml:
         name: TopicResponse
 
@@ -2378,7 +2442,7 @@ components:
 
 ## Multiple retuns for a bulk operation
     BulkResponse:
-      allOf:    
+      allOf:
         - $ref: '#/components/schemas/SuccessResponse'
       type: object
       properties:
@@ -2414,18 +2478,18 @@ components:
             propertyName: operation
             mapping:
               /connectivity/connect: '#/components/schemas/ServiceResponse'
-              /connectivity/disconnect: '#/components/schemas/SuccessResponse' 
+              /connectivity/disconnect: '#/components/schemas/SuccessResponse'
               /data/attribute/read: '#/components/schemas/AttributeValueResponse'
               /data/attribute/write: '#/components/schemas/AttributeValueResponse'
       xml:
         name: Operation
- 
- # API key authorization           
+
+ # API key authorization
   securitySchemes:
-    ApiKeyAuth:       
+    ApiKeyAuth:
       type: apiKey
-      in: header      
-      name: X-API-KEY  
+      in: header
+      name: X-API-KEY
 # Apply the API key globally to all operations
 security:
-  - ApiKeyAuth: [] 
+  - ApiKeyAuth: []

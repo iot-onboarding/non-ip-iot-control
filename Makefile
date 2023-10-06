@@ -11,8 +11,10 @@ all: $(DOCS)
 %.xml:	%.mkd
 	kramdown-rfc2629 $< > $@
 
-%.html %.txt:	%.xml
+%.html:	%.xml
 	xml2rfc --html $<
+
+%.txt:	%.xml
 	xml2rfc --text $<
 
 %.ftxt: %.json $(JSON)
