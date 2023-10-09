@@ -28,7 +28,7 @@ info:
   license:
     name: TBD
     url: TBD
-  version: 0.4.2
+  version: 0.4.5
 externalDocs:
   description: NIPC IETF draft
   url: TBD
@@ -840,12 +840,102 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
+                
+  /data/attribute/write/file:
+    post:
+      tags:
+        - data
+      summary: Write a file to an attribute across multiple writes
+      description: Write a file to an attribute across multiple writes
+      operationId: dataWriteFile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AttributeFile'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/AttributeFile'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AttributeFile'
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request       
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse' 
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+                
+  /data/attribute/write/blob:
+    post:
+      tags:
+        - data
+      summary: Write a binary blob to an attribute across multiple writes
+      description: Write a binary blob to an attribute across multiple writes
+      operationId: dataWriteBlob
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AttributeBlob'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/AttributeBlob'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AttributeBlob'
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request       
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse' 
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
   
   /data/attribute/read:
     post:
       tags:
         - data
-      summary: Write a value to an attribute on a device
+      summary: Read an attribute on a device
       description: Write a value to an attribute on a device
       operationId: dataAttrRead
       requestBody:
@@ -859,6 +949,51 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               $ref: '#/components/schemas/Attribute'
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttributeValueResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/AttributeValueResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request       
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse' 
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+  
+  /data/attribute/read/conditional:
+    post:
+      tags:
+        - data
+      summary: Read a value from attribute on a device until it matches a specific value
+      description: Read a value from attribute on a device until it matches a specific value
+      operationId: dataReadCond
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AttributeConditional'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/AttributeConditional'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AttributeConditional'
         required: true
       responses:
         '200':
@@ -1527,6 +1662,257 @@ paths:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
 
+  /registration/file:
+    post:
+      tags:
+        - registrations
+      summary: Register and upload a file for later use
+      description: Register and upload a file for later use
+      operationId: registerFile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/File'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/File'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/File'
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request 
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse' 
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+    
+    put:
+      tags:
+        - registrations
+      summary: Update an existing file registration
+      description: Update an existing file registration
+      operationId: UpdateFile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/File'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/File'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/File'
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request 
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse' 
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+                
+    delete:
+      tags:
+        - registrations
+      summary: Delete a file
+      description: Delete a file
+      operationId: DeleteFile
+      parameters:
+        - name: filename
+          in: query
+          description: file that needs to be filtered
+          required: false
+          explode: true
+          schema:
+            type: string
+            example: "firmware.dat"
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse' 
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+        
+    get:
+      tags:
+        - registrations
+      summary: get a file
+      description: get a file by name of get all files if no names supplied
+      operationId: getFile
+      parameters:
+        - name: filename
+          in: query
+          description: file that needs to be filtered
+          required: false
+          explode: true
+          schema:
+            type: string
+            example: "firmware.dat"
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MultiFileResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/MultiFileResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse' 
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+                
+  /registration/file/{filename}:
+    delete:
+      tags:
+        - registrations
+      summary: delete a file by name
+      description: delete a file by name
+      operationId: deleteFilebyName
+      parameters:
+        - name: filename
+          in: path
+          description: file that needs to be filtered
+          required: true
+          schema:
+            type: string
+            example: "firmware.dat"
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/FileResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+
+    get:
+      tags:
+        - registrations
+      summary: get a file by name
+      description: get a file by name
+      operationId: getFilebyName
+      parameters:
+        - name: filename
+          in: path
+          description: file that needs to be filtered
+          required: true
+          schema:
+            type: string
+            example: 12345678-1234-5678-1234-56789abcdef4
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/FileResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
 
   /bulk:
     post:
@@ -2079,6 +2465,78 @@ components:
             - no
       xml:
         name: AttributeValue
+        
+## A file-based attribute of an Device
+    AttributeFile:
+      allOf:
+        - $ref: '#/components/schemas/Attribute'
+      required:
+        - filename
+      type: object
+      properties:
+        filename:
+          type: string
+          example: "firmware.dat"
+        chunksize:
+          type: integer
+        forcedResponse:
+          description: do or do not wait for a response?
+          type: string
+          format: boolean
+          example: yes
+          enum:
+            - yes
+            - no
+      xml:
+        name: AttributeFile
+        
+## A binary blob-based attribute of an Device
+    AttributeBlob:
+      allOf:
+        - $ref: '#/components/schemas/Attribute'
+      required:
+        - blob
+      type: object
+      properties:
+        blob:
+          type: string
+          format: binary
+        chunksize:
+          type: integer
+        forcedResponse:
+          description: do or do not wait for a response?
+          type: string
+          format: boolean
+          example: yes
+          enum:
+            - yes
+            - no
+      xml:
+        name: AttributeFile
+        
+## Conditional read of a value (read until specific value is read)
+    AttributeConditional:
+      allOf:
+        - $ref: '#/components/schemas/Attribute'
+      required:
+        - value
+      type: object
+      properties:
+        value:
+          type: string
+          format: byte
+          example: 0001
+        maxtime:
+          description: maximum time the conditional read should run in seconds (default 10 sec, max 60 sec) 
+          type: integer
+        maxrepeat:
+          description: maximum time the conditional read should repeat (default 5, max 60) 
+          type: integer
+        frequency:
+          description: time between reads in seconds (default 1, max 60) 
+          type: integer
+      xml:
+        name: AttributeConditional
 
 ## A subscription attribute of an Device
     Subscription:
@@ -2221,6 +2679,24 @@ components:
                 example: https://data-app-1
       xml:
         name: Topic
+        
+## File
+    File:
+      required:
+        - filename
+      type: object
+      properties:
+        filename:
+          type: string
+          example: "firmware.dat"
+        file: #file itself is provided
+          type: string
+          format: binary
+        fileURL: #file can be downloaded from a URL
+          type: string
+          example: "https://domain.com/firmware.dat"
+      xml:
+        name: File
 
 ## Defines an operation in a bulk API
     Operation:
@@ -2235,18 +2711,25 @@ components:
                 - /connectivity/connect
                 - /connectivity/disconnect
                 - /data/attribute/read
+                - /data/attribute/read/conditional
                 - /data/attribute/write
+                - /data/attribute/write/file
+                - /data/attribute/write/blob
         - oneOf:
             - $ref: '#/components/schemas/Service'
             - $ref: '#/components/schemas/Attribute'
             - $ref: '#/components/schemas/AttributeValue'
+            - $ref: '#/components/schemas/AttributeConditional'
+            - $ref: '#/components/schemas/AttributeFile'
+            - $ref: '#/components/schemas/AttributeBlob'
           discriminator:
             propertyName: operation
             mapping:
               /connectivity/connect: '#/components/schemas/Service'
               /data/attribute/read: '#/components/schemas/Attribute'
-              /data/attribute/write: |-
-                '#/components/schemas/AttributeValue'
+              /data/attribute/read/conditional: '#/components/schemas/AttributeConditional'
+              /data/attribute/write/file: '#/components/schemas/AttributeFile'
+              /data/attribute/write/blob: '#/components/schemas/AttributeBlob'
       xml:
         name: Operation
 
@@ -2433,7 +2916,7 @@ components:
       xml:
         name: TopicResponse
 
-## Success response for binding API
+## Success response for topic API
     TopicsResponse:
       oneOf:
         - $ref: '#/components/schemas/TopicResponse'
@@ -2441,7 +2924,7 @@ components:
       xml:
         name: TopicsResponse
 
-## Returning multiple bindings
+## Returning multiple topics
     MultiTopicsResponse:
       allOf:
         - $ref: '#/components/schemas/Success'
@@ -2452,12 +2935,44 @@ components:
         topics:
           type: array
           xml:
-            name: bindings
+            name: topics
             wrapped: true
           items:
             $ref: '#/components/schemas/TopicsResponse'
       xml:
         name: MultiTopicsResponse
+
+## Returns a file name
+    FileResponse:
+      allOf:
+        - $ref: '#/components/schemas/SuccessResponse'
+      required:
+        - filename
+      type: object
+      properties:
+        filename:
+          type: string
+          example: "firmware.dat"
+      xml:
+        name: FileResponse
+
+## Returning multiple filne names
+    MultiFileResponse:
+      allOf:
+        - $ref: '#/components/schemas/Success'
+      required:
+        - filenames
+      type: object
+      properties:
+        filenames:
+          type: array
+          xml:
+            name: filenames
+            wrapped: true
+          items:
+            $ref: '#/components/schemas/FileResponse'
+      xml:
+        name: MultiFileResponse
 
 ## Multiple returns for a bulk operation
     BulkResponse:
