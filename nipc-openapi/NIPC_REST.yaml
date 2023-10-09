@@ -13,13 +13,13 @@ info:
     The gateway provides the following functions:
        - authentication and authorization of application clients that
          will communicate with devices 
-       - API's that onboard a device on the network (out of scope for
+       - APIs that onboard a device on the network (out of scope for
          this specification, but covered in SCIM for devices)
-       - API's that allow an app to set up a connection with a device
-       - API's that allow an app to exchange data with a device
-       - API's that allow a device to create registrations in the
+       - APIs that allow an app to set up a connection with a device
+       - APIs that allow an app to exchange data with a device
+       - APIs that allow a device to create registrations in the
          network for a device 
-    These collection of these API's, in combination with hte
+    These collection of these APIs, in combination with the
     onboarding API (SCIM for devices) will allow an application to
     perform a complete set of operations on Non-IP devices.
   termsOfService: http://swagger.io/terms/
@@ -40,10 +40,10 @@ servers:
         description: Gateway Host
 tags:
   - name: connectivity
-    description: API's that allow apps to manage device connections
+    description: APIs that allow apps to manage device connections
   - name: data
     description: |-
-      API's that allow apps to exchange data with non-IP devices
+      APIs that allow apps to exchange data with non-IP devices
   - name: registrations
     description: |-
       APIs that allow apps to make registrations in the network for
@@ -105,7 +105,7 @@ paths:
       summary: Get bindings for a device
       description: |-
         Get all bindings control app made (no parameter) or binding
-        by object ID, Multiple id's can be provided with comma
+        by object ID, Multiple ids can be provided with comma
         separated strings, or a group id can be provided 
       operationId: GetBindings
       parameters:
@@ -150,7 +150,7 @@ paths:
         Delete bindings for a device or group of devices
       description: |-
         Delete all bindings control app made or bindings by object
-        ID, Multiple id's can be provided with comma separated
+        ID, Multiple ids can be provided with comma separated
         strings, or a group id can be provided 
       operationId: DeleteBindings
       parameters:
@@ -376,7 +376,7 @@ paths:
         devices
       description: |-
         Get all connection status for connections made by control ap
-        or connection status by object ID, Multiple id's can be
+        or connection status by object ID, multiple ids can be
         provided with comma separated strings, or a group id can be
         provided  
       operationId: GetConnections
@@ -2459,7 +2459,7 @@ components:
       xml:
         name: MultiTopicsResponse
 
-## Multiple retuns for a bulk operation
+## Multiple returns for a bulk operation
     BulkResponse:
       allOf:
         - $ref: '#/components/schemas/SuccessResponse'
