@@ -19,15 +19,14 @@ author:
     country: Belgium
     email: bbrinckma@cisco.com
  -
-    ins: E. Lear
-    name: Eliot Lear
+    ins: R. Mohan
+    name: Rohit Mohan
     org: Cisco Systems
-    street: Richtistrasse 7
-    code: CH-8304
-    city: Wallisellen
-    country: Switzerland
-    phone: +41 44 878 9200
-    email: lear@cisco.com
+    street: 170 West Tasman Drive
+    code: 95134
+    city: San Jose
+    country: USA
+    email: rohitmo@cisco.com
 
 normative:
   BLE53:
