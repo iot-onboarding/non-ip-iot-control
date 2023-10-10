@@ -2540,9 +2540,9 @@ components:
             (default 10 sec, max 60 sec) 
           type: integer
         maxrepeat: 
-          description:|-
-          maximum time the conditional read should repeat 
-          (default 5, max 60) 
+          description: |-
+           maximum time the conditional read should repeat 
+           (default 5, max 60) 
           type: integer
         frequency:
           description: |- 
