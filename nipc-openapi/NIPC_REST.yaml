@@ -846,7 +846,8 @@ paths:
       tags:
         - data
       summary: Write a file to an attribute across multiple writes
-      description: Write a file to an attribute across multiple writes
+      description: |- 
+        Write a file to an attribute across multiple writes
       operationId: dataWriteFile
       requestBody:
         content:
@@ -890,8 +891,10 @@ paths:
     post:
       tags:
         - data
-      summary: Write a binary blob to an attribute across multiple writes
-      description: Write a binary blob to an attribute across multiple writes
+      summary: |-
+        Write a binary blob to an attribute across multiple writes
+      description: |-
+        Write a binary blob to an attribute across multiple writes
       operationId: dataWriteBlob
       requestBody:
         content:
@@ -980,8 +983,12 @@ paths:
     post:
       tags:
         - data
-      summary: Read a value from attribute on a device until it matches a specific value
-      description: Read a value from attribute on a device until it matches a specific value
+      summary: |-
+        Read a value from attribute on a device until it
+         matches a specific value
+      description: |-
+        Read a value from attribute on a device until it 
+        matches a specific value
       operationId: dataReadCond
       requestBody:
         content:
@@ -1796,7 +1803,8 @@ paths:
       tags:
         - registrations
       summary: get a file
-      description: get a file by name of get all files if no names supplied
+      description: |-
+        get a file by name of get all files if no names supplied
       operationId: getFile
       parameters:
         - name: filename
@@ -2527,13 +2535,18 @@ components:
           format: byte
           example: 0001
         maxtime:
-          description: maximum time the conditional read should run in seconds (default 10 sec, max 60 sec) 
+          description: |-
+            maximum time the conditional read should run in seconds 
+            (default 10 sec, max 60 sec) 
           type: integer
-        maxrepeat:
-          description: maximum time the conditional read should repeat (default 5, max 60) 
+        maxrepeat: 
+          description:|-
+          maximum time the conditional read should repeat 
+          (default 5, max 60) 
           type: integer
         frequency:
-          description: time between reads in seconds (default 1, max 60) 
+          description: |- 
+            time between reads in seconds (default 1, max 60) 
           type: integer
       xml:
         name: AttributeConditional
@@ -2727,9 +2740,12 @@ components:
             mapping:
               /connectivity/connect: '#/components/schemas/Service'
               /data/attribute/read: '#/components/schemas/Attribute'
-              /data/attribute/read/conditional: '#/components/schemas/AttributeConditional'
-              /data/attribute/write/file: '#/components/schemas/AttributeFile'
-              /data/attribute/write/blob: '#/components/schemas/AttributeBlob'
+              /data/attribute/read/conditional: -|
+                '#/components/schemas/AttributeConditional'
+              /data/attribute/write/file: -|
+                '#/components/schemas/AttributeFile'
+              /data/attribute/write/blob: -|
+                '#/components/schemas/AttributeBlob'
       xml:
         name: Operation
 
