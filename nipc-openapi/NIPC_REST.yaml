@@ -2510,12 +2510,12 @@ components:
           type: string
           format: byte
           example: 0001
-        maxtime:
+        maxTime:
           description: |-
             maximum time the conditional read should run in seconds 
             (default 10 sec, max 60 sec) 
           type: integer
-        maxrepeat: 
+        maxRepeat: 
           description: |-
            maximum time the conditional read should repeat 
            (default 5, max 60) 
