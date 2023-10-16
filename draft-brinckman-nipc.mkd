@@ -1,5 +1,5 @@
 ---
-title: An Application Layer Interface for Non-IP device control
+title: An Application Layer Interface for Non-IP device control (NIPC)
 abbrev: NIPC
 docname: draft-brinckman-nipc-00
 submissionType: IETF
@@ -45,34 +45,48 @@ normative:
 
 --- abstract
 
-This memo specifies RESTful application layer interface for non-IP
-operations.  The interface initially describes Bluetooth Low
-Energy and Zigbee.
+This memo specifies RESTful application layer interface for gateways 
+providing operations against non-IP devices. The described interface is
+extensible. This memo initially describes Bluetooth Low Energy and 
+Zigbee as they are the most commonly deployed.
 
 --- middle
 
 Introduction
 ============
 
-There has been an explosion of non-IP devices to support
-manufacturing, healthcare, the home, and the office.  At the same
-time, wireless access points have been deployed nearly everywhere,
-many of which have soft or separate radios that can transmit and
-receive different frame types, such as {{BLE53}}.  To avoid the need for
-parallel infrastructure, a gateway control function is necessary.
+Use cases in building management, healthcare, workplaces, manufacturing,
+logistics and hospitality have introduced low-power devices into these 
+environments. These devices typically do not support IP-based 
+interfaces, hence there is a need for gateway functions to allow these
+devices to communicate with the applications that manage them. In 
+abscence of a standard describing how applications communicate with such
+non-IP devices, vertically integrated infrastructure prolifilates and 
+applications have bespoke integrations with that infrastructure for 
+every use case. This stunts the eco-system growth. At the same time,
+wireless access points have been deployed nearly everywhere, many of 
+which have soft or separate radios that can transmit and receive 
+different frame types, such as {{BLE53}}.  To avoid the need for 
+parallel infrastructure and bespoke application integration, a 
+standardized gateway function is necessary.
 
-The gateway provides the following functions:
+The gateway provides at a minimum the following functions:
  - authentication and authorization of application clients that
    will access devices
- - maintenance of an inventory of devices that are intended to
+ - the ability to onboard devices that are entended to be deployed 
+   within the use case
+ - maintenance of an inventory of onboarded devices that are intended to
    access and be accessed by the deployment and applications.
- - a map of which APs should be communicating with the endpoints.
+ - interfaces that allow for bi-directional communication to non-IP
+   devices
  - one or more channels to process requests, responses, and asymmetric
-   communciations.
+   communciations with the non-IP radio resources (Access Points) 
+   in the system.
 
 Combined with a provisioning interface such as
 {{!I-D.shahzad-scim-device-model}}, this specification supports
-these aspects.
+these aspects, specifically focusing on providing bi-directional 
+communication with non-IP devices.
 
 ~~~~~
 
@@ -98,31 +112,43 @@ these aspects.
 
 {{arch}} shows us the application layer gateway (ALG), an access
 point (AP), and a device (D) in the enterprise environment.  The role
-of the ALG is to select the appropriate AP.  MQTT is used to send
-unsolicited messages generated from devices.  These messages can be
-subscribed to using the control interface.
+of the ALG is to provide a gateway to non-IP devices connecting into 
+one or more AP. Applications implementing this memo can leverage RESTful
+interfaces to communicate with these devices and subscribe to streaming 
+data or broadcasts levering MQTT.
 
-The flow of operations is as follows:
+The flow of operations are as follows:
 
-1. Get SCIM endpoint authorized.  This occurs out of band but may
-   be accomplished manually, via a federated transaction, or through
-   other means.
-2. Provision applications that may control devices.
-3. Provision applications that may receive telemetry.
-4. Provision one or more devices.
+1. Authorize application(s) to perform operations. This happens out of
+   band and may be accomplished by means of exchanging tokens or public
+   keys
+   a. Authorize an onboarding appcation against a SCIM endpoint
+   supported by the gateway. 
+   b. Provision and authorize applications that may control devices.
+   c. Provision and authorize applications that may receive telemetry.
+2. Provision one or more devices on the gateway leveraging SCIM.
 
-Steps 1-4 are not within the scope of this specification, but are
+Steps 1 and 2 are not within the scope of this specification, but are
 provided for context.
 
-5. Transmit appropriate GATT requests and await replies via this
-   specification.
+3. Perform RESTful calls to the gateway in order to establish
+   bidirectional communication to one or more devices. Optionally set 
+   up a publish/subcribe topic to receive streaming data from a device 
+   (telemetry interface).
+4. Optionally receive streaming data on a pub/sub topic configured by 
+   the control interface (telemetry interface)
+
+Step 3 and 4 are the subject of this memo.
 
 This specification is organized into three sections:
 
-- Basic control functions described in narrative.
+- Basic non-IP control functions described in narrative.
+- Extensibility of the interfaces.
+- Examples of use cases leveraging both BLE and Zigbee-based devices. 
 - A specification that can be mapped to a publication/subscribe
   interface, such as MQTT.
-- OpenAPI and Protobufs definitions for the above
+- OpenAPI definitions for the control interface and Protobuf definitions 
+  for the streaming data interface
 
 ## Terminology
 
@@ -132,25 +158,79 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
 14 {{!RFC2119}} {{!RFC8174}} when, and only when, they appear in all
 capitals, as shown here.
 
-# Basic Operations and concepts
+Non-IP Control Functions
+========================
 
-The general flow of operations is as follows:
+# Approach
 
-1. Introduce device using /introduce
-2. Connect to device if bidirectional communications are desired,
-   POSTing the /connection object. 
-3. Send GATT reads and writes, establish indications and notifications
-   using the /data operations.
-4. Receive those indications and notifications via MQTT
-5. Disconnect DELETEing the /connection object.
+In non-IP protocols such as BLE or Zigbee, a number of basic operations
+are defined that are fairly similar across protocols. Basic examples of 
+this are read and write data. Devices may choose to implement all of the
+operations or a subset. For example in BLE a device may choose to 
+implement a binding, but could also allow connect without a binding. 
+In this memo we have therefore defined a control interface that exposes
+these basic operations with a radio-agnostic schema, with radio 
+technology specific extensions to allow to transmit and receive 
+attributes that are specific to the radio technoligy supported by the 
+device. This allows for extensions to the schema to integrate new 
+non-ip radio technologies, whithout the need to update the base schema.
+~~~~~
 
-## Connecting to The Control Interface
+    ID
+     - device/group attributes
+	|
+	|> BLE
+	|     - BLE attributes
+	|
+        |> Zigbee
+              - Zigbee attributes
 
-The control interface makes use of RESTful HTTP{{!RFC9114}}.  The
-connection endpoint is provided out of band, most likely through
-the SCIM devices model extension, in which an application is registered.
-Similarly authentication is specified using that SCIM interface.  It
-may be based on a device certificate or via a token.
+~~~~~
+{: #schema title="Extensible Schema"}
+
+As shown in {{schema}}, the control interface addresses device and group
+objects as IDs, hence the requirement to declare a device to the gateway
+before addressing a NIPC operation to the device. This can be done by 
+means of SCIM. A NIPC operation can either be performed against a 
+device-id or a group-id. The gateway will leverage information from the 
+SCIM object to onboard the device for a specific radio technology. 
+Please refer to {{!I-D.shahzad-scim-device-model}} for more information
+on SCIM device objects.  
+
+Apart from enabling bi-directional communication with non-ip devices,
+NIPC also allows an application to register pub/sub topics in order to
+support a programmable data streaming interface. 
+
+## Common base schema
+
+As described, most operations are executed against a device or a group.
+Control operations refer to either of these as "Object" with an ID as an
+identifier. The common schema for Object is defined as follows:
+
+
+| Attribute     | Req |   Type   |          Example                    |
++---------------+----------+-------------------------------------------|
+| id            |  T  |  uuid   | 12345678-1234-5678-1234-56789abcdef4 |
+| objectType    |  T  |  enum   | device                               |
+| technology    |  F  |  enum   | ble                                  |
+{: #objectdef title="Definition of an Object"}
+
+where-
+
+ - id is the id returned in the response when registering a device 
+   against a SCIM server.
+ - objectType is either "group" or "device".
+ - technology is the radio technology extension(s) supported by the 
+   device, in this memo either "ble" or "zigbee".
+
+## Connecting to the Non-IP Control Interface
+
+NIPC makes use of RESTful HTTP{{!RFC9114}}.  The connection endpoint is
+provided out of band, most likely through the SCIM devices model 
+extension, in which an authorized application can be registered for a
+SCIM object. Similarly authentication of the interface can be specified
+using that SCIM interface. It may be based on a device certificate or 
+an authorization token.
 
 # Control Interface Scheme Elements
 
@@ -165,33 +245,12 @@ several groupings available through this model:
  - /registrations registers interest in an MQTT topic for telemetry
  - /bulk handles bulk operations
 
-## Common definitions
 
-Many of RESTful operations refer to or return an "Object".  This is defined in the schema as having the following properties:
-
-
-| Attribute     | Req |   Type   |          Example                    |
-+---------------+----------+-------------------------------------------|
-| id            |  T  |  uuid   | 12345678-1234-5678-1234-56789abcdef4 |
-| controlApp    |  T  |  url    | https://control-app-1.example.com    |
-| objectType    |  T  |  enum   | device                               |
-| technology    |  F  |  enum   | ble                                  |
-{: #objectdef title="Definition of an Object"}
-
-where-
-
- - id is the id returned in a SCIM request.
- - objectType is either "group" or "device".
- - technology is either "ble" or "zigbee".
- - controlApp is the URI to refer to this device. XXX
-
-Other elements are explained in line.
-
-## Connectivity Elements
+# Connectivity Elements
 
 Connectivity elements are accessed from this group of operations.
 
-### /introduce
+## /introduce
 
 This endpoint notifies the network that the device should be
 accessible.  The only operation supported is POST.  A single Object
