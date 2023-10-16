@@ -61,12 +61,13 @@ Energy and Zigbee.
 Introduction
 ============
 
-There has been an explosion of non-IP devices to support
-manufacturing, healthcare, the home, and the office.  At the same
-time, wireless access points have been deployed nearly everywhere,
-many of which have soft or separate radios that can transmit and
-receive different frame types, such as {{BLE53}}.  To avoid the need for
-parallel infrastructure, a gateway control function is necessary.
+There has been a large influx of non-IP devices to supporting
+processes in manufacturing, healthcare, the home, and the office.
+At the same time, wireless access points have been deployed nearly 
+everywhere,many of which have soft or separate radios that can 
+transmit and receive different frame types, such as {{BLE53}} and
+{{Zigbee22}}. To avoid the need for parallel infrastructure, a 
+gateway control function is necessary.
 
 The gateway provides the following functions:
  - authentication and authorization of application clients that
