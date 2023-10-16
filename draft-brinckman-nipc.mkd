@@ -27,6 +27,13 @@ author:
     city: San Jose
     country: USA
     email: rohitmo@cisco.com
+ - 
+    ins: B. Sanford
+    name: Braeden Sanford
+    org: Philips
+    city: Cambridge
+    country: USA
+    email: braeden.sanford@philips.com
 
 normative:
   BLE53:
