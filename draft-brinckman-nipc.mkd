@@ -17,7 +17,7 @@ author:
     org: Cisco Systems
     city: Brussels
     country: Belgium
-    email: bbrinckma@cisco.com
+    email: bbrinckm@cisco.com
  -
     ins: R. Mohan
     name: Rohit Mohan
@@ -27,6 +27,13 @@ author:
     city: San Jose
     country: USA
     email: rohitmo@cisco.com
+-
+    ins: B. Sanford
+    name: Braeden Sanford
+    org: Philips
+    city: Cambridge
+    country: USA
+    email: braeden.sanford@philips.com
 
 normative:
   BLE53:
@@ -59,16 +66,28 @@ Use cases in building management, healthcare, workplaces, manufacturing,
 logistics and hospitality have introduced low-power devices into these 
 environments. These devices typically do not support IP-based 
 interfaces, hence there is a need for gateway functions to allow these
-devices to communicate with the applications that manage them. In 
-abscence of a standard describing how applications communicate with such
-non-IP devices, vertically integrated infrastructure prolifilates and 
-applications have bespoke integrations with that infrastructure for 
-every use case. This stunts the eco-system growth. At the same time,
-wireless access points have been deployed nearly everywhere, many of 
-which have soft or separate radios that can transmit and receive 
-different frame types, such as {{BLE53}}.  To avoid the need for 
-parallel infrastructure and bespoke application integration, a 
-standardized gateway function is necessary.
+devices to communicate with the applications that manage them. 
+
+~~~~~
+                                                               
+    +-------------+   	         +---------+              +--------+        
+    | Application |<------------>| Gateway |<------------>| Non-IP |                     
+    |    app      |   IP-based	 |         |    Non-IP    | Device |
+    +-------------+   Operation  +---------+   Operation  +--------+                 
+
+~~~~~
+{: #gw title="Gateway for non-IP Devices"}
+
+In abscence of a standard describing how applications communicate with 
+suchnon-IP devices, vertically integrated infrastructure prolifilates
+and applications have bespoke integrations with that infrastructure for 
+every use case. The Application interfaces are non-standard. This 
+stunts the eco-system growth. At the same time, wireless access points 
+have been deployed nearly everywhere, many of which have soft or 
+separate radios that can transmit and receive different frame types,
+such as {{BLE53}}.  To avoid the need for parallel infrastructure and 
+bespoke application integration, a standardized gateway function is 
+necessary.
 
 The gateway provides at a minimum the following functions:
  - authentication and authorization of application clients that
@@ -90,7 +109,6 @@ communication with non-IP devices.
 
 ~~~~~
 
-
                             +-----------------------------------+
                             |                                   |
     +-----------+   Request |  +---------+                      |
@@ -104,7 +122,7 @@ communication with non-IP devices.
     | Telemetry |<...MQTT...|.<|            |                   |
     |    Apps   |           |  +------------+                   |
     +-----------+           |                                   |
-                            |       Enterprise Deployment       |
+                            |       Network Deployment          |
                             +-----------------------------------+
 
 ~~~~~
@@ -119,24 +137,26 @@ data or broadcasts levering MQTT.
 
 The flow of operations are as follows:
 
-1. Authorize application(s) to perform operations. This happens out of
-   band and may be accomplished by means of exchanging tokens or public
-   keys
+1. The operator of the network deployment authorizes application(s) to
+   perform operations on the Gateway. This happens out of band and may
+   be accomplished by means of exchanging tokens or public keys. 
+   Authorization can be role-based:
    a. Authorize an onboarding appcation against a SCIM endpoint
    supported by the gateway. 
    b. Provision and authorize applications that may control devices.
    c. Provision and authorize applications that may receive telemetry.
-2. Provision one or more devices on the gateway leveraging SCIM.
+2. The authorized application can now provision one or more devices on
+   the gateway leveraging SCIM.
 
 Steps 1 and 2 are not within the scope of this specification, but are
 provided for context.
 
-3. Perform RESTful calls to the gateway in order to establish
-   bidirectional communication to one or more devices. Optionally set 
-   up a publish/subcribe topic to receive streaming data from a device 
-   (telemetry interface).
-4. Optionally receive streaming data on a pub/sub topic configured by 
-   the control interface (telemetry interface)
+3. The authorized application can perform RESTful calls to the gateway
+   in order to establish bidirectional communication to one or more
+   devices. Optionally set up a publish/subcribe topic to receive
+   streaming data from a device (telemetry interface).
+4. Optionally, an application can receive streaming data on a pub/sub 
+   topic configured by the control interface (telemetry interface).
 
 Step 3 and 4 are the subject of this memo.
 
@@ -161,6 +181,13 @@ capitals, as shown here.
 Non-IP Control Functions
 ========================
 
+# Introduction
+
+This section will describe a standardized protocol-agnostic interface 
+that allows the application to establish bi-directional communication 
+with a non-IP device, such as a BLE or Zigbee device. The interface 
+will be supported on a gateway as show in {{arch}}.
+ 
 # Approach
 
 In non-IP protocols such as BLE or Zigbee, a number of basic operations
@@ -169,11 +196,13 @@ this are read and write data. Devices may choose to implement all of the
 operations or a subset. For example in BLE a device may choose to 
 implement a binding, but could also allow connect without a binding. 
 In this memo we have therefore defined a control interface that exposes
-these basic operations with a radio-agnostic schema, with radio 
-technology specific extensions to allow to transmit and receive 
-attributes that are specific to the radio technoligy supported by the 
-device. This allows for extensions to the schema to integrate new 
-non-ip radio technologies, whithout the need to update the base schema.
+these basic operations with a communications protocol-agnostic schema,
+with protocol specific extensions to allow to transmit and receive 
+attributes that are specific to the communications protocol supported 
+by the device. This allows for extensions to the schema to integrate new
+non-ip communications protocols, whithout the need to update the base
+schema.
+
 ~~~~~
 
     ID
@@ -193,9 +222,10 @@ objects as IDs, hence the requirement to declare a device to the gateway
 before addressing a NIPC operation to the device. This can be done by 
 means of SCIM. A NIPC operation can either be performed against a 
 device-id or a group-id. The gateway will leverage information from the 
-SCIM object to onboard the device for a specific radio technology. 
-Please refer to {{!I-D.shahzad-scim-device-model}} for more information
-on SCIM device objects.  
+SCIM object to xecute a specific NIPC operation. For example, keying 
+material found in the SCIM object may be required to connect to ai
+device. Please refer to {{!I-D.shahzad-scim-device-model}} for more 
+information on SCIM device objects.  
 
 Apart from enabling bi-directional communication with non-ip devices,
 NIPC also allows an application to register pub/sub topics in order to
@@ -208,10 +238,10 @@ Control operations refer to either of these as "Object" with an ID as an
 identifier. The common schema for Object is defined as follows:
 
 
-| Attribute     | Req |   Type   |          Example                    |
-+---------------+----------+-------------------------------------------|
+| Attribute     | Req |   Type  |          Example                     |
++---------------+-----+---------+--------------------------------------|
 | id            |  T  |  uuid   | 12345678-1234-5678-1234-56789abcdef4 |
-| objectType    |  T  |  enum   | device                               |
+| type          |  T  |  enum   | device                               |
 | technology    |  F  |  enum   | ble                                  |
 {: #objectdef title="Definition of an Object"}
 
@@ -223,6 +253,74 @@ where-
  - technology is the radio technology extension(s) supported by the 
    device, in this memo either "ble" or "zigbee".
 
+## Protocol extensions
+
+An object can support one or more communications protocols. These 
+attributes must be described in a protocol object, for example a "ble"
+or a "zigbee" object.
+
+| Attribute | Req |   Type  |          Example                         |
++-----------+-----+---------+------------------------------------------|
+| ble       |  T  |  object | an object with BLE-specific attributes   |
+| zigbee    |  T  |  object | an object with Zigbee-specific attributes|
+{: #protext title="Protocol extensions"}
+
+where-
+
+ - "ble" is an object containing attributes that are specific to the BLE
+   protocol.
+ - "zigbee" is an object containing attributes that are specific to the
+   Zigbee protocol.
+ - Other protocol extensions can be added
+
+## Response
+
+As most operations have a common base schema, so do responses. As 
+mandatory, a status is returned, optionally also device id and request id.
+
+Success response:
+| Attribute     | Req |   Type  |           Example                    |
++---------------+-----+---------+--------------------------------------|
+| status        |  T  |  enum   | SUCCESS                              |
+| id            |  F  |  uuid   | 12345678-1234-5678-1234-56789abcdef4 |
+| RequestID     |  F  |  uuid   | abcd0987-1234-5678-1234-56789abcdef4 |
+{: #success title="Base response"}
+
+Failure response:
+| Attribute     | Req |   Type  |           Example                    |
++---------------+-----+---------+--------------------------------------|
+| status        |  T  |  enum   | SUCCESS                              |
+| errorCode     |  T  |  int    | 12                                   |
+| reason        |  T  |  string | "Not Found"                          |
+| RequestID     |  F  |  uuid   | abcd0987-1234-5678-1234-56789abcdef4 |
+{: #failure title="Base response"}
+
+where-
+
+ - status is the status of the request, either "SUCCESS" or "FAILURE". 
+   In case of failure an error code and reason are added
+ - id is the id the operation was executed against, found in the request
+ - RequestID is a correlation ID that can be used for end-to-end 
+   tracing.  
+
+## Categories of operations supported	
+
+The common operations are categorized in common categories that describe 
+high level sets of functionalities. Each of the NIPC operations belong 
+to a category. The categories are:
+ - /connectivity: Allows an application to establish connectivity with
+   a device (if so required by the technology)
+ - /data: Allows applications to exchange data with a device
+ - /registrations: Allows an application to make registrations in the 
+   network, for example to register a pub/sub topic
+ - /extensions: This is a category of operations that leverage basic 
+   connectivity, data or registration operations, but are optimized for
+   application usage, allowing applications to perform functions with a
+   reduced number of round-trips. An example of this is the the bulk
+   operation, allowing to send multiple operations is one operation. 
+   This category also allows for furhter extensions based on the basic 
+   operations.
+
 ## Connecting to the Non-IP Control Interface
 
 NIPC makes use of RESTful HTTP{{!RFC9114}}.  The connection endpoint is
@@ -232,36 +330,402 @@ SCIM object. Similarly authentication of the interface can be specified
 using that SCIM interface. It may be based on a device certificate or 
 an authorization token.
 
-# Control Interface Scheme Elements
+# Connectivity
 
-What follows is a narrative description of each RESTful endpoint
-and the parameters that follow at a coarse level.  Additional information
-may be necessary based on what non-IP technology is in use.  There are
-several groupings available through this model:
+/connectivity
 
- - /connectivity establishes and ends bidirectional communciations
- - /data processes basic protocol operations (reads, writes,
-   subscriptions, and device schema discovery)
- - /registrations registers interest in an MQTT topic for telemetry
- - /bulk handles bulk operations
+Connectivity elements are elements that allow operations that establish
+or tear down associations & connectivity with devices. They also allow
+discovery of services that can be accessed during the connection.
+
+## Binding
+
+/connectivity/binding
+
+The binding element allows an application to request a binding or 
+association to a device.
+
+Operations:
+ - Create binding: POST
+ - Return active bindings: GET
+ - Delete binding: DELETE 
+
+### Create a Binding
+
+Method: POST /connectivity/binding
+
+Description: Creates a binding with a device
+
+Parameters: None
+
+Request Body: an Object
+
+{{ojectdef}}
+
+Response: Success or Failure Response
+
+{{success}}
+
+ - or - 
+
+{{failure}}
+
+### Return active bindings
+
+Method: GET /connectivity/binding
+
+Description: Returns one or more bindings, based on id's provided in
+parameters (none = return all)
+
+Parameters: 
+One of following options:
+ - None: return all bindings this application made
+ - single id: return binding for this id
+ - comma separated ids: return bindings for multiple ids
+
+Response: An Array of bindings
+
+| Attribute     | Req |   Type  |          Example                     |
++---------------+----------+-------------------------------------------|
+| status        |  T  |  enum   | SUCCESS                              |
+| RequestID     |  F  |  uuid   | abcd0987-1234-5678-1234-56789abcdef4 |
+| bindings      |  T  |  array  | Array of BLE or Zigbee ids           |
+{: #bindingresponse title="Binding response"}
+
+ - or - 
+
+{{failure}}
+
+Method: DELETE /connectivity/binding
+
+Description: Delete one or more bindings, based on id's provided in
+parameters
+
+Parameters: 
+One of following options:
+ - None: delete all bindings this application made
+ - single id: delete binding for this id
+ - comma separated ids: delete bindings for multiple ids
+
+Response: Success or Failure Response
+
+{{success}}
+
+ - or - 
+
+{{failure}}
+
+## Binding by id
+
+/connectivity/binding/{id}
+
+The binding by id element allows an application to request a binding or 
+association to a device by id, which provides a simpler interface than 
+standard binding element, but pertains to a single device only.
+
+Operations:
+ - Create binding by id: POST
+ - Return active binding by id: GET
+ - Delete binding by id: DELETE 
+
+### Create a Binding by id
+
+Method: POST /connectivity/binding/{id}
+
+Description: Creates a binding by id 
+
+Parameters: id
+
+Response: Success or Failure Response
+
+{{success}}
+
+ - or - 
+
+{{failure}}
+
+### Return active binding by id
+
+Method: GET /connectivity/binding/{id}
+
+Description: Returns a binding by id 
+Parameters: id
+
+Response: Success or Failure Response
+
+{{success}}
+
+ - or - 
+
+{{failure}}
+
+### Delete binding by id
+
+Method: DELETE /connectivity/binding/{id}
+
+Description: Delete a binding by id
+
+Parameters: id
+
+Response: Success or Failure Response
+
+{{success}}
+
+ - or - 
+
+{{failure}}
 
 
-# Connectivity Elements
+## Connection
 
-Connectivity elements are accessed from this group of operations.
+/connectivity/connection
 
-## /introduce
+The connection element allows an application to request to connect to 
+a device.
 
-This endpoint notifies the network that the device should be
-accessible.  The only operation supported is POST.  A single Object
-is transmitted in the content.  This operation MUST be performed before
-the applications may connect to a device.
+Operations:
+ - Connect to a device: POST
+ - Return active connections: GET
+ - Disconnect a device: DELETE 
 
-### /connection
+### Connect to a device
 
-Devices are New connections are established via the "connection"
-endpoint with POST.  Connections may be removed using DELETE.
-Information about a connection may be retrieved using GET.  /
+Method: POST /connectivity/connection
+
+Description: Connect to a device
+
+Parameters: None
+
+Request Body: an Object, and optionally a set of services to be 
+discovered
+
+{{ojectdef}}
+
+optionally, protocol-specific extensions can be supplied, such as BLE
+selective service discovery. 
+
+{{protext}}
+
+In the case of BLE, service discovery is performed when connecting to a
+device. Optionally service discovery may be limited to services 
+defined in the "ble" protocol extension. The services to be discovered
+can be added in an array, as well as optional caching parameters.
+
+Contents of the BLE protocol extension for limited service discovery:
+| Attribute     | Req |   Type   |          Example                    |
++---------------+----------+-------------------------------------------|
+| services      |  T  |  array  | Array of serviceIDs to be discovered |
+| cached        |  F  | boolean | no                                   |
+| cacheIdlePurge|  F  |   int   | 3600                                 |
+| autoUpdate    |  F  | boolean | yes                                  |
+{: #servdisc title="Service Discovery "}
+
+where:
+
+ - "services"is an array of services defined by their serviceIDs.
+ - "cached" refers to whether the services need to be cached for 
+   subsequent connects, in order not to perform service discovery on
+   ech request.
+ - "cacheIdlepurge" defines how long the cache should be maintained 
+   before purging
+ - some devices support notifications on changes in services, 
+   "autoUpdate" allows the network to update services based on 
+   notification (on by default)
+
+Response: Success with a list of supported services or Failure Response
+
+{{success}}
+
+and an array of services, characteristics and descriptors supported by the
+device.
+~~~~~
+
+    services
+     - serviceID
+	|
+	|> characteristics
+	    - charactericID
+	    - flags
+	       |
+               |> Descriptors
+                   - descriptorID
+
+~~~~~
+{: #services title="Services"}
+
+Attributes in the array of services:
+| Attribute      | Req |  Type  |          Example                     |
++----------------+-----+--------+--------------------------------------|
+| serviceID      |  F  |  uuid  | abcd0987-1234-5678-1234-56789abcdef4 |
+|characteristicID|  F  |  uuid  | abcd0987-1234-5678-1234-56789abcdef4 |
+| flags          |  F  |  enum  | write                                |
+| descriptorID   |  F  |  uuid  | abcd0987-1234-5678-1234-56789abcdef4 |
+{: #servresp title="Service Discovery Response Attributes"}
+
+ - or - 
+
+{{failure}}
+
+### Return active connections
+
+Method: GET /connectivity/connection
+
+Description: Returns one or more active connections, based on id's provided in
+parameters (none = return all)
+
+Parameters: 
+One of following options:
+ - None: return all active connections for this application 
+ - single id: return connection status for this id
+ - comma separated ids: return connection status for multiple ids
+
+Response: An Array of connections
+
+| Attribute     | Req |   Type   |          Example                    |
++---------------+----------+-------------------------------------------|
+| status        |  T  |  enum   | SUCCESS                              |
+| RequestID     |  F  |  uuid   | abcd0987-1234-5678-1234-56789abcdef4 |
+| connections   |  T  |  array  | Array of connections                 |
+{: #connresponse title="Connection response"}
+
+ - or - 
+
+{{failure}}
+
+Method: DELETE /connectivity/connection
+
+Description: Disconnect one or more devices, based on id's provided in
+parameters
+
+Parameters: 
+One of following options:
+ - None: Disconnect all devices for connections this application made
+ - single id: disconnect device with id
+ - comma separated ids: disconnect multiple devices with ids
+
+Response: Success or Failure Response
+
+{{success}}
+
+ - or - 
+
+{{failure}}
+
+## Connections by id
+
+/connectivity/connection/{id}
+
+The connection by id element allows an application to request a
+connection to a device by id, which provides a simpler interface than 
+standard connection element, but pertains to a single device only.
+
+Operations:
+ - Connect device by id: POST
+ - Return connection state by id: GET
+ - Disconnect device by id: DELETE 
+
+### Connect device by id
+
+Method: POST /connectivity/connection/{id}
+
+Description: Creates a connection by id 
+
+Parameters: id
+
+Response: Success or Failure Response
+
+{{success}}
+
+ - or - 
+
+{{failure}}
+
+### Return connection state by id
+
+Method: GET /connectivity/connection/{id}
+
+Description: Returns connection state by id 
+Parameters: id
+
+Response: Success or Failure Response
+
+{{success}}
+
+ - or - 
+
+{{failure}}
+
+### Delete connection by id
+
+Method: DELETE /connectivity/connection/{id}
+
+Description: Delete a binding by id
+
+Parameters: id
+
+Response: Success or Failure Response
+
+{{success}}
+
+ - or - 
+
+{{failure}}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## /data
 
@@ -286,12 +750,12 @@ Here provide a narrative description of the pub/sub interface.
 Security Considerations
 =======================
 
-Too early.
+TBD.
 
 IANA Considerations
 ===================
 
-Too early.
+TBD. 
 
 --- back
 
@@ -307,6 +771,7 @@ the implementor.
 {::include nipc-openapi/NIPC_REST.yaml}
 <CODE ENDS>
 ~~~~~~
+{#openAPI}
 
 Protobufs definitions
 =====================
