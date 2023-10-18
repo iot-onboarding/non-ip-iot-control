@@ -90,6 +90,7 @@ bespoke application integration, a standardized gateway function is
 necessary.
 
 The gateway provides at a minimum the following functions:
+
  - authentication and authorization of application clients that
    will access devices
  - the ability to onboard devices that are entended to be deployed 
@@ -310,6 +311,7 @@ where-
 The common operations are categorized in common categories that describe 
 high level sets of functionalities. Each of the NIPC operations belong 
 to a category. The categories are:
+
  - /connectivity: Allows an application to establish connectivity with
    a device (if so required by the technology)
  - /data: Allows applications to exchange data with a device
@@ -348,6 +350,7 @@ The binding element allows an application to request a binding or
 association to a device.
 
 Operations:
+
  - Create binding: POST
  - Return active bindings: GET
  - Delete binding: DELETE 
@@ -386,6 +389,7 @@ One of following options:
  - comma separated ids: return bindings for multiple ids
 
 Response: An Array of bindings
+
 | Attribute     | Req |   Type  |          Example                     |
 +---------------+----------+-------------------------------------------|
 | status        |  T  |  enum   | SUCCESS                              |
@@ -425,6 +429,7 @@ association to a device by id, which provides a simpler interface than
 standard binding element, but pertains to a single device only.
 
 Operations:
+
  - Create binding by id: POST
  - Return active binding by id: GET
  - Delete binding by id: DELETE 
@@ -485,6 +490,7 @@ The connection element allows an application to request to connect to
 a device.
 
 Operations:
+
  - Connect to a device: POST
  - Return active connections: GET
  - Disconnect a device: DELETE 
@@ -513,14 +519,9 @@ defined in the "ble" protocol extension. The services to be discovered
 can be added in an array, as well as optional caching parameters.
 
 Contents of the BLE protocol extension for limited service discovery:
-<<<<<<< HEAD
+
 | Attribute     | Req |   Type  |          Example                     |
 +---------------+-----+---------+--------------------------------------|
-=======
-
-| Attribute     | Req |   Type   |          Example                    |
-+---------------+----------+-------------------------------------------|
->>>>>>> aa0fc66 (Whitespace fixes to resolve build issues)
 | services      |  T  |  array  | Array of serviceIDs to be discovered |
 | cached        |  F  | boolean | no                                   |
 | cacheIdlePurge|  F  |   int   | 3600                                 |
@@ -698,7 +699,7 @@ cache in case services caching is enabled for a connection.
 Parameters: an Object, and optionally a set of services to be 
 discovered in case not all services should be discovered.
 
-{{ojectdef}}
+{{objectdef}}
 
 optionally, protocol-specific extensions can be supplied, such as BLE
 selective service discovery. 
@@ -748,7 +749,7 @@ does not support partial service discovery, all services are discovered.
 
 Parameters: an Objecti id 
 
-{{ojectdef}}
+{{objectdef}}
 
 Response: Success with a list of supported services or Failure Response
 
@@ -784,6 +785,7 @@ The attribute element allows an application get an attribute value,
 write, update or delete a value. 
 
 Operations:
+
  - Write value: POST
  - Update value: PUT
  - Read value: GET
@@ -799,12 +801,13 @@ Parameters: None
 
 Request Body: an Object, a value and an attribute definition
 
-{{ojectdef}}
+{{objectdef}}
 
 A value to be written:
+
 | Attribute     | Req |   Type  |          Example                     |
 +---------------+-----+---------+--------------------------------------|
-| value         |  T  |  array  | 100				       |
+| value         |  T  |  array  | 100                                  |
 | forcedResponse|  F  | boolean | no                                   |
 {: #value title="Value"}
 
@@ -822,6 +825,7 @@ In the case of BLE, we are writing characteristics, in the case of
 Zigbee, we are writing attributes.
 
 Contents of the BLE protocol extension defining an attribute:
+
 | Attribute      | Req |   Type |          Example                     |
 +----------------+-----+--------+--------------------------------------|
 | serviceID      |  T  |  uuid  | abcd0987-1234-5678-1234-56789abcdef4 |
@@ -836,6 +840,7 @@ where-
  - long is an optional attribute that allows to force a write type
 
 Contents of the Zigbee protocol extension defining an attribute:
+
 | Attribute      | Req |   Type |          Example                     |
 +----------------+-----+--------+--------------------------------------|
 | endpointID     |  T  |  int   | 16                                   |
@@ -872,7 +877,7 @@ Parameters: None
 
 Request Body: an Object, a value and an attribute definition
 
-{{ojectdef}}
+{{objectdef}}
 
 A value to be updated:
 {{value}}
@@ -909,7 +914,7 @@ Description: Reads an attribute from a device
 
 Parameters: An object and an atribute definition
 
-{{ojectdef}}
+{{objectdef}}
 
 Protocol-specific extensions are supplied to identify the attributes to
 be written.
@@ -943,7 +948,7 @@ Description: Clear the value from an attribute of a device
 
 Parameters: An object and an atribute definition
 
-{{ojectdef}}
+{{objectdef}}
 
 Protocol-specific extensions are supplied to identify the attributes to
 be written.
@@ -977,6 +982,7 @@ The subscription element allows an application to ask a device to start
 streaming data attached to a certain attribute.
 
 Operations:
+
  - Start a subscription data stream: POST
  - Update d subscription ata stream value: PUT
  - Get status of a subscription data stream: GET
@@ -994,7 +1000,7 @@ Parameters: None
 Request Body: an Object, an attribute definition and optionally a 
 pub/sub topic to stream data to.
 
-{{ojectdef}}
+{{objectdef}}
 
 Protocol-specific extensions are supplied to identify the attributes to
 be written.
@@ -1011,12 +1017,13 @@ Contents of the Zigbee protocol extension defining an attribute:
 {{zigbeeattr}}
 
 An optional topic to stream to:
+
 | Attribute     | Req |   Type  |          Example                     |
 +---------------+-----+---------+--------------------------------------|
 | topic         |  F  | string  | "enterprise/hospital/pulse"          |
 | dataFormat    |  F  | enum    | "default"                            |
-| replay	|  F  | boolean | no                                   |
-| forced_ack	|  F  | boolean | no                                   |
+| replay        |  F  | boolean | no                                   |
+| forced_ack    |  F  | boolean | no                                   |
 {: #topic title="Topic"}
 
 where-
@@ -1048,7 +1055,7 @@ Parameters: None
 Request Body: an Object, an attribute definition and optionally a 
 pub/sub topic to stream data to.
 
-{{ojectdef}}
+{{objectdef}}
 
 Protocol-specific extensions are supplied to identify the attributes to
 be written.
@@ -1084,7 +1091,7 @@ active, failure if not active
 
 Parameters: An object and an atribute definition, optionally a topic
 
-{{ojectdef}}
+{{objectdef}}
 
 Protocol-specific extensions are supplied to identify the attributes to
 be written.
@@ -1119,7 +1126,7 @@ Description: stops a subscription data stream
 
 Parameters: An object and an atribute definition, optionally a topic
 
-{{ojectdef}}
+{{objectdef}}
 
 Protocol-specific extensions are supplied to identify the attributes to
 be written.
@@ -1154,6 +1161,7 @@ The subscription by id element allows an application to operate on all
 subscriptions of a specific id. 
 
 Operations:
+
  - Return active subscriptions by id: GET
  - Terminate all subscriptions of an id: DELETE 
 
@@ -1171,6 +1179,7 @@ Response: Success with array of subscriptions or Failure Response
 
 And an object called "subscriptions" which contains an Array of active
 subscriptions, each consisting of an: 
+
  - {{objectdef}}
  - Zigbee or BLE specific {{protext}} containing
     - {{bleattr}}
@@ -1194,7 +1203,8 @@ Response: Success with array of subscriptions or Failure Response
 {{success}}
 
 And an object called "subscriptions" which contains an Array of active
-subscriptions, each consisting of an: 
+subscriptions, each consisting of an:  
+
  - {{objectdef}}
  - Zigbee or BLE specific {{protext}} containing
     - {{bleattr}}
@@ -1212,7 +1222,7 @@ subscriptions, each consisting of an:
 The subscription by topic element allows an application to operate on
 all subscriptions of a specific topic. 
 
-Operations:
+Operations: 
  - Return active subscriptions by topic: GET
  - Terminate all subscriptions active on a topic d: DELETE 
 
@@ -1229,7 +1239,8 @@ Response: Success with array of subscriptions or Failure Response
 {{success}}
 
 And an object called "subscriptions" which contains an Array of active
-subscriptions, each consisting of an: 
+subscriptions, each consisting of an:  
+
  - {{objectdef}}
  - Zigbee or BLE specific {{protext}} containing
     - {{bleattr}}
@@ -1253,7 +1264,8 @@ Response: Success with array of subscriptions or Failure Response
 {{success}}
 
 And an object called "subscriptions" which contains an Array of active
-subscriptions, each consisting of an: 
+subscriptions, each consisting of an:  
+
  - {{objectdef}}
  - Zigbee or BLE specific {{protext}} containing
     - {{bleattr}}
@@ -1273,7 +1285,8 @@ The beodcast element allows an application  to broadcast a message to a
 specific device. Note that broadcasts can be heard by other devices on 
 the same L2 network.
 
-Operations:
+Operations:  
+
  - Broadcast message: POST
 
 ### Broadcasting a message 
@@ -1286,15 +1299,16 @@ Parameters: None
 
 Request Body: an Object, broadcast parameters and an attribute definition
 
-{{ojectdef}}
+{{objectdef}}
 
 Broadcast parameters:
+
 | Attribute         | Req |   Type  |          Example                 |
 +-------------------+-----+---------+----------------------------------|
-| cycle        	    |  T  |  enum   | single			       |
+| cycle             |  T  |  enum   | single                           |
 | broadcastTime     |  F  |  int    | 30                               |
 | broadcastInterval |  F  |  int    | 5                                |
-{: #broadcast title="Broadcast parameters"}
+{: #broadcastparams title="Broadcast parameters"}
 
 where-
 
@@ -1311,6 +1325,7 @@ be broadcasted.
 
 Contents of the BLE protocol extension defining an broadcast is an array
 of following attributes:
+
 | Attribute      | Req |   Type |          Example                     |
 +----------------+-----+--------+--------------------------------------|
 | adType         |  T  |  byte  | ff                                   |
@@ -1340,7 +1355,7 @@ operations on devices but register attributes on the gateway that
 support operations, such attributes are topics for data streaming and
 files to write files.
 
-## Topic
+## Topic {#topic-section}
 
 /registration/topic
 
@@ -1391,6 +1406,7 @@ Response: Success or Failure Response
 {{success}}
 
 the topic name that was registered: 
+
 | Attribute     | Req |   Type  |          Example                     |
 +---------------+-----+---------+--------------------------------------|
 | topic         |  T  | string  | "enterprise/hospital/pulse"          |
@@ -1535,7 +1551,8 @@ attributes:
 The topic registration by id element allows an application to get or 
 delete topic registrations for a specific id. 
 
-Operations:
+Operations:  
+
  - Return active topics by id: GET
  - Delete all topics for an id: DELETE 
 
@@ -1552,7 +1569,8 @@ Response: Success with an array of topics or Failure Response
 {{success}}
 
 A topics object with an Array of topics returned, with following
-attributes:
+attributes:  
+
  - the topic name {topicname}
  - the status of the topic {{success}}, with the object id the topic is
    active on 
@@ -1575,7 +1593,8 @@ Response: Success with an array of topics or Failure Response
 {{success}}
 
 A topics object with an Array of topics returned, with following
-attributes:
+attributes:  
+
  - the topic name {topicname}
  - the status of the topic {{success}}, with the object id the topic is
    active on 
@@ -1591,7 +1610,8 @@ attributes:
 The topic registration by data-app element allows an application to get or 
 delete topic registrations for which a specific data-application is registered. 
 
-Operations:
+Operations:  
+
  - Return active topics by data-app: GET
  - Delete all topics for an data-app: DELETE 
 
@@ -1608,7 +1628,8 @@ Response: Success with an array of topics or Failure Response
 {{success}}
 
 A topics object with an Array of topics returned, with following
-attributes:
+attributes:  
+
  - the topic name {topicname}
  - the status of the topic {{success}}, with the object id the topic is
    active on 
@@ -1631,7 +1652,8 @@ Response: Success with an array of topics or Failure Response
 {{success}}
 
 A topics object with an Array of topics returned, with following
-attributes:
+attributes:  
+
  - the topic name {topicname}
  - the status of the topic {{success}}, with the object id the topic is
    active on 
@@ -1647,7 +1669,8 @@ attributes:
 The topic registration by topic element allows an application to get or 
 delete a topic registration by topic name. 
 
-Operations:
+Operations:  
+
  - Return active topics by topic name: GET
  - Delete all topics for a topic name: DELETE 
 
@@ -1688,14 +1711,15 @@ Response: Success with a topic name or Failure Response
 {{failure}}
 
 
-## File
+## File {#file-section}
 
 /registration/file
 
 The file registration element allows an application to register a file.
 a file can be used in operations to devices (such as attribute)
 
-Operations:
+Operations:  
+
  - Register a file: POST
  - Update a file: PUT
  - Check if a file exists: GET
@@ -1712,10 +1736,11 @@ Parameters: None
 Request Body: a file or URL. 
 
 File can be uploaded or referred to as a URL:
+
 | Attribute     | Req |   Type  |          Example                     |
 +---------------+----------+-------------------------------------------|
 | filename      |  T  | string  | "firmware.dat"                       |
-| file 	        |  F  | binary  | file                                 |
+| file          |  F  | binary  | file                                 |
 | bindings      |  F  | string  | "https://domain.com/firmware.dat"    |
 {: #file title="File"}
 
@@ -1761,6 +1786,7 @@ Response: Success with an array of file names or Failure Response
 {{success}}
 
 A filenames object with an Array of file names:
+
 | Attribute     | Req |   Type  |          Example                     |
 +---------------+-----+---------+--------------------------------------|
 | filename      |  T  | string  | "firmware.dat"                       |
@@ -1793,7 +1819,8 @@ Response: Success Failure Response
 The file registration by file name element allows an application to get
 or delete file registrations by file name. 
 
-Operations:
+Operations:  
+
  - Return file registrations by file name: GET
  - Delete file registrations by file name: DELETE
 
@@ -1857,15 +1884,15 @@ protocols, whithout the need to update the base schema.
 
     ID
      - device/group attributes
-	|
-	|> BLE
-	|     - BLE attributes
-	|
+        |
+        |> BLE
+        |     - BLE attributes
+        |
         |> Zigbee
         |     - Zigbee attributes
-	|
+        |
         |> Protocol extension
-	|     - Protocol extension attributes	
+        |     - Protocol extension attributes
 
 ~~~~~
 {: #extschema title="Extended Schema"}
@@ -1878,6 +1905,7 @@ the base objext definition {{objectdef}}
 
 Furhtermore, the protocol objects need to be extended with the new
 protocol as well. Protocol objects will be extended as follows:
+
 | Attribute  | Req |   Type |          Example                         |
 +------------+-----+--------+------------------------------------------|
 | ble        |  T  | object | an object with BLE-specific attributes   |
@@ -1912,7 +1940,8 @@ This extension make use of multiple write operations (attribute post)
 to write an entire file to an attribute. The interface allows the 
 application to define the chunk size.
 
-Operations:
+Operations:  
+
  - Write file: POST
 
 ## Read conditional file
@@ -1922,7 +1951,8 @@ Operations:
 This extension perform a read operation sequentially for a defined 
 amount of time until a specified value is read.
 
-Operations:
+Operations:  
+
  - Read Conditional: POST
 
 ## Bulk
@@ -1930,9 +1960,10 @@ Operations:
 /extension/bulk
 
 This extension allows you to create a compound operation made out of 
-multiple connection and data operations that are to be executed \
+multiple connection and data operations that are to be executed 
 sequentially until they all succeed or there is a failure.
-supported operations are:
+Supported operations are:
+
  - /connectivity/connection/create
  - /connectivity/connection/delete
  - /extension/attribute/read
@@ -1941,7 +1972,8 @@ supported operations are:
  - /extension/attribute/write/blob
  - /extension/attribute/read/conditional
 
-Operations:
+Operations:  
+
  - Bulk: POST
 
 
@@ -1967,7 +1999,8 @@ NIPC operations to communicate with BLE and Zigbee devices.
 In this example, we will onboard a device, and setup an advertisement
 subscription topic for that device.
 
-The sequence of operations for this are:
+The sequence of operations for this are:  
+
  - Onboard a device using the SCIM Interface (out of scope of this
    memo)
  - Register a topic with the device id to subscribe to advertisements
@@ -1980,7 +2013,8 @@ The sequence of operations for this are:
 In this example, we will connect to a BLE device (BLE device does not
 require binding) and read and write from an attribute
 
-The sequence of operations for this are:
+The sequence of operations for this are:  
+
  - Onboard a device using the SCIM Interface (out of scope of this
    memo)
  - Connect to the BLE device
@@ -1997,7 +2031,8 @@ The sequence of operations for this are:
 In this example, we will  bidn a zigbee device to a Zigbee mesh
 and read and write from an attribute
 
-The sequence of operations for this are:
+The sequence of operations for this are:  
+
  - Onboard a device using the SCIM Interface (out of scope of this
    memo)
  - Bind the Zigbee device
@@ -2033,7 +2068,7 @@ the implementor.
 {::include nipc-openapi/NIPC_REST.yaml}
 <CODE ENDS>
 ~~~~~~
-{#openAPI}
+{: #openAPI}
 
 
 Protobuf definition
@@ -2044,8 +2079,8 @@ convenience of the implementor.
 
 ~~~~~~
 <CODE BEGINS>file "data_app.proto"
-{::include proto/NIPC_REST.yaml}
+{::include proto/data_app.proto}
 <CODE ENDS>
 ~~~~~~
-{#proto}
+{: #proto}
 
