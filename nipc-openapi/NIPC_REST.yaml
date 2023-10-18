@@ -2081,12 +2081,8 @@ components:
               format: uuid
               example: 12345678-1234-5678-1234-56789abcdef4
             long:
-              type: string
-              format: boolean
-              example: no
-              enum:
-                - yes # attribute is of type long
-                - no # attrribute is of type normal, default
+              type: boolean
+              example: false
       xml:
         name: BLEAttributes
 
@@ -2392,12 +2388,8 @@ components:
               description: |-
                 If we can cache information, then device doesn't need
                 to be rediscovered before every connected.
-              type: string
-              format: boolean
-              example: no
-              enum:
-                - no #  default
-                - yes
+              type: boolean
+              default: false
             cacheIdlePurge:
               description: cache expiry period, when device allows
               type: integer
@@ -2405,12 +2397,8 @@ components:
             autoUpdate:
               description: |-
                 autoupdate services if device supports it (default)
-              type: string
-              format: boolean
-              example: yes
-              enum:
-                - yes
-                - no
+              type: boolean
+              example: true
           xml:
             name: ble
       xml:
@@ -2461,12 +2449,8 @@ components:
           example: 0001
         forcedResponse:
           description: do or do not wait for a response?
-          type: string
-          format: boolean
-          example: yes
-          enum:
-            - yes
-            - no
+          type: boolean
+          example: true
       xml:
         name: AttributeValue
         
@@ -2485,12 +2469,8 @@ components:
           type: integer
         forcedResponse:
           description: do or do not wait for a response?
-          type: string
-          format: boolean
-          example: yes
-          enum:
-            - yes
-            - no
+          type: boolean
+          example: true
       xml:
         name: AttributeFile
         
@@ -2509,12 +2489,8 @@ components:
           type: integer
         forcedResponse:
           description: do or do not wait for a response?
-          type: string
-          format: boolean
-          example: yes
-          enum:
-            - yes
-            - no
+          type: boolean
+          example: true
       xml:
         name: AttributeFile
         
@@ -2530,11 +2506,15 @@ components:
           type: string
           format: byte
           example: 0001
-        maxtime:
-          description: maximum time the conditional read should run in seconds (default 10 sec, max 60 sec) 
+        maxTime:
+          description: |-
+            maximum time the conditional read should run in seconds 
+            (default 10 sec, max 60 sec) 
           type: integer
-        maxrepeat:
-          description: maximum time the conditional read should repeat (default 5, max 60) 
+        maxRepeat: 
+          description: |-
+           maximum time the conditional read should repeat 
+           (default 5, max 60) 
           type: integer
         frequency:
           description: time between reads in seconds (default 1, max 60) 
@@ -2564,22 +2544,15 @@ components:
             - timestamped
             - payload
         replay:
-          type: string
-          format: boolean
-          example: no
-          enum:
-            - no #default
-            - yes
-        forced_ack:
+          type: boolean
+          example: false
+          default: false
+        forcedAck:
           description: |-
             When not looking at device/attribute support MUST we
             ackhnowledge?
-          type: string
-          format: boolean
-          example: yes
-          enum:
-            - yes
-            - no
+          type: boolean
+          example: true
       xml:
         name: Subscription
 
@@ -2747,12 +2720,9 @@ components:
         autoDisconnect:
           description: |- 
             do we automatically disconnect after a RESTful operation?
-          type: string
-          format: boolean
-          example: no
-          enum:
-            - no
-            - yes # default
+          type: boolean
+          example: true
+          default: true
         operations:
           type: array
           xml:
