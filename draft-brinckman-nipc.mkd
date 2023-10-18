@@ -27,7 +27,7 @@ author:
     city: San Jose
     country: USA
     email: rohitmo@cisco.com
--
+ -
     ins: B. Sanford
     name: Braeden Sanford
     org: Philips
@@ -70,9 +70,9 @@ devices to communicate with the applications that manage them.
 
 ~~~~~
                                                                
-    +-------------+   	         +---------+              +--------+        
+    +-------------+              +---------+              +--------+
     | Application |<------------>| Gateway |<------------>| Non-IP |                     
-    |    app      |   IP-based	 |         |    Non-IP    | Device |
+    |    app      |   IP-based   |         |    Non-IP    | Device |
     +-------------+   Operation  +---------+   Operation  +--------+                 
 
 ~~~~~
@@ -207,10 +207,10 @@ schema.
 
     ID
      - device/group attributes
-	|
-	|> BLE
-	|     - BLE attributes
-	|
+        |
+        |> BLE
+        |     - BLE attributes
+        |
         |> Zigbee
               - Zigbee attributes
 
@@ -279,6 +279,7 @@ As most operations have a common base schema, so do responses. As
 mandatory, a status is returned, optionally also device id and request id.
 
 Success response:
+
 | Attribute     | Req |   Type  |           Example                    |
 +---------------+-----+---------+--------------------------------------|
 | status        |  T  |  enum   | SUCCESS                              |
@@ -287,6 +288,7 @@ Success response:
 {: #success title="Base response"}
 
 Failure response:
+
 | Attribute     | Req |   Type  |           Example                    |
 +---------------+-----+---------+--------------------------------------|
 | status        |  T  |  enum   | SUCCESS                              |
@@ -303,7 +305,7 @@ where-
  - RequestID is a correlation ID that can be used for end-to-end 
    tracing.  
 
-## Categories of operations supported	
+## Categories of operations supported
 
 The common operations are categorized in common categories that describe 
 high level sets of functionalities. Each of the NIPC operations belong 
@@ -360,7 +362,7 @@ Parameters: None
 
 Request Body: an Object
 
-{{ojectdef}}
+{{objectdef}}
 
 Response: Success or Failure Response
 
@@ -498,7 +500,7 @@ Parameters: None
 Request Body: an Object, and optionally a set of services to be 
 discovered
 
-{{ojectdef}}
+{{objectdef}}
 
 optionally, protocol-specific extensions can be supplied, such as BLE
 selective service discovery. 
@@ -511,8 +513,14 @@ defined in the "ble" protocol extension. The services to be discovered
 can be added in an array, as well as optional caching parameters.
 
 Contents of the BLE protocol extension for limited service discovery:
+<<<<<<< HEAD
 | Attribute     | Req |   Type  |          Example                     |
 +---------------+-----+---------+--------------------------------------|
+=======
+
+| Attribute     | Req |   Type   |          Example                    |
++---------------+----------+-------------------------------------------|
+>>>>>>> aa0fc66 (Whitespace fixes to resolve build issues)
 | services      |  T  |  array  | Array of serviceIDs to be discovered |
 | cached        |  F  | boolean | no                                   |
 | cacheIdlePurge|  F  |   int   | 3600                                 |
@@ -537,22 +545,22 @@ Response: Success with a list of supported services or Failure Response
 
 and an array of services, characteristics and descriptors supported by the
 device.
-~~~~~
 
+~~~~~
     services
      - serviceID
-	|
-	|> characteristics
-	    - charactericID
-	    - flags
-	       |
+        |
+        |> characteristics
+            - charactericID
+            - flags
+               |
                |> Descriptors
                    - descriptorID
-
 ~~~~~
 {: #services title="Services"}
 
 Attributes in the array of services:
+
 | Attribute      | Req |  Type  |          Example                     |
 +----------------+-----+--------+--------------------------------------|
 | serviceID      |  F  |  uuid  | abcd0987-1234-5678-1234-56789abcdef4 |
