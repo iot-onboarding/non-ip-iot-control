@@ -141,11 +141,11 @@ The flow of operations are as follows:
 1. The operator of the network deployment authorizes application(s) to
    perform operations on the Gateway. This happens out of band and may
    be accomplished by means of exchanging tokens or public keys. 
-   Authorization can be role-based:
+   Authorization can be role-based:  
    a. Authorize an onboarding appcation against a SCIM endpoint
-   supported by the gateway. 
-   b. Provision and authorize applications that may control devices.
-   c. Provision and authorize applications that may receive telemetry.
+   supported by the gateway.  
+   b. Provision and authorize applications that may control devices.  
+   c. Provision and authorize applications that may receive telemetry.  
 2. The authorized application can now provision one or more devices on
    the gateway leveraging SCIM.
 
@@ -379,7 +379,7 @@ Response: Success or Failure Response
 
 Method: GET /connectivity/binding
 
-Description: Returns one or more bindings, based on id's provided in
+Description: Returns one or more bindings, based on ids provided in
 parameters (none = return all)
 
 Parameters: 
@@ -403,7 +403,7 @@ Response: An Array of bindings
 
 Method: DELETE /connectivity/binding
 
-Description: Delete one or more bindings, based on id's provided in
+Description: Delete one or more bindings, based on ids provided in
 parameters
 
 Parameters: 
@@ -578,7 +578,7 @@ Attributes in the array of services:
 
 Method: GET /connectivity/connection
 
-Description: Returns one or more active connections, based on id's provided in
+Description: Returns one or more active connections, based on ids provided in
 parameters (none = return all)
 
 Parameters: 
@@ -602,7 +602,7 @@ Response: An Array of connections
 
 Method: DELETE /connectivity/connection
 
-Description: Disconnect one or more devices, based on id's provided in
+Description: Disconnect one or more devices, based on ids provided in
 parameters
 
 Parameters: 
@@ -747,7 +747,7 @@ Description: Discover services supported by a device, this updates
 cache in case services caching is enabled for a connection. This method
 does not support partial service discovery, all services are discovered.
 
-Parameters: an Objecti id 
+Parameters: an Object id 
 
 {{objectdef}}
 
