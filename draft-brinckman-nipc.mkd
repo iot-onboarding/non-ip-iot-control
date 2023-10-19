@@ -285,7 +285,7 @@ Success response:
 +---------------+-----+---------+--------------------------------------|
 | status        |  T  |  enum   | SUCCESS                              |
 | id            |  F  |  uuid   | 12345678-1234-5678-1234-56789abcdef4 |
-| RequestID     |  F  |  uuid   | abcd0987-1234-5678-1234-56789abcdef4 |
+| requestID     |  F  |  uuid   | abcd0987-1234-5678-1234-56789abcdef4 |
 {: #success title="Base response"}
 
 Failure response:
@@ -295,7 +295,7 @@ Failure response:
 | status        |  T  |  enum   | SUCCESS                              |
 | errorCode     |  T  |  int    | 12                                   |
 | reason        |  T  |  string | "Not Found"                          |
-| RequestID     |  F  |  uuid   | abcd0987-1234-5678-1234-56789abcdef4 |
+| requestID     |  F  |  uuid   | abcd0987-1234-5678-1234-56789abcdef4 |
 {: #failure title="Base response"}
 
 where-
@@ -303,7 +303,7 @@ where-
  - status is the status of the request, either "SUCCESS" or "FAILURE". 
    In case of failure an error code and reason are added
  - id is the id the operation was executed against, found in the request
- - RequestID is a correlation ID that can be used for end-to-end 
+ - requestID is a correlation ID that can be used for end-to-end 
    tracing.  
 
 ## Categories of operations supported
@@ -371,7 +371,7 @@ Response: Success or Failure Response
 
 {{success}}
 
- - or - 
+ \- or - 
 
 {{failure}}
 
@@ -383,7 +383,9 @@ Description: Returns one or more bindings, based on ids provided in
 parameters (none = return all)
 
 Parameters: 
+
 One of following options:
+
  - None: return all bindings this application made
  - single id: return binding for this id
  - comma separated ids: return bindings for multiple ids
@@ -393,11 +395,11 @@ Response: An Array of bindings
 | Attribute     | Req |   Type  |          Example                     |
 +---------------+----------+-------------------------------------------|
 | status        |  T  |  enum   | SUCCESS                              |
-| RequestID     |  F  |  uuid   | abcd0987-1234-5678-1234-56789abcdef4 |
+| requestID     |  F  |  uuid   | abcd0987-1234-5678-1234-56789abcdef4 |
 | bindings      |  T  |  array  | Array of BLE or Zigbee ids           |
 {: #bindingresponse title="Binding response"}
 
- - or - 
+ \- or - 
 
 {{failure}}
 
@@ -407,7 +409,9 @@ Description: Delete one or more bindings, based on ids provided in
 parameters
 
 Parameters: 
+
 One of following options:
+
  - None: delete all bindings this application made
  - single id: delete binding for this id
  - comma separated ids: delete bindings for multiple ids
@@ -416,7 +420,7 @@ Response: Success or Failure Response
 
 {{success}}
 
- - or - 
+ \- or - 
 
 {{failure}}
 
@@ -446,7 +450,7 @@ Response: Success or Failure Response
 
 {{success}}
 
- - or - 
+ \- or - 
 
 {{failure}}
 
@@ -461,7 +465,7 @@ Response: Success or Failure Response
 
 {{success}}
 
- - or - 
+ \- or - 
 
 {{failure}}
 
@@ -477,7 +481,7 @@ Response: Success or Failure Response
 
 {{success}}
 
- - or - 
+ \- or - 
 
 {{failure}}
 
@@ -570,7 +574,7 @@ Attributes in the array of services:
 | descriptorID   |  F  |  uuid  | abcd0987-1234-5678-1234-56789abcdef4 |
 {: #servresp title="Service Discovery Response Attributes"}
 
- - or - 
+ \- or - 
 
 {{failure}}
 
@@ -582,7 +586,9 @@ Description: Returns one or more active connections, based on ids provided in
 parameters (none = return all)
 
 Parameters: 
+
 One of following options:
+
  - None: return all active connections for this application 
  - single id: return connection status for this id
  - comma separated ids: return connection status for multiple ids
@@ -592,11 +598,11 @@ Response: An Array of connections
 | Attribute     | Req |   Type  |          Example                     |
 +---------------+-----+---------+--------------------------------------|
 | status        |  T  |  enum   | SUCCESS                              |
-| RequestID     |  F  |  uuid   | abcd0987-1234-5678-1234-56789abcdef4 |
+| requestID     |  F  |  uuid   | abcd0987-1234-5678-1234-56789abcdef4 |
 | connections   |  T  |  array  | Array of connections                 |
 {: #connresponse title="Connection response"}
 
- - or - 
+ \- or - 
 
 {{failure}}
 
@@ -606,7 +612,9 @@ Description: Disconnect one or more devices, based on ids provided in
 parameters
 
 Parameters: 
+
 One of following options:
+
  - None: Disconnect all devices for connections this application made
  - single id: disconnect device with id
  - comma separated ids: disconnect multiple devices with ids
@@ -615,7 +623,7 @@ Response: Success or Failure Response
 
 {{success}}
 
- - or - 
+ \- or - 
 
 {{failure}}
 
@@ -628,6 +636,7 @@ connection to a device by id, which provides a simpler interface than
 standard connection element, but pertains to a single device only.
 
 Operations:
+
  - Connect device by id: POST
  - Return connection state by id: GET
  - Disconnect device by id: DELETE 
@@ -644,7 +653,7 @@ Response: Success or Failure Response
 
 {{success}}
 
- - or - 
+ \- or - 
 
 {{failure}}
 
@@ -659,7 +668,7 @@ Response: Success or Failure Response
 
 {{success}}
 
- - or - 
+ \- or - 
 
 {{failure}}
 
@@ -675,7 +684,7 @@ Response: Success or Failure Response
 
 {{success}}
 
- - or - 
+ \- or - 
 
 {{failure}}
 
@@ -687,6 +696,7 @@ The services element allows an application to request a service
 discovery for a device, possibly to update a cache 
 
 Operations:
+
  - Discover services: GET
 
 ### Discover services supported by a device
@@ -725,7 +735,7 @@ Attributes in the array of services:
 
 {{servresp}}
 
- - or - 
+ \- or - 
 
 {{failure}}
 
@@ -737,6 +747,7 @@ The services element allows an application to request a service
 discovery for a device by id, possibly to update a cache 
 
 Operations:
+
  - Discover services by id: GET
 
 ### Discover services supported by a device by id
@@ -764,7 +775,7 @@ Attributes in the array of services:
 
 {{servresp}}
 
- - or - 
+ \- or - 
 
 {{failure}}
 
@@ -863,7 +874,7 @@ Response: Success optionally with value written or Failure Response
 
 {{value}}
 
- - or - 
+ \- or - 
 
 {{failure}}
 
@@ -902,7 +913,7 @@ Response: Success optionally with value written or Failure Response
 
 {{value}}
 
- - or - 
+ \- or - 
 
 {{failure}}
 
@@ -936,7 +947,7 @@ Response: Success optionally with value written or Failure Response
 
 {{value}}
 
- - or - 
+ \- or - 
 
 {{failure}}
 
@@ -970,7 +981,7 @@ Response: Success optionally with current value or Failure Response
 
 {{value}}
 
- - or - 
+ \- or - 
 
 {{failure}}
 
@@ -1039,7 +1050,7 @@ Response: Success or Failure Response
 
 {{success}}
 
- - or - 
+ \- or - 
 
 {{failure}}
 
@@ -1078,7 +1089,7 @@ Response: Success or Failure Response
 
 {{success}}
 
- - or - 
+ \- or - 
 
 {{failure}}
 
@@ -1114,7 +1125,7 @@ Response: Success or Failure Response
 
 {{success}}
 
- - or - 
+ \- or - 
 
 {{failure}}
 
@@ -1149,7 +1160,7 @@ Response: Success or Failure Response
 
 {{success}}
 
- - or - 
+ \- or - 
 
 {{failure}}
 
@@ -1186,7 +1197,7 @@ subscriptions, each consisting of an:
     - {{zigbeeattr}} 
  - an optional {{topic}}
 
- - or - 
+ \- or - 
 
 {{failure}}
 
@@ -1211,7 +1222,7 @@ subscriptions, each consisting of an:
     - {{zigbeeattr}} 
  - an optional {{topic}}
 
- - or - 
+ \- or - 
 
 {{failure}}
 
@@ -1247,7 +1258,7 @@ subscriptions, each consisting of an:
     - {{zigbeeattr}} 
  - an optional {{topic}}
 
- - or - 
+ \- or - 
 
 {{failure}}
 
@@ -1272,7 +1283,7 @@ subscriptions, each consisting of an:
     - {{zigbeeattr}} 
  - an optional {{topic}}
 
- - or - 
+ \- or - 
 
 {{failure}}
 
@@ -1341,7 +1352,7 @@ Response: Success or Failure Response
 
 {{success}}
 
- - or - 
+ \- or - 
 
 {{failure}}
 
@@ -1365,6 +1376,7 @@ or more device(s), the application can then publish streaming data to
 that topic.
 
 Operations:
+
  - Register a topic: POST
  - Update a topic: PUT
  - Get configuration of one or more topics: GET
@@ -1394,6 +1406,7 @@ connection status, or Broadcast (advertisement) data.
 For Zigbee, these are Zigbee attributes.
 
 Contents of the BLE protocol extension defining a topic are:
+
  - A Subscription for {{bleattr}}
  - Device connection state 
  - BLE Advertisement, with an optional filters defined by an array of {{blebcastattr}}
@@ -1412,7 +1425,7 @@ the topic name that was registered:
 | topic         |  T  | string  | "enterprise/hospital/pulse"          |
 {: #topicname title="Topic Name"}
 
- - or - 
+ \- or - 
 
 {{failure}}
 
@@ -1440,6 +1453,7 @@ connection status, or Broadcast (advertisement) data.
 For Zigbee, these are Zigbee attributes.
 
 Contents of the BLE protocol extension defining a topic are:
+
  - A Subscription for {{bleattr}}
  - Device connection state 
  - BLE Advertisement, with an optional filters defined by an array of {{blebcastattr}}
@@ -1453,7 +1467,7 @@ Response: Success or Failure Response
 
 {{topicname}}
 
- - or - 
+ \- or - 
 
 {{failure}}
 
@@ -1479,6 +1493,7 @@ connection status, or Broadcast (advertisement) data.
 For Zigbee, these are Zigbee attributes.
 
 Contents of the BLE protocol extension defining a topic are:
+
  - A Subscription for {{bleattr}}
  - Device connection state 
  - BLE Advertisement, with an optional filters defined by an array of {{blebcastattr}}
@@ -1492,11 +1507,12 @@ Response: Success with an array of topics or Failure Response
 
 A topics object with an Array of topics returned, with following
 attributes:
+
  - the topic name {topicname}
  - the status of the topic {{success}}, with the object id the topic is
    active on 
 
- - or - 
+ \- or - 
 
 {{failure}}
 
@@ -1522,6 +1538,7 @@ connection status, or Broadcast (advertisement) data.
 For Zigbee, these are Zigbee attributes.
 
 Contents of the BLE protocol extension defining a topic are:
+
  - A Subscription for {{bleattr}}
  - Device connection state 
  - BLE Advertisement, with an optional filters defined by an array of 
@@ -1536,11 +1553,12 @@ Response: Success with an array of topics or Failure Response
 
 A topics object with an Array of topics returned, with following
 attributes:
+
  - the topic name {topicname}
  - the status of the topic {{success}}, with the object id the topic is
    active on 
 
- - or - 
+\- or - 
 
 {{failure}}
 
@@ -1575,7 +1593,7 @@ attributes:
  - the status of the topic {{success}}, with the object id the topic is
    active on 
 
- - or - 
+ \- or - 
 
 {{failure}}
 
@@ -1599,7 +1617,7 @@ attributes:
  - the status of the topic {{success}}, with the object id the topic is
    active on 
 
- - or - 
+ \- or - 
 
 {{failure}}
 
@@ -1634,7 +1652,7 @@ attributes:
  - the status of the topic {{success}}, with the object id the topic is
    active on 
 
- - or - 
+ \- or - 
 
 {{failure}}
 
@@ -1658,7 +1676,7 @@ attributes:
  - the status of the topic {{success}}, with the object id the topic is
    active on 
 
- - or - 
+ \- or - 
 
 {{failure}}
 
@@ -1688,7 +1706,7 @@ Response: Success with a topic name or Failure Response
 
 {topicname}
 
- - or - 
+ \- or - 
 
 {{failure}}
 
@@ -1706,7 +1724,7 @@ Response: Success with a topic name or Failure Response
 
 {topicname}
 
- - or - 
+ \- or - 
 
 {{failure}}
 
@@ -1748,7 +1766,7 @@ Response: Success or Failure Response
 
 {{success}}
 
- - or - 
+ \- or - 
 
 {{failure}}
 
@@ -1768,7 +1786,7 @@ Response: Success or Failure Response
 
 {{success}}
 
- - or - 
+ \- or - 
 
 {{failure}}
 
@@ -1792,7 +1810,7 @@ A filenames object with an Array of file names:
 | filename      |  T  | string  | "firmware.dat"                       |
 | id            |  T  |  uuid   | abcd0987-1234-5678-1234-56789abcdef4 |
 
- - or - 
+ \- or - 
 
 {{failure}}
 
@@ -1808,7 +1826,7 @@ Response: Success Failure Response
 
 {{success}}
 
- - or - 
+ \- or - 
 
 {{failure}}
 
@@ -1836,7 +1854,7 @@ Response: Success Failure Response
 
 {{success}}
 
- - or - 
+ \- or - 
 
 {{failure}}
 
@@ -1852,7 +1870,7 @@ Response: Success Failure Response
 
 {{success}}
 
- - or - 
+ \- or - 
 
 {{failure}}
 
