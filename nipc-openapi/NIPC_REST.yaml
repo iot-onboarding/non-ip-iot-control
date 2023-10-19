@@ -28,7 +28,7 @@ info:
   license:
     name: TBD
     url: TBD
-  version: 0.5.0
+  version: 0.5.1
 externalDocs:
   description: NIPC IETF draft
   url: TBD
@@ -629,6 +629,50 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
+                
+  /connectivity/services/{id}:            
+    get:
+      tags:
+        - connectivity
+      summary: Get services by id for a device
+      description: |-
+        Get services by id for a connected device, success when device
+        connected, failure when device not connected 
+      operationId: GetServicesbyId
+      parameters:
+        - name: id
+          in: path
+          description: device or group ids that need to be filtered
+          required: true
+          schema:
+            type: string
+            format: uuid
+            example: 12345678-1234-5678-1234-56789abcdef4
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse' 
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
 
 ### Data
   /data/attribute:
@@ -972,7 +1016,169 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
+
+  /data/subscription/{topic}:    
+    delete:
+      tags:
+        - data
+      summary: delete all active subscriptions by topic
+      description: delete all active subscriptions by topic
+      operationId: deleteSubscriptionbyTopic
+      parameters:
+        - name: topic
+          in: path
+          description: topic that needs to be filtered
+          required: true
+          schema:
+            type: string
+            example: "enterprise/hospital/pulse_oximeter"
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MultiSubscriptionResponse'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/MultiSubscriptionResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse' 
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
                 
+    get:
+      tags:
+        - data
+      summary: get all active subscriptions by topic
+      description: get all active subscriptions by topic
+      operationId: getSubsciptionsbyTopic
+      parameters:
+        - name: topic
+          in: path
+          description: topic that needs to be filtered
+          required: true
+          schema:
+            type: string
+            example: "enterprise/hospital/pulse_oximeter"
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MultiSubscriptionResponse'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/MultiSubscriptionResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MultiSubscriptionResponse' 
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/MultiSubscriptionResponse'
+
+  /data/subscription/{id}:
+    delete:
+      tags:
+        - data
+      summary: delete all subscriptions by id
+      description: delete all subscriptions by id
+      operationId: deleteSubscriptionbyID
+      parameters:
+        - name: id
+          in: path
+          description: object id that needs to be filtered
+          required: true
+          schema:
+            type: string
+            example: 12345678-1234-5678-1234-56789abcdef4
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MultiSubscriptionResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/MultiSubscriptionResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+
+    get:
+      tags:
+        - data
+      summary: get all subscriptions by object id
+      description: get all subscriptions by object id
+      operationId: getSubscriptionbyID
+      parameters:
+        - name: id
+          in: path
+          description: object id that needs to be filtered
+          required: true
+          schema:
+            type: string
+            example: 12345678-1234-5678-1234-56789abcdef4
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MultiSubscriptionResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/MultiSubscriptionResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+  
   /data/broadcast:
     post:
       tags:
@@ -2094,14 +2300,14 @@ components:
       properties:
         ble:
           oneOf:
-            - $ref: '#/components/schemas/BLEGattTopic'
+            - $ref: '#/components/schemas/BLESubTopic'
             - $ref: '#/components/schemas/BLEConnTopic'
             - $ref: '#/components/schemas/BLEAdvTopic'
       xml:
         name: BLETopic
 
 ## BLE Gatt Topic definition
-    BLEGattTopic:
+    BLESubTopic:
       required:
         - type
         - serviceID
@@ -2120,7 +2326,7 @@ components:
           type: string
           example: 12345678-1234-5678-1234-56789abcdef1
       xml:
-        name: BLEGattTopic
+        name: BLESubTopic
 
 ## BLE Connection event Topic definition
     BLEConnTopic:
@@ -2526,8 +2732,6 @@ components:
     Subscription:
       allOf:
         - $ref: '#/components/schemas/Attribute'
-      required:
-        - topic
       type: object
       properties:
         topic:
@@ -2540,7 +2744,7 @@ components:
           type: string
           example: default
           enum:
-            - default # XXX
+            - default # decorated with attribute ids
             - timestamped
             - payload
         replay:
@@ -2569,10 +2773,10 @@ components:
           ble: '#/components/schemas/BleBroadcast'
           zigbee: '#/components/schemas/ZigbeeBroadcast'
       required:
-        - type
+        - cycle
       type: object
       properties:
-        type:
+        cycle:
           type: string
           example: single
           enum:
@@ -2589,29 +2793,11 @@ components:
       xml:
         name: Broadcast
 
-## SCIM Topic
-    SCIMTopic:
-      required:
-        - scim
-      type: object
-      properties:
-        scim:
-          type: object
-          properties:
-            type:
-              type: string
-              example: scim_events
-              enum:
-                - scim_events
-      xml:
-        name: BLETopic
-
 ## DataStream Topic
     Topic:
       oneOf:
         - $ref: '#/components/schemas/BLETopic'
         - $ref: '#/components/schemas/ZigbeeAttributes'
-        - $ref: '#/components/schemas/SCIMTopic'
       discriminator:
         propertyName: technology
         mapping:
@@ -2640,9 +2826,6 @@ components:
           enum:
             - off #default
             - on
-        controlApp:
-          type: string
-          example: https://control-app-1
         dataApps:
           type: array
           xml:
@@ -2685,13 +2868,13 @@ components:
             operation:
               type: string
               enum:
-                - /connectivity/connection/create
-                - /connectivity/connection/delete
-                - /data/attribute/read
-                - /data/attribute/read/conditional
-                - /data/attribute/write
-                - /data/attribute/write/file
-                - /data/attribute/write/blob
+               - /connectivity/connection/create
+               - /connectivity/connection/delete
+               - /extension/attribute/read
+               - /extension/attribute/write
+               - /extension/attribute/write/file
+               - /extension/attribute/write/blob
+               - /extension/attribute/read/conditional
         - oneOf:
             - $ref: '#/components/schemas/Service'
             - $ref: '#/components/schemas/Attribute'
@@ -2703,11 +2886,11 @@ components:
             propertyName: operation
             mapping:
               /connectivity/connection/create: '#/components/schemas/Service'
-              /data/attribute/read: '#/components/schemas/Attribute'
-              /data/attribute/read/conditional: '#/components/schemas/AttributeConditional'
-              /data/attribute/write: '#/components/schemas/AttributeValue'
-              /data/attribute/write/file: '#/components/schemas/AttributeFile'
-              /data/attribute/write/blob: '#/components/schemas/AttributeBlob'
+              /extension/attribute/read: '#/components/schemas/Attribute'
+              /extension/attribute/read/conditional: '#/components/schemas/AttributeConditional'
+              /extension/attribute/write: '#/components/schemas/AttributeValue'
+              /extension/attribute/write/file: '#/components/schemas/AttributeFile'
+              /extension/attribute/write/blob: '#/components/schemas/AttributeBlob'
       xml:
         name: Operation
 
@@ -2917,6 +3100,24 @@ components:
       xml:
         name: MultiTopicsResponse
 
+## Returning multiple subscriptions
+    MultiSubscriptionResponse:
+      allOf:
+        - $ref: '#/components/schemas/Success'
+      required:
+        - subscriptions
+      type: object
+      properties:
+        subscriptions:
+          type: array
+          xml:
+            name: subscriptions
+            wrapped: true
+          items:
+            $ref: '#/components/schemas/Subscription'
+      xml:
+        name: MultiSubscriptionResponse
+        
 ## Returns a file name
     FileResponse:
       allOf:
@@ -2931,7 +3132,7 @@ components:
       xml:
         name: FileResponse
 
-## Returning multiple filne names
+## Returning multiple file names
     MultiFileResponse:
       allOf:
         - $ref: '#/components/schemas/Success'
@@ -2975,10 +3176,13 @@ components:
             operation:
               type: string
               enum:
-                - /connectivity/connect
-                - /connectivity/disconnect
-                - /data/attribute/read
-                - /data/attribute/write
+               - /connectivity/connection/create
+               - /connectivity/connection/delete
+               - /extension/attribute/read
+               - /extension/attribute/write
+               - /extension/attribute/write/file
+               - /extension/attribute/write/blob
+               - /extension/attribute/read/conditional
         - oneOf:
           - $ref: '#/components/schemas/ServiceResponse'
           - $ref: '#/components/schemas/SuccessResponse'
@@ -2986,13 +3190,19 @@ components:
           discriminator:
             propertyName: operation
             mapping:
-              /connectivity/connect: |-
+              /connectivity/connection/create: |-
                 '#/components/schemas/ServiceResponse'
-              /connectivity/disconnect: |-
+              /connectivity/connection/delete: |-
                 '#/components/schemas/SuccessResponse'
-              /data/attribute/read: |-
+              /extension/attribute/read: |-
                 '#/components/schemas/AttributeValueResponse'
-              /data/attribute/write: |-
+              /extension/attribute/write: |-
+                '#/components/schemas/AttributeValueResponse'
+              /extension/attribute/write/file: |-
+                '#/components/schemas/SuccessResponse'
+              /extension/attribute/write/blob: |-
+                '#/components/schemas/SuccessResponse'
+              /extension/attribute/read/conditional: |-
                 '#/components/schemas/AttributeValueResponse'
       xml:
         name: Operation
