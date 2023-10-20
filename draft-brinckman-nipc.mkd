@@ -86,15 +86,15 @@ every use case. The Application interfaces are non-standard. This
 stunts the eco-system growth. At the same time, wireless access points 
 have been deployed nearly everywhere, many of which have soft or 
 separate radios that can transmit and receive different frame types,
-such as {{BLE53}}.  To avoid the need for parallel infrastructure and 
-bespoke application integration, a standardized gateway function is 
-necessary.
+such as {{BLE53}} and {{Zigbee22}}.  To avoid the need for parallel
+infrastructure and bespoke application integration, a standardized 
+gateway function is necessary.
 
 The gateway provides at a minimum the following functions:
 
  - authentication and authorization of application clients that
    will access devices
- - the ability to onboard devices that are entended to be deployed 
+ - the ability to onboard devices that are intended to be deployed 
    within the use case
  - maintenance of an inventory of onboarded devices that are intended to
    access and be accessed by the deployment and applications.
@@ -143,7 +143,7 @@ The flow of operations are as follows:
    perform operations on the Gateway. This happens out of band and may
    be accomplished by means of exchanging tokens or public keys. 
    Authorization can be role-based:  
-   a. Authorize an onboarding appcation against a SCIM endpoint
+   a. Authorize an onboarding application against a SCIM endpoint
    supported by the gateway.  
    b. Provision and authorize applications that may control devices.  
    c. Provision and authorize applications that may receive telemetry.  
@@ -154,8 +154,8 @@ Steps 1 and 2 are not within the scope of this specification, but are
 provided for context.
 
 3. The authorized application can perform RESTful calls to the gateway
-   in order to establish bidirectional communication to one or more
-   devices. Optionally set up a publish/subcribe topic to receive
+   in order to establish bi-directional communication to one or more
+   devices. Optionally, set up a publish/subcribe topic to receive
    streaming data from a device (telemetry interface).
 4. Optionally, an application can receive streaming data on a pub/sub 
    topic configured by the control interface (telemetry interface).
@@ -690,7 +690,7 @@ Failure Response is the standard response as defined in {{failure}}.
 
 /data
 
-Data elements are elements that allow operations that exchange data with
+Data elements are elements that allow operations to exchange data with
 a device. This could be reading or writing attributes or enabling 
 streaming data.
 
@@ -1048,7 +1048,8 @@ where-
    run
  - broadcastInterval is the time between broadcasts in seconds 
 
-Broadcast attributes:
+Protocol-specific extensions are supplied to identify the attributes to 
+be broadcasted.
 
 | Attribute      | Req |   Type |          Example                     |
 +----------------+-----+--------+--------------------------------------|
@@ -1560,7 +1561,7 @@ The sequence of operations for this are:
 
 ## Zigbee Attribute Read/Write
 
-In this example, we will  bidn a zigbee device to a Zigbee mesh
+In this example, we will bind a zigbee device to a Zigbee mesh
 and read and write from an attribute
 
 The sequence of operations for this are:  
@@ -1573,8 +1574,8 @@ The sequence of operations for this are:
    GET /data/attribute 
  - Write to an attribute on the Zigbee device
    POST /data/attribute 
- - Disconnect from the BLE device
-
+ - Disconnect from the Zigbee device
+   DELETE /connectivity/connection
 
 # Security Considerations
 
