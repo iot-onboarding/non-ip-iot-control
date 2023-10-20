@@ -1074,7 +1074,7 @@ operations on devices but register attributes on the gateway that
 support operations, such attributes are topics for data streaming and
 files to write files.
 
-### Topic 
+### Topic registration
 
 /registration/topic
 
@@ -1279,7 +1279,7 @@ defined in {{topicname}}.
 For failed responses see {{failure}}.
 
 
-### File 
+### File registration 
 
 /registration/file
 
