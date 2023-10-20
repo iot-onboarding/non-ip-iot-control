@@ -183,14 +183,12 @@ capitals, as shown here.
 Non-IP Control Functions
 ========================
 
-# Introduction
-
 This section will describe a standardized protocol-agnostic interface 
 that allows the application to establish bi-directional communication 
 with a non-IP device, such as a BLE or Zigbee device. The interface 
 will be supported on a gateway as show in {{arch}}.
  
-# Approach
+## Approach
 
 In non-IP protocols such as BLE or Zigbee, a number of basic operations
 are defined that are similar across protocols. Examples of 
@@ -233,7 +231,7 @@ Apart from enabling bi-directional communication with non-ip devices,
 NIPC also allows an application to register pub/sub topics in order to
 support a programmable data streaming interface. 
 
-## Common base schema
+### Common base schema
 
 As described, most operations are executed against a device or a group.
 Control operations refer to either of these as "Object" with an ID as an
@@ -254,7 +252,7 @@ where-
  - technology is the radio technology extension(s) supported by the 
    device, in this memo either "ble" or "zigbee".
 
-## Protocol extensions
+### Protocol extensions
 
 An object can support one or more communications protocols. These 
 attributes must be described in a protocol object, for example a "ble"
@@ -274,7 +272,7 @@ where-
    Zigbee protocol.
  - Other protocol extensions can be added
 
-## Response
+### Response
 
 As most operations have a common base schema, so do responses. As 
 mandatory, a status is returned, optionally also device id and request id.
@@ -308,7 +306,7 @@ where-
  - errorCode is a numerical value representing the error
  - reason is a human readable explanation of why the error occurred
 
-## Categories of operations supported
+### Categories of operations supported
 
 The common operations are categorized in common categories that describe 
 high level sets of functionalities. Each of the NIPC operations belong 
@@ -327,7 +325,7 @@ to a category. The categories are:
    This category also allows for furhter extensions based on the basic 
    operations.
 
-## Connecting to the Non-IP Control Interface
+### Connecting to the Non-IP Control Interface
 
 NIPC makes use of RESTful HTTP{{!RFC9114}}.  The connection endpoint is
 provided out of band, most likely through the SCIM devices model 
@@ -336,7 +334,7 @@ SCIM object. Similarly authentication of the interface can be specified
 using that SCIM interface. It may be based on a device certificate or 
 an authorization token.
 
-# Connectivity
+## Connectivity
 
 /connectivity
 
@@ -344,7 +342,7 @@ Connectivity elements are elements that allow operations that establish
 or tear down associations & connectivity with devices. They also allow
 discovery of services that can be accessed during the connection.
 
-## Binding
+### Binding
 
 /connectivity/binding
 
@@ -357,7 +355,7 @@ Operations:
  - Return active bindings: GET
  - Delete binding: DELETE 
 
-### Create a Binding
+#### Create a Binding
 
 Method: POST /connectivity/binding
 
@@ -369,15 +367,9 @@ Request Body: an Object
 
 {{objectdef}}
 
-Response: Success or Failure Response
+Response: See {{success}} for success, and {{failure}} for failed responses.
 
-{{success}}
-
- \- or - 
-
-{{failure}}
-
-### Return active bindings
+#### Return active bindings
 
 Method: GET /connectivity/binding
 
@@ -418,15 +410,9 @@ One of following options:
  - single id: delete binding for this id
  - comma separated ids: delete bindings for multiple ids
 
-Response: Success or Failure Response
+Response: See {{success}} for success, and {{failure}} for failed responses.
 
-{{success}}
-
- \- or - 
-
-{{failure}}
-
-## Binding by id
+### Binding by id
 
 /connectivity/binding//id/{id}
 
@@ -440,7 +426,7 @@ Operations:
  - Return active binding by id: GET
  - Delete binding by id: DELETE 
 
-### Create a Binding by id
+#### Create a Binding by id
 
 Method: POST /connectivity/binding/id/{id}
 
@@ -448,30 +434,18 @@ Description: Creates a binding by id
 
 Parameters: id
 
-Response: Success or Failure Response
+Response: See {{success}} for success, and {{failure}} for failed responses.
 
-{{success}}
-
- \- or - 
-
-{{failure}}
-
-### Return active binding by id
+#### Return active binding by id
 
 Method: GET /connectivity/binding//id/{id}
 
 Description: Returns a binding by id 
 Parameters: id
 
-Response: Success or Failure Response
+Response: See {{success}} for success, and {{failure}} for failed responses.
 
-{{success}}
-
- \- or - 
-
-{{failure}}
-
-### Delete binding by id
+#### Delete binding by id
 
 Method: DELETE /connectivity/binding/id/{id}
 
@@ -479,16 +453,9 @@ Description: Delete a binding by id
 
 Parameters: id
 
-Response: Success or Failure Response
+Response: See {{success}} for success, and {{failure}} for failed responses.
 
-{{success}}
-
- \- or - 
-
-{{failure}}
-
-
-## Connection
+### Connection
 
 /connectivity/connection
 
@@ -501,7 +468,7 @@ Operations:
  - Return active connections: GET
  - Disconnect a device: DELETE 
 
-### Connect to a device
+#### Connect to a device
 
 Method: POST /connectivity/connection
 
@@ -580,7 +547,7 @@ Attributes in the array of services:
 
 {{failure}}
 
-### Return active connections
+#### Return active connections
 
 Method: GET /connectivity/connection
 
@@ -621,15 +588,9 @@ One of following options:
  - single id: disconnect device with id
  - comma separated ids: disconnect multiple devices with ids
 
-Response: Success or Failure Response
+Response: See {{success}} for success, and {{failure}} for failed responses.
 
-{{success}}
-
- \- or - 
-
-{{failure}}
-
-## Connections by id
+### Connections by id
 
 /connectivity/connection/id/{id}
 
@@ -643,7 +604,7 @@ Operations:
  - Return connection state by id: GET
  - Disconnect device by id: DELETE 
 
-### Connect device by id
+#### Connect device by id
 
 Method: POST /connectivity/connection/id/{id}
 
@@ -651,30 +612,18 @@ Description: Creates a connection by id
 
 Parameters: id
 
-Response: Success or Failure Response
+Response: See {{success}} for success, and {{failure}} for failed responses.
 
-{{success}}
-
- \- or - 
-
-{{failure}}
-
-### Return connection state by id
+#### Return connection state by id
 
 Method: GET /connectivity/connection/id/{id}
 
 Description: Returns connection state by id 
 Parameters: id
 
-Response: Success or Failure Response
+Response: See {{success}} for success, and {{failure}} for failed responses.
 
-{{success}}
-
- \- or - 
-
-{{failure}}
-
-### Delete connection by id
+#### Delete connection by id
 
 Method: DELETE /connectivity/connection/id/{id}
 
@@ -682,15 +631,9 @@ Description: Delete a binding by id
 
 Parameters: id
 
-Response: Success or Failure Response
+Response: See {{success}} for success, and {{failure}} for failed responses.
 
-{{success}}
-
- \- or - 
-
-{{failure}}
-
-## Discover services supported by a device
+### Discover services supported by a device
 
 /connectivity/services
 
@@ -701,7 +644,7 @@ Operations:
 
  - Discover services: GET
 
-### Discover services supported by a device
+#### Discover services supported by a device
 
 Method: GET /connectivity/service
 
@@ -741,7 +684,7 @@ Attributes in the array of services:
 
 {{failure}}
 
-## Discover services supported by a device by id
+### Discover services supported by a device by id
 
 /connectivity/services/id/{id}
 
@@ -752,7 +695,7 @@ Operations:
 
  - Discover services by id: GET
 
-### Discover services supported by a device by id
+#### Discover services supported by a device by id
 
 Method: GET /connectivity/service/id/{id}
 
@@ -782,7 +725,7 @@ Attributes in the array of services:
 {{failure}}
 
 
-# Data
+## Data
 
 /data
 
@@ -790,7 +733,7 @@ Data elements are elements that allow operations that exchange data with
 a device. This could be reading or writing attributes or enabling 
 streaming data.
 
-## Attribute
+### Attribute
 
 /data/attribute
 
@@ -804,7 +747,7 @@ Operations:
  - Read value: GET
  - Delete value: DELETE 
 
-### Writing a value 
+#### Writing a value 
 
 Method: POST /data/attribute
 
@@ -880,7 +823,7 @@ Response: Success optionally with value written or Failure Response
 
 {{failure}}
 
-### Updating a value 
+#### Updating a value 
 
 Method: PUT /data/attribute
 
@@ -919,7 +862,7 @@ Response: Success optionally with value written or Failure Response
 
 {{failure}}
 
-### Read an attribute
+#### Read an attribute
 
 Method: GET /data/attribute
 
@@ -953,7 +896,7 @@ Response: Success optionally with value written or Failure Response
 
 {{failure}}
 
-### clear the value from an attribute
+#### clear the value from an attribute
 
 Method: DELETE /data/attribute
 
@@ -987,7 +930,7 @@ Response: Success optionally with current value or Failure Response
 
 {{failure}}
 
-## Subscription
+### Subscription
 
 /data/subscription
 
@@ -1001,7 +944,7 @@ Operations:
  - Get status of a subscription data stream: GET
  - Stop a subscription data stream: DELETE 
 
-### Starting a subscription data stream 
+#### Starting a subscription data stream 
 
 Method: POST /data/subscription
 
@@ -1048,15 +991,9 @@ where-
  - forced ack ignores the attribute definition and forces packet ack
    behavior to the device
 
-Response: Success or Failure Response
+Response: See {{success}} for success, and {{failure}} for failed responses.
 
-{{success}}
-
- \- or - 
-
-{{failure}}
-
-### Updating a subscription data stream 
+#### Updating a subscription data stream 
 
 Method: PUT /data/subscription
 
@@ -1087,15 +1024,9 @@ Contents of the Zigbee protocol extension defining an attribute:
 An optional topic to stream to:
 {{topic}}
 
-Response: Success or Failure Response
+Response: See {{success}} for success, and {{failure}} for failed responses.
 
-{{success}}
-
- \- or - 
-
-{{failure}}
-
-### Get status of a subscription data stream
+#### Get status of a subscription data stream
 
 Method: GET /data/subscription
 
@@ -1123,15 +1054,9 @@ Contents of the Zigbee protocol extension defining an attribute:
 An optional topic to stream to:
 {{topic}}
 
-Response: Success or Failure Response
+Response: See {{success}} for success, and {{failure}} for failed responses.
 
-{{success}}
-
- \- or - 
-
-{{failure}}
-
-### stop a subscription data stream
+#### stop a subscription data stream
 
 Method: DELETE /data/subscription
 
@@ -1158,15 +1083,9 @@ Contents of the Zigbee protocol extension defining an attribute:
 An optional topic to stream to:
 {{topic}}
 
-Response: Success or Failure Response
+Response: See {{success}} for success, and {{failure}} for failed responses.
 
-{{success}}
-
- \- or - 
-
-{{failure}}
-
-## Subscriptions by id
+### Subscriptions by id
 
 /data/subscription/id/{id}
 
@@ -1178,7 +1097,7 @@ Operations:
  - Return active subscriptions by id: GET
  - Terminate all subscriptions of an id: DELETE 
 
-### Return active subscriptions by id
+#### Return active subscriptions by id
 
 Method: GET /data/subscription/id/{id}
 
@@ -1203,7 +1122,7 @@ subscriptions, each consisting of:
 
 {{failure}}
 
-### Stop active subscriptions by id
+#### Stop active subscriptions by id
 
 Method: DELETE /data/subscription/id/{id}
 
@@ -1228,7 +1147,7 @@ subscriptions, each consisting of:
 
 {{failure}}
 
-## Subscriptions by topic
+### Subscriptions by topic
 
 /data/subscription/topic/{topic}
 
@@ -1239,7 +1158,7 @@ Operations:
  - Return active subscriptions by topic: GET
  - Terminate all subscriptions active on a topic: DELETE 
 
-### Return active subscriptions by topic
+#### Return active subscriptions by topic
 
 Method: GET /data/subscription/topic/{topic}
 
@@ -1264,7 +1183,7 @@ subscriptions, each consisting of:
 
 {{failure}}
 
-### Stop active subscriptions by topic
+#### Stop active subscriptions by topic
 
 Method: DELETE /data/subscription/topic/{topic}
 
@@ -1290,7 +1209,7 @@ subscriptions, each consisting of:
 {{failure}}
 
 
-## Broadcast
+### Broadcast
 
 /data/broadcast
 
@@ -1302,7 +1221,7 @@ Operations:
 
  - Broadcast message: POST
 
-### Broadcasting a message 
+#### Broadcasting a message 
 
 Method: POST /data/broadcast
 
@@ -1350,16 +1269,9 @@ where-
  - adType is the BLE advertisement attribute type
  - adData is the BLE advertisement attribute data
 
-Response: Success or Failure Response
+Response: See {{success}} for success, and {{failure}} for failed responses.
 
-{{success}}
-
- \- or - 
-
-{{failure}}
-
-
-# Registrations
+## Registrations
 
 /registation
 
@@ -1368,7 +1280,7 @@ operations on devices but register attributes on the gateway that
 support operations, such attributes are topics for data streaming and
 files to write files.
 
-## Topic {#topic-section}
+### Topic {#topic-section}
 
 /registration/topic
 
@@ -1384,7 +1296,7 @@ Operations:
  - Get configuration of one or more topics: GET
  - Delete a topic: DELETE
 
-### Registering a topic
+#### Registering a topic
 
 Method: POST /registration/topic
 
@@ -1431,7 +1343,7 @@ the topic name that was registered:
 
 {{failure}}
 
-### Updating a topic
+#### Updating a topic
 
 Method: PUT /registration/topic
 
@@ -1473,7 +1385,7 @@ Response: Success or Failure Response
 
 {{failure}}
 
-### Get configuration of one or more topics
+#### Get configuration of one or more topics
 
 Method: GET /registration/topic
 
@@ -1518,7 +1430,7 @@ attributes:
 
 {{failure}}
 
-### Delete one or more topics
+#### Delete one or more topics
 
 Method: DELETE /registration/topic
 
@@ -1564,7 +1476,7 @@ attributes:
 
 {{failure}}
 
-## Topic registrations by id
+### Topic registrations by id
 
 /registration/topic/id/{id}
 
@@ -1576,7 +1488,7 @@ Operations:
  - Return active topics by id: GET
  - Delete all topics for an id: DELETE 
 
-### Return active topics by id
+#### Return active topics by id
 
 Method: GET /registration/topic/id/{id}
 
@@ -1599,7 +1511,7 @@ attributes:
 
 {{failure}}
 
-### Delete active topics by id
+#### Delete active topics by id
 
 Method: DELETE /registration/topic/id/{id}
 
@@ -1623,7 +1535,7 @@ attributes:
 
 {{failure}}
 
-## Topic registrations by data app
+### Topic registrations by data app
 
 /registration/topic/data-app/{data-app}
 
@@ -1635,7 +1547,7 @@ Operations:
  - Return active topics by data-app: GET
  - Delete all topics for an data-app: DELETE 
 
-### Return active topics by data-app
+#### Return active topics by data-app
 
 Method: GET /registration/topic/data-app/{data-app}
 
@@ -1658,7 +1570,7 @@ attributes:
 
 {{failure}}
 
-### Delete active topics by data-app
+#### Delete active topics by data-app
 
 Method: DELETE /registration/topic/data-app/{data-app}
 
@@ -1682,7 +1594,7 @@ attributes:
 
 {{failure}}
 
-## Topic registrations by topic name
+### Topic registrations by topic name
 
 /registration/topic/{topic}
 
@@ -1694,7 +1606,7 @@ Operations:
  - Return active topics by topic name: GET
  - Delete all topics for a topic name: DELETE 
 
-### Return active topics by topic name
+#### Return active topics by topic name
 
 Method: GET /registration/topic/{topic}
 
@@ -1712,7 +1624,7 @@ Response: Success with a topic name or Failure Response
 
 {{failure}}
 
-### Delete active topics by topic name
+#### Delete active topics by topic name
 
 Method: DELETE /registration/topic/{topic}
 
@@ -1731,7 +1643,7 @@ Response: Success with a topic name or Failure Response
 {{failure}}
 
 
-## File {#file-section}
+### File {#file-section}
 
 /registration/file
 
@@ -1745,7 +1657,7 @@ Operations:
  - Check if a file exists: GET
  - Delete a file: DELETE
 
-### Registering a file
+#### Registering a file
 
 Method: POST /registration/file
 
@@ -1764,15 +1676,9 @@ File can be uploaded or referred to as a URL:
 | bindings      |  F  | string  | "https://domain.com/firmware.dat"    |
 {: #file title="File"}
 
-Response: Success or Failure Response
+Response: See {{success}} for success, and {{failure}} for failed responses.
 
-{{success}}
-
- \- or - 
-
-{{failure}}
-
-### Updating a file
+#### Updating a file
 
 Method: PUT /registration/file
 
@@ -1784,15 +1690,9 @@ Request Body: a file or URL.
 
 {{file}}
 
-Response: Success or Failure Response
+Response: See {{success}} for success, and {{failure}} for failed responses.
 
-{{success}}
-
- \- or - 
-
-{{failure}}
-
-### check presence of a registered file
+#### check presence of a registered file
 
 Method: GET /registration/file
 
@@ -1816,7 +1716,7 @@ A filenames object with an Array of file names:
 
 {{failure}}
 
-### delete a registered file
+#### delete a registered file
 
 Method: DELETE /registration/file
 
@@ -1832,7 +1732,7 @@ Response: Success Failure Response
 
 {{failure}}
 
-## file registrations by file name
+### file registrations by file name
 
 /registration/file/{filename}
 
@@ -1844,7 +1744,7 @@ Operations:
  - Return file registrations by file name: GET
  - Delete file registrations by file name: DELETE
 
-### Return file registrations by file name
+#### Return file registrations by file name
 
 Method: GET /registration/file/{filename}
 
@@ -1860,7 +1760,7 @@ Response: Success Failure Response
 
 {{failure}}
 
-### Delete file registrations by file name
+#### Delete file registrations by file name
 
 Method: DELETE /registration/file/{filename}
 
@@ -1880,8 +1780,6 @@ Response: Success Failure Response
 NIPC Extensibility
 ==================
 
-# Introduction
-
 NIPC is extensible in two ways:
  
  - Protocol extensions: Protocol extensions can extend NIPC with support
@@ -1891,7 +1789,7 @@ NIPC is extensible in two ways:
    operations for applications.
  
 
-# Protocol extensions
+## Protocol extensions
 
 As described in {{schema}} the NIPC interface supports protocol specific
 extensions that allow bi-directional communication of attributes
@@ -1936,9 +1834,9 @@ protocol as well. Protocol objects will be extended as follows:
 In the new protocol object, protocol specific attributes can be added.
  
 
-# Interface extensions
+## Interface extensions
 
-## Extension category
+### Extension category
 
 /extensions
 
@@ -1953,7 +1851,7 @@ extensions, and we will describe them here at a high level to provide
 some context on other possible extensions.
 
 
-## Write file
+### Write file
 
 /extension/write/file
 
@@ -1965,7 +1863,7 @@ Operations:
 
  - Write file: POST
 
-## Read conditional file
+### Read conditional file
 
 /extension/read/conditional
 
@@ -1976,7 +1874,7 @@ Operations:
 
  - Read Conditional: POST
 
-## Bulk
+### Bulk
 
 /extension/bulk
 
@@ -2009,13 +1907,13 @@ In this memo we propose the data format to be protocol buffers, as
 fully described in the {{proto}} protobuf definition.
 
 
-Examples
-===========================
+# Examples
+
 
 This section contains a few examples on how applications can leverage 
 NIPC operations to communicate with BLE and Zigbee devices.
 
-# BLE Advertisement
+## BLE Advertisement
 
 In this example, we will onboard a device, and setup an advertisement
 subscription topic for that device.
@@ -2029,7 +1927,7 @@ The sequence of operations for this are:
  - Subscribe to the topic from the data receiver app 
    MQTT subscribe topic
 
-# BLE Attribute Read/Write
+## BLE Attribute Read/Write
 
 In this example, we will connect to a BLE device (BLE device does not
 require binding) and read and write from an attribute
@@ -2047,7 +1945,7 @@ The sequence of operations for this are:
  - Disconnect from the BLE device
    DELETE /connectivity/connection 
 
-# Zigbee Attribute Read/Write
+## Zigbee Attribute Read/Write
 
 In this example, we will  bidn a zigbee device to a Zigbee mesh
 and read and write from an attribute
