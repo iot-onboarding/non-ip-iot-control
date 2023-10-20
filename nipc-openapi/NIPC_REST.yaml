@@ -2636,7 +2636,7 @@ components:
       discriminator:
         propertyName: technology
         mapping:
-          ble: '#/components/schemas/BleAttributes'
+          ble: '#/components/schemas/BLEAttributes'
           zigbee: '#/components/schemas/ZigbeeAttributes'
       xml:
         name: Attribute
@@ -2770,7 +2770,7 @@ components:
       discriminator:
         propertyName: technology
         mapping:
-          ble: '#/components/schemas/BleBroadcast'
+          ble: '#/components/schemas/BLEBroadcast'
           zigbee: '#/components/schemas/ZigbeeBroadcast'
       required:
         - cycle
