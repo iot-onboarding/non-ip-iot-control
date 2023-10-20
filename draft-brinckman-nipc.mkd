@@ -486,7 +486,7 @@ Request Body:
    a device. Optionally, service discovery may be limited to services 
    defined in the "ble" protocol extension. The services to be 
    discovered can be added in an array, as well as optional caching 
-   parameters. Please see table below {{servddisc}} for a definition of
+   parameters. Please see table below {{servdisc}} for a definition of
    the content of the BLE protocol extension for limited service 
    discovery 
 
@@ -1337,7 +1337,7 @@ no file name os present in parameters
 
 Parameters: filename 
 
-Response: Success as in {{success} including a "filesnames" object with
+Response: Success as in {{success}} including a "filesnames" object with
 an array of file names as shown in {{filename}} or a Failure Response
 as described in {{failure}}.
 
@@ -1379,7 +1379,7 @@ Description: Checks the presence of a file and returns its name
 
 Parameters: filename
 
-Response: Success as in {{success} including a file name as shown in
+Response: Success as in {{success}} including a file name as shown in
 {{filename}} or a Failure Response as described in {{failure}}.
 
 #### Delete file registrations by file name
