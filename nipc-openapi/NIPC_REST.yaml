@@ -636,8 +636,8 @@ paths:
         - connectivity
       summary: Get services by id for a device
       description: |-
-        Get services by id for a connected device, success when device
-        connected, failure when device not connected 
+        Get services by id for a connected device, success when
+        device connected, failure when device not connected 
       operationId: GetServicesbyId
       parameters:
         - name: id
@@ -1038,10 +1038,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MultiSubscriptionResponse'          
+                $ref: |-
+                   '#/components/schemas/MultiSubscriptionResponse'
             application/xml:
               schema:
-                $ref: '#/components/schemas/MultiSubscriptionResponse'
+                $ref: |-
+                   '#/components/schemas/MultiSubscriptionResponse'
         '400':
           description: Bad request
         '401':
@@ -1053,11 +1055,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse' 
+                $ref: '#/components/schemas/FailureResponse'
             application/xml:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
-                
+
     get:
       tags:
         - data
@@ -1078,10 +1080,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MultiSubscriptionResponse'          
+                $ref: |-
+                   '#/components/schemas/MultiSubscriptionResponse'
             application/xml:
               schema:
-                $ref: '#/components/schemas/MultiSubscriptionResponse'
+                $ref: |-
+                   '#/components/schemas/MultiSubscriptionResponse'
         '400':
           description: Bad request
         '401':
@@ -1093,10 +1097,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MultiSubscriptionResponse' 
+                $ref: |-
+                   '#/components/schemas/MultiSubscriptionResponse'
             application/xml:
               schema:
-                $ref: '#/components/schemas/MultiSubscriptionResponse'
+                $ref: |-
+                   '#/components/schemas/MultiSubscriptionResponse'
 
   /data/subscription/id/{id}:
     delete:
@@ -1119,10 +1125,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MultiSubscriptionResponse'
+                $ref: |-
+                   '#/components/schemas/MultiSubscriptionResponse'
             application/xml:
               schema:
-                $ref: '#/components/schemas/MultiSubscriptionResponse'
+                $ref: |-
+                   '#/components/schemas/MultiSubscriptionResponse'
         '400':
           description: Bad request
         '401':
@@ -1159,10 +1167,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MultiSubscriptionResponse'
+                $ref: |-
+                   '#/components/schemas/MultiSubscriptionResponse'
             application/xml:
               schema:
-                $ref: '#/components/schemas/MultiSubscriptionResponse'
+                $ref: |-
+                   '#/components/schemas/MultiSubscriptionResponse'
         '400':
           description: Bad request
         '401':
@@ -1178,7 +1188,7 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
-  
+
   /data/broadcast:
     post:
       tags:
@@ -1204,7 +1214,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessResponse'          
+                $ref: '#/components/schemas/SuccessResponse'
             application/xml:
               schema:
                 $ref: '#/components/schemas/SuccessResponse'
@@ -1213,13 +1223,13 @@ paths:
         '401':
           description: Unauthorized
         '405':
-          description: Invalid request       
+          description: Invalid request
         '500':
           description: Server-side failure
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse' 
+                $ref: '#/components/schemas/FailureResponse'
             application/xml:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
@@ -1250,7 +1260,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TopicResponse'          
+                $ref: '#/components/schemas/TopicResponse'
             application/xml:
               schema:
                 $ref: '#/components/schemas/TopicResponse'
@@ -1259,17 +1269,17 @@ paths:
         '401':
           description: Unauthorized
         '405':
-          description: Invalid request 
+          description: Invalid request
         '500':
           description: Server-side failure
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse' 
+                $ref: '#/components/schemas/FailureResponse'
             application/xml:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
-    
+
     put:
       tags:
         - registrations
@@ -1294,7 +1304,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TopicResponse'          
+                $ref: '#/components/schemas/TopicResponse'
             application/xml:
               schema:
                 $ref: '#/components/schemas/TopicResponse'
@@ -1303,17 +1313,17 @@ paths:
         '401':
           description: Unauthorized
         '405':
-          description: Invalid request 
+          description: Invalid request
         '500':
           description: Server-side failure
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse' 
+                $ref: '#/components/schemas/FailureResponse'
             application/xml:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
-                
+
     delete:
       tags:
         - registrations
@@ -1353,11 +1363,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse' 
+                $ref: '#/components/schemas/FailureResponse'
             application/xml:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
-        
+
     get:
       tags:
         - registrations
@@ -1365,7 +1375,7 @@ paths:
       description: |-
         unregister a publish/subscribe topic, Multiple topics can be
         provided with comma separate strings, or a group id can be
-        provided 
+        provided
       operationId: getTopic
       parameters:
         - name: topic
@@ -1397,12 +1407,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse' 
+                $ref: '#/components/schemas/FailureResponse'
             application/xml:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
-                
-  /registration/topic/{topic}:    
+
+  /registration/topic/{topic}:
     delete:
       tags:
         - registrations
@@ -1423,7 +1433,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TopicResponse'          
+                $ref: '#/components/schemas/TopicResponse'
             application/xml:
               schema:
                 $ref: '#/components/schemas/TopicResponse'
@@ -1438,11 +1448,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse' 
+                $ref: '#/components/schemas/FailureResponse'
             application/xml:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
-                
+
     get:
       tags:
         - registrations
@@ -1463,7 +1473,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TopicResponse'          
+                $ref: '#/components/schemas/TopicResponse'
             application/xml:
               schema:
                 $ref: '#/components/schemas/TopicResponse'
@@ -1478,12 +1488,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse' 
+                $ref: '#/components/schemas/FailureResponse'
             application/xml:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
 
-  /registration/topic/data-app/{data-app}:    
+  /registration/topic/data-app/{data-app}:
     delete:
       tags:
         - registrations
@@ -1671,7 +1681,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessResponse'          
+                $ref: '#/components/schemas/SuccessResponse'
             application/xml:
               schema:
                 $ref: '#/components/schemas/SuccessResponse'
@@ -1680,17 +1690,17 @@ paths:
         '401':
           description: Unauthorized
         '405':
-          description: Invalid request 
+          description: Invalid request
         '500':
           description: Server-side failure
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse' 
+                $ref: '#/components/schemas/FailureResponse'
             application/xml:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
-    
+
     put:
       tags:
         - registrations
@@ -1715,7 +1725,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessResponse'          
+                $ref: '#/components/schemas/SuccessResponse'
             application/xml:
               schema:
                 $ref: '#/components/schemas/SuccessResponse'
@@ -1724,17 +1734,17 @@ paths:
         '401':
           description: Unauthorized
         '405':
-          description: Invalid request 
+          description: Invalid request
         '500':
           description: Server-side failure
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse' 
+                $ref: '#/components/schemas/FailureResponse'
             application/xml:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
-                
+
     delete:
       tags:
         - registrations
@@ -1771,16 +1781,18 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse' 
+                $ref: '#/components/schemas/FailureResponse'
             application/xml:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
-        
+
     get:
       tags:
         - registrations
       summary: get a file
-      description: get a file by name of get all files if no names supplied
+      description: |-
+        get a file by name of get all files if no names
+        supplied.
       operationId: getFile
       parameters:
         - name: filename
@@ -1812,11 +1824,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse' 
+                $ref: '#/components/schemas/FailureResponse'
             application/xml:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
-                
+
   /registration/file/{filename}:
     delete:
       tags:
@@ -1905,10 +1917,10 @@ paths:
         - extensions
       summary: |-
         Connect a device to the network, optionally with service
-        discovery 
+        discovery
       description: |-
         Connect a device to the network, optionally with service
-        discovery 
+        discovery
       operationId: ExtConnect
       requestBody:
         content:
@@ -1928,7 +1940,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ServiceResponse'          
+                $ref: '#/components/schemas/ServiceResponse'
             application/xml:
               schema:
                 $ref: '#/components/schemas/ServiceResponse'
@@ -1943,21 +1955,21 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse' 
+                $ref: '#/components/schemas/FailureResponse'
             application/xml:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
-                
+
   /extension/connection/delete:
     post:
       tags:
         - extensions
       summary: |-
         Connect a device to the network, optionally with service
-        discovery 
+        discovery
       description: |-
         Connect a device to the network, optionally with service
-        discovery 
+        discovery
       operationId: ExtDisconnect
       requestBody:
         content:
@@ -1977,7 +1989,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessResponse'          
+                $ref: '#/components/schemas/SuccessResponse'
             application/xml:
               schema:
                 $ref: '#/components/schemas/SuccessResponse'
@@ -1992,11 +2004,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse' 
+                $ref: '#/components/schemas/FailureResponse'
             application/xml:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
-                
+
   /extension/attribute/write:
     post:
       tags:
@@ -2031,23 +2043,24 @@ paths:
         '401':
           description: Unauthorized
         '405':
-          description: Invalid request       
+          description: Invalid request
         '500':
           description: Server-side failure
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse' 
+                $ref: '#/components/schemas/FailureResponse'
             application/xml:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
-                
+
   /extension/attribute/write/file:
     post:
       tags:
         - extensions
       summary: Write a file to an attribute across multiple writes
-      description: Write a file to an attribute across multiple writes
+      description: |-
+        Write a file to an attribute across multiple writes
       operationId: dataWriteFile
       requestBody:
         content:
@@ -2076,23 +2089,25 @@ paths:
         '401':
           description: Unauthorized
         '405':
-          description: Invalid request       
+          description: Invalid request
         '500':
           description: Server-side failure
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse' 
+                $ref: '#/components/schemas/FailureResponse'
             application/xml:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
-                
+
   /extension/attribute/write/blob:
     post:
       tags:
         - extensions
-      summary: Write a binary blob to an attribute across multiple writes
-      description: Write a binary blob to an attribute across multiple writes
+      summary: |-
+        Write a binary blob to an attribute across multiple writes
+      description: |-
+        Write a binary blob to an attribute across multiple writes
       operationId: dataWriteBlob
       requestBody:
         content:
@@ -2121,17 +2136,17 @@ paths:
         '401':
           description: Unauthorized
         '405':
-          description: Invalid request       
+          description: Invalid request
         '500':
           description: Server-side failure
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse' 
+                $ref: '#/components/schemas/FailureResponse'
             application/xml:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
-  
+
   /extension/attribute/read:
     post:
       tags:
@@ -2166,23 +2181,27 @@ paths:
         '401':
           description: Unauthorized
         '405':
-          description: Invalid request       
+          description: Invalid request
         '500':
           description: Server-side failure
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse' 
+                $ref: '#/components/schemas/FailureResponse'
             application/xml:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
-  
+
   /extension/attribute/read/conditional:
     post:
       tags:
         - extensions
-      summary: Read a value from attribute on a device until it matches a specific value
-      description: Read a value from attribute on a device until it matches a specific value
+      summary: |-
+        Read a value from attribute on a device until it matches a
+        specific value.
+      description: |-
+        Read a value from attribute on a device until it matches a
+        specific value.
       operationId: dataReadCond
       requestBody:
         content:
@@ -2211,13 +2230,13 @@ paths:
         '401':
           description: Unauthorized
         '405':
-          description: Invalid request       
+          description: Invalid request
         '500':
           description: Server-side failure
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse' 
+                $ref: '#/components/schemas/FailureResponse'
             application/xml:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
@@ -2757,7 +2776,7 @@ components:
           example: true
       xml:
         name: AttributeValue
-        
+
 ## A file-based attribute of an Device
     AttributeFile:
       allOf:
@@ -2777,7 +2796,7 @@ components:
           example: true
       xml:
         name: AttributeFile
-        
+
 ## A binary blob-based attribute of an Device
     AttributeBlob:
       allOf:
@@ -2797,7 +2816,7 @@ components:
           example: true
       xml:
         name: AttributeFile
-        
+
 ## Conditional read of a value (read until specific value is read)
     AttributeConditional:
       allOf:
@@ -2812,16 +2831,17 @@ components:
           example: 0001
         maxTime:
           description: |-
-            maximum time the conditional read should run in seconds 
-            (default 10 sec, max 60 sec) 
+            maximum time the conditional read should run in seconds
+            (default 10 sec, max 60 sec)
           type: integer
-        maxRepeat: 
+        maxRepeat:
           description: |-
-           maximum time the conditional read should repeat 
-           (default 5, max 60) 
+           maximum time the conditional read should repeat
+           (default 5, max 60)
           type: integer
         frequency:
-          description: time between reads in seconds (default 1, max 60) 
+          description: |-
+            time between reads in seconds (default 1, max 60)
           type: integer
       xml:
         name: AttributeConditional
@@ -2837,7 +2857,7 @@ components:
           example: enterprise/hospital/pulse_oximeter
         dataFormat:
           description: |-
-            how is information decorated? default: timestamped and 
+            how is information decorated? default: timestamped and
             attribute ids.
           type: string
           example: default
@@ -2937,7 +2957,7 @@ components:
                 example: https://data-app-1
       xml:
         name: Topic
-        
+
 ## File
     File:
       required:
@@ -2983,12 +3003,18 @@ components:
           discriminator:
             propertyName: operation
             mapping:
-              /extension/connection/create: '#/components/schemas/Service'
-              /extension/attribute/read: '#/components/schemas/Attribute'
-              /extension/attribute/read/conditional: '#/components/schemas/AttributeConditional'
-              /extension/attribute/write: '#/components/schemas/AttributeValue'
-              /extension/attribute/write/file: '#/components/schemas/AttributeFile'
-              /extension/attribute/write/blob: '#/components/schemas/AttributeBlob'
+              /extension/connection/create: |-
+                '#/components/schemas/Service'
+              /extension/attribute/read: |-
+                '#/components/schemas/Attribute'
+              /extension/attribute/read/conditional: |-
+                '#/components/schemas/AttributeConditional'
+              /extension/attribute/write: |-
+                '#/components/schemas/AttributeValue'
+              /extension/attribute/write/file: |-
+                '#/components/schemas/AttributeFile'
+              /extension/attribute/write/blob: |-
+                '#/components/schemas/AttributeBlob'
       xml:
         name: Operation
 
@@ -2999,7 +3025,7 @@ components:
       type: object
       properties:
         autoDisconnect:
-          description: |- 
+          description: |-
             do we automatically disconnect after a RESTful operation?
           type: boolean
           example: true
@@ -3215,7 +3241,7 @@ components:
             $ref: '#/components/schemas/Subscription'
       xml:
         name: MultiSubscriptionResponse
-        
+
 ## Returns a file name
     FileResponse:
       allOf:
