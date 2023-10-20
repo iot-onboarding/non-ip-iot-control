@@ -79,7 +79,7 @@ devices to communicate with the applications that manage them.
 {: #gw title="Gateway for non-IP Devices"}
 
 In abscence of a standard describing how applications communicate with 
-suchnon-IP devices, vertically integrated infrastructure prolifilates
+such non-IP devices, vertically integrated infrastructure prolifilates
 and applications have bespoke integrations with that infrastructure for 
 every use case. The Application interfaces are non-standard. This 
 stunts the eco-system growth. At the same time, wireless access points 
@@ -131,10 +131,10 @@ communication with non-IP devices.
 
 {{arch}} shows us the application layer gateway (ALG), an access
 point (AP), and a device (D) in the enterprise environment.  The role
-of the ALG is to provide a gateway to non-IP devices connecting into 
-one or more AP. Applications implementing this memo can leverage RESTful
-interfaces to communicate with these devices and subscribe to streaming 
-data or broadcasts levering MQTT.
+of the ALG is to provide a application gateway to non-IP devices
+connecting into one or more AP. Applications implementing this memo can
+leverage RESTful interfaces to communicate with these devices and 
+subscribe to streaming data or broadcasts levering MQTT.
 
 The flow of operations are as follows:
 
@@ -223,8 +223,8 @@ objects as IDs, hence the requirement to declare a device to the gateway
 before addressing a NIPC operation to the device. This can be done by 
 means of SCIM. A NIPC operation can either be performed against a 
 device-id or a group-id. The gateway will leverage information from the 
-SCIM object to xecute a specific NIPC operation. For example, keying 
-material found in the SCIM object may be required to connect to ai
+SCIM object to execute a specific NIPC operation. For example, keying 
+material found in the SCIM object may be required to connect to a
 device. Please refer to {{!I-D.shahzad-scim-device-model}} for more 
 information on SCIM device objects.  
 
@@ -250,7 +250,7 @@ where-
 
  - id is the id returned in the response when registering a device 
    against a SCIM server.
- - objectType is either "group" or "device".
+ - type is either "group" or "device".
  - technology is the radio technology extension(s) supported by the 
    device, in this memo either "ble" or "zigbee".
 
@@ -305,6 +305,8 @@ where-
  - id is the id the operation was executed against, found in the request
  - requestID is a correlation ID that can be used for end-to-end 
    tracing.  
+ - errorCode is a numerical value representing the error
+ - reason is a human readable explanation of why the error occurred
 
 ## Categories of operations supported
 
@@ -426,7 +428,7 @@ Response: Success or Failure Response
 
 ## Binding by id
 
-/connectivity/binding/{id}
+/connectivity/binding//id/{id}
 
 The binding by id element allows an application to request a binding or 
 association to a device by id, which provides a simpler interface than 
@@ -440,7 +442,7 @@ Operations:
 
 ### Create a Binding by id
 
-Method: POST /connectivity/binding/{id}
+Method: POST /connectivity/binding/id/{id}
 
 Description: Creates a binding by id 
 
@@ -456,7 +458,7 @@ Response: Success or Failure Response
 
 ### Return active binding by id
 
-Method: GET /connectivity/binding/{id}
+Method: GET /connectivity/binding//id/{id}
 
 Description: Returns a binding by id 
 Parameters: id
@@ -471,7 +473,7 @@ Response: Success or Failure Response
 
 ### Delete binding by id
 
-Method: DELETE /connectivity/binding/{id}
+Method: DELETE /connectivity/binding/id/{id}
 
 Description: Delete a binding by id
 
@@ -629,7 +631,7 @@ Response: Success or Failure Response
 
 ## Connections by id
 
-/connectivity/connection/{id}
+/connectivity/connection/id/{id}
 
 The connection by id element allows an application to request a
 connection to a device by id, which provides a simpler interface than 
@@ -643,7 +645,7 @@ Operations:
 
 ### Connect device by id
 
-Method: POST /connectivity/connection/{id}
+Method: POST /connectivity/connection/id/{id}
 
 Description: Creates a connection by id 
 
@@ -659,7 +661,7 @@ Response: Success or Failure Response
 
 ### Return connection state by id
 
-Method: GET /connectivity/connection/{id}
+Method: GET /connectivity/connection/id/{id}
 
 Description: Returns connection state by id 
 Parameters: id
@@ -674,7 +676,7 @@ Response: Success or Failure Response
 
 ### Delete connection by id
 
-Method: DELETE /connectivity/connection/{id}
+Method: DELETE /connectivity/connection/id/{id}
 
 Description: Delete a binding by id
 
@@ -741,7 +743,7 @@ Attributes in the array of services:
 
 ## Discover services supported by a device by id
 
-/connectivity/services/{id}
+/connectivity/services/id/{id}
 
 The services element allows an application to request a service 
 discovery for a device by id, possibly to update a cache 
@@ -752,7 +754,7 @@ Operations:
 
 ### Discover services supported by a device by id
 
-Method: GET /connectivity/service/{id}
+Method: GET /connectivity/service/id/{id}
 
 Description: Discover services supported by a device, this updates 
 cache in case services caching is enabled for a connection. This method
@@ -995,7 +997,7 @@ streaming data attached to a certain attribute.
 Operations:
 
  - Start a subscription data stream: POST
- - Update d subscription ata stream value: PUT
+ - Update a subscription data stream value: PUT
  - Get status of a subscription data stream: GET
  - Stop a subscription data stream: DELETE 
 
@@ -1058,7 +1060,7 @@ Response: Success or Failure Response
 
 Method: PUT /data/subscription
 
-Description: Update parameters of a sibscription data stream pertaining
+Description: Update parameters of a subscription data stream pertaining
 to a specific attribute
 
 Parameters: None
@@ -1166,7 +1168,7 @@ Response: Success or Failure Response
 
 ## Subscriptions by id
 
-/data/subscription/{id}
+/data/subscription/id/{id}
 
 The subscription by id element allows an application to operate on all
 subscriptions of a specific id. 
@@ -1178,7 +1180,7 @@ Operations:
 
 ### Return active subscriptions by id
 
-Method: GET /data/subscription/{id}
+Method: GET /data/subscription/id/{id}
 
 Description: Returns connection state by id 
 
@@ -1203,7 +1205,7 @@ subscriptions, each consisting of an:
 
 ### Stop active subscriptions by id
 
-Method: DELETE /data/subscription/{id}
+Method: DELETE /data/subscription/id/{id}
 
 Description: Delete active subscriptions for an id 
 
@@ -1228,18 +1230,18 @@ subscriptions, each consisting of an:
 
 ## Subscriptions by topic
 
-/data/subscription/{topic}
+/data/subscription/topic/{topic}
 
 The subscription by topic element allows an application to operate on
 all subscriptions of a specific topic. 
 
 Operations: 
  - Return active subscriptions by topic: GET
- - Terminate all subscriptions active on a topic d: DELETE 
+ - Terminate all subscriptions active on a topic: DELETE 
 
 ### Return active subscriptions by topic
 
-Method: GET /data/subscription/{topic}
+Method: GET /data/subscription/topic/{topic}
 
 Description: Returns connection state by topic 
 
@@ -1264,7 +1266,7 @@ subscriptions, each consisting of an:
 
 ### Stop active subscriptions by topic
 
-Method: DELETE /data/subscription/{topic}
+Method: DELETE /data/subscription/topic/{topic}
 
 Description: Delete all active subscriptions for a topic 
 
@@ -1292,7 +1294,7 @@ subscriptions, each consisting of an:
 
 /data/broadcast
 
-The beodcast element allows an application  to broadcast a message to a
+The broadcast element allows an application to broadcast a message to a
 specific device. Note that broadcasts can be heard by other devices on 
 the same L2 network.
 
@@ -1554,7 +1556,7 @@ Response: Success with an array of topics or Failure Response
 A topics object with an Array of topics returned, with following
 attributes:
 
- - the topic name {topicname}
+ - the topic name {{topicname}}
  - the status of the topic {{success}}, with the object id the topic is
    active on 
 
@@ -1564,7 +1566,7 @@ attributes:
 
 ## Topic registrations by id
 
-/registration/topic/{id}
+/registration/topic/id/{id}
 
 The topic registration by id element allows an application to get or 
 delete topic registrations for a specific id. 
@@ -1576,7 +1578,7 @@ Operations:
 
 ### Return active topics by id
 
-Method: GET /registration/topic/{id}
+Method: GET /registration/topic/id/{id}
 
 Description: Returns active topics by id 
 
@@ -1589,7 +1591,7 @@ Response: Success with an array of topics or Failure Response
 A topics object with an Array of topics returned, with following
 attributes:  
 
- - the topic name {topicname}
+ - the topic name {{topicname}}
  - the status of the topic {{success}}, with the object id the topic is
    active on 
 
@@ -1599,7 +1601,7 @@ attributes:
 
 ### Delete active topics by id
 
-Method: DELETE /registration/topic/{id}
+Method: DELETE /registration/topic/id/{id}
 
 Description: Deletes active topics by id, will delete all topics that
 are associated with a specific object id. 
@@ -1613,7 +1615,7 @@ Response: Success with an array of topics or Failure Response
 A topics object with an Array of topics returned, with following
 attributes:  
 
- - the topic name {topicname}
+ - the topic name {{topicname}}
  - the status of the topic {{success}}, with the object id the topic is
    active on 
 
@@ -1623,7 +1625,7 @@ attributes:
 
 ## Topic registrations by data app
 
-/registration/topic/{data-app}
+/registration/topic/data-app/{data-app}
 
 The topic registration by data-app element allows an application to get or 
 delete topic registrations for which a specific data-application is registered. 
@@ -1635,7 +1637,7 @@ Operations:
 
 ### Return active topics by data-app
 
-Method: GET /registration/topic/{data-app}
+Method: GET /registration/topic/data-app/{data-app}
 
 Description: Returns active topics by data-app 
 
@@ -1648,7 +1650,7 @@ Response: Success with an array of topics or Failure Response
 A topics object with an Array of topics returned, with following
 attributes:  
 
- - the topic name {topicname}
+ - the topic name {{topicname}}
  - the status of the topic {{success}}, with the object id the topic is
    active on 
 
@@ -1658,7 +1660,7 @@ attributes:
 
 ### Delete active topics by data-app
 
-Method: DELETE /registration/topic/{data-app}
+Method: DELETE /registration/topic/data-app/{data-app}
 
 Description: Deletes active topics by data-app, will delete all topics the
 specified data app is registered for. 
@@ -1672,7 +1674,7 @@ Response: Success with an array of topics or Failure Response
 A topics object with an Array of topics returned, with following
 attributes:  
 
- - the topic name {topicname}
+ - the topic name {{topicname}}
  - the status of the topic {{success}}, with the object id the topic is
    active on 
 
@@ -1704,7 +1706,7 @@ Response: Success with a topic name or Failure Response
 
 {{success}}
 
-{topicname}
+{{topicname}}
 
  \- or - 
 
@@ -1722,7 +1724,7 @@ Response: Success with a topic name or Failure Response
 
 {{success}}
 
-{topicname}
+{{topicname}}
 
  \- or - 
 
@@ -1878,7 +1880,6 @@ Response: Success Failure Response
 NIPC Extensibility
 ==================
 
-
 # Introduction
 
 NIPC is extensible in 2 ways:
@@ -1941,14 +1942,14 @@ In the new protocol object, protocol specific attributes can be added.
 /extensions
 
 The interface extension elements are freely extendible interfaces. These
-elements leverage the basic NIPC defined elements, and combine them in 
+elements leverage the basic NIPC defined elements and combine them in 
 compound statements in order to streamline application operation against
 devices. In principle they do not add any basic functionality, but 
 rather they combine basic elements into one API call, in order to make
 application operation against devices more convenient and expedient. In
 the OpenAPI model {{openAPI}} below, we have defined a few example 
-extensions, and we will describe them here at a high level to provide 
-some context on possible extensions.
+extensions, and we will describe a few of them here at a high level to
+provide some context on possible extensions.
 
 ## Write file
 
@@ -1982,8 +1983,8 @@ multiple connection and data operations that are to be executed
 sequentially until they all succeed or there is a failure.
 Supported operations are:
 
- - /connectivity/connection/create
- - /connectivity/connection/delete
+ - /extension/connection/create
+ - /extension/connection/delete
  - /extension/attribute/read
  - /extension/attribute/write
  - /extension/attribute/write/file
