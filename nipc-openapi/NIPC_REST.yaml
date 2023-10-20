@@ -28,7 +28,7 @@ info:
   license:
     name: TBD
     url: TBD
-  version: 0.5.1
+  version: 0.5.2
 externalDocs:
   description: NIPC IETF draft
   url: TBD
@@ -190,7 +190,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
   
-  /connectivity/binding/{id}:
+  /connectivity/binding/id/{id}:
     post:
       tags:
         - connectivity
@@ -462,7 +462,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
 
-  /connectivity/connection/{id}:
+  /connectivity/connection/id/{id}:
     post:
       tags:
         - connectivity
@@ -630,7 +630,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
                 
-  /connectivity/services/{id}:            
+  /connectivity/services/id/{id}:            
     get:
       tags:
         - connectivity
@@ -1017,7 +1017,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
 
-  /data/subscription/{topic}:    
+  /data/subscription/topic/{topic}:    
     delete:
       tags:
         - data
@@ -1098,7 +1098,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/MultiSubscriptionResponse'
 
-  /data/subscription/{id}:
+  /data/subscription/id/{id}:
     delete:
       tags:
         - data
@@ -1483,7 +1483,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
 
-  /registration/topic/{data-app}:    
+  /registration/topic/data-app/{data-app}:    
     delete:
       tags:
         - registrations
@@ -1565,7 +1565,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
 
-  /registration/topic/{id}:
+  /registration/topic/id/{id}:
     delete:
       tags:
         - registrations
@@ -1899,6 +1899,104 @@ paths:
                 $ref: '#/components/schemas/FailureResponse'
 
 ### Extensions
+  /extension/connection/create:
+    post:
+      tags:
+        - extensions
+      summary: |-
+        Connect a device to the network, optionally with service
+        discovery 
+      description: |-
+        Connect a device to the network, optionally with service
+        discovery 
+      operationId: ExtConnect
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Connection'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Connection'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Connection'
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse' 
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+                
+  /extension/connection/delete:
+    post:
+      tags:
+        - extensions
+      summary: |-
+        Connect a device to the network, optionally with service
+        discovery 
+      description: |-
+        Connect a device to the network, optionally with service
+        discovery 
+      operationId: ExtDisconnect
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Object'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Object'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Object'
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse' 
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+                
   /extension/attribute/write:
     post:
       tags:
@@ -2868,8 +2966,8 @@ components:
             operation:
               type: string
               enum:
-               - /connectivity/connection/create
-               - /connectivity/connection/delete
+               - /extension/connection/create
+               - /extension/connection/delete
                - /extension/attribute/read
                - /extension/attribute/write
                - /extension/attribute/write/file
@@ -2885,7 +2983,7 @@ components:
           discriminator:
             propertyName: operation
             mapping:
-              /connectivity/connection/create: '#/components/schemas/Service'
+              /extension/connection/create: '#/components/schemas/Service'
               /extension/attribute/read: '#/components/schemas/Attribute'
               /extension/attribute/read/conditional: '#/components/schemas/AttributeConditional'
               /extension/attribute/write: '#/components/schemas/AttributeValue'
