@@ -1305,6 +1305,7 @@ Request Body: a file or URL point to a file, as described in {{file}}
 below. 
 
 File definition:
+
 | Attribute     | Req |   Type  |          Example                     |
 +---------------+----------+-------------------------------------------|
 | filename      |  T  | string  | "firmware.dat"                       |
