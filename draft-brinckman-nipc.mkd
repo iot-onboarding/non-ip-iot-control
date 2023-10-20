@@ -1307,7 +1307,7 @@ below.
 File definition:
 
 | Attribute     | Req |   Type  |          Example                     |
-+---------------+----------+-------------------------------------------|
++---------------+-----+---------+--------------------------------------|
 | filename      |  T  | string  | "firmware.dat"                       |
 | file          |  F  | binary  | file                                 |
 | bindings      |  F  | string  | "https://domain.com/firmware.dat"    |
