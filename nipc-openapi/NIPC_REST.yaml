@@ -28,7 +28,7 @@ info:
   license:
     name: TBD
     url: TBD
-  version: 0.5.2
+  version: 0.5.3
 externalDocs:
   description: NIPC IETF draft
   url: TBD
@@ -2911,8 +2911,22 @@ components:
       xml:
         name: Broadcast
 
+## Topic Name
+    TopicName:
+      required:
+        - topic
+      type: object
+      properties:
+        topic:
+          type: string
+          example: enterprise/hospital/pulse_oximeter
+      xml:
+        name: TopicName
+
 ## DataStream Topic
     Topic:
+      allOf:
+        - $ref: '#/components/schemas/TopicName'      
       oneOf:
         - $ref: '#/components/schemas/BLETopic'
         - $ref: '#/components/schemas/ZigbeeAttributes'
@@ -2921,13 +2935,8 @@ components:
         mapping:
           ble: '#/components/schemas/BLETopic'
           zigbee: '#/components/schemas/ZigbeeAttributes'
-      required:
-        - topic
       type: object
       properties:
-        topic:
-          type: string
-          example: enterprise/hospital/pulse_oximeter
         dataFormat:
           description: |-
             How is information decorated?  Default: device
@@ -2958,8 +2967,8 @@ components:
       xml:
         name: Topic
 
-## File
-    File:
+## FileName
+    FileName:
       required:
         - filename
       type: object
@@ -2967,6 +2976,15 @@ components:
         filename:
           type: string
           example: "firmware.dat"
+      xml:
+        name: FileName
+
+## File
+    File:
+      allOf:
+        - $ref: '#/components/schemas/FileName'
+      type: object
+      properties:
         file: #file itself is provided
           type: string
           format: binary
@@ -3198,14 +3216,6 @@ components:
       xml:
         name: TopicResponse
 
-## Success response for topic API
-    TopicsResponse:
-      oneOf:
-        - $ref: '#/components/schemas/TopicResponse'
-        - $ref: '#/components/schemas/FailureResponse'
-      xml:
-        name: TopicsResponse
-
 ## Returning multiple topics
     MultiTopicsResponse:
       allOf:
@@ -3220,7 +3230,7 @@ components:
             name: topics
             wrapped: true
           items:
-            $ref: '#/components/schemas/TopicsResponse'
+            $ref: '#/components/schemas/TopicName'
       xml:
         name: MultiTopicsResponse
 
@@ -3270,7 +3280,7 @@ components:
             name: filenames
             wrapped: true
           items:
-            $ref: '#/components/schemas/FileResponse'
+            $ref: '#/components/schemas/FileName'
       xml:
         name: MultiFileResponse
 
