@@ -180,14 +180,15 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
 14 {{!RFC2119}} {{!RFC8174}} when, and only when, they appear in all
 capitals, as shown here.
 
-Non-IP Control Functions
-========================
+
+# Non-IP Control Functions
 
 This section will describe a standardized protocol-agnostic interface 
 that allows the application to establish bi-directional communication 
 with a non-IP device, such as a BLE or Zigbee device. The interface 
 will be supported on a gateway as show in {{arch}}.
  
+
 ## Approach
 
 In non-IP protocols such as BLE or Zigbee, a number of basic operations
@@ -275,7 +276,8 @@ where-
 ### Response
 
 As most operations have a common base schema, so do responses. As 
-mandatory, a status is returned, optionally also device id and request id.
+mandatory, a status is returned, optionally also device id and request 
+id.
 
 Success response:
 
@@ -284,7 +286,7 @@ Success response:
 | status        |  T  |  enum   | SUCCESS                              |
 | id            |  F  |  uuid   | 12345678-1234-5678-1234-56789abcdef4 |
 | requestID     |  F  |  uuid   | abcd0987-1234-5678-1234-56789abcdef4 |
-{: #success title="Base response"}
+{: #success title="Success response"}
 
 Failure response:
 
@@ -294,7 +296,7 @@ Failure response:
 | errorCode     |  T  |  int    | 12                                   |
 | reason        |  T  |  string | "Not Found"                          |
 | requestID     |  F  |  uuid   | abcd0987-1234-5678-1234-56789abcdef4 |
-{: #failure title="Base response"}
+{: #failure title="Failure response"}
 
 where-
 
@@ -322,7 +324,7 @@ to a category. The categories are:
    application usage, allowing applications to perform functions with a
    reduced number of round-trips. An example of this is the the bulk
    operation, allowing to send multiple operations is one operation. 
-   This category also allows for furhter extensions based on the basic 
+   This category also allows for further extensions based on the basic 
    operations.
 
 ### Connecting to the Non-IP Control Interface
@@ -333,6 +335,7 @@ extension, in which an authorized application can be registered for a
 SCIM object. Similarly authentication of the interface can be specified
 using that SCIM interface. It may be based on a device certificate or 
 an authorization token.
+
 
 ## Connectivity
 
@@ -363,11 +366,10 @@ Description: Creates a binding with a device
 
 Parameters: None
 
-Request Body: an Object
+Request Body: an Object as defined in {{objectdef}}
 
-{{objectdef}}
-
-Response: See {{success}} for success, and {{failure}} for failed responses.
+Response: See {{success}} for success, and {{failure}} for failed
+responses.
 
 #### Return active bindings
 
@@ -377,14 +379,13 @@ Description: Returns one or more bindings, based on ids provided in
 parameters (none = return all)
 
 Parameters: 
-
 One of following options:
-
  - None: return all bindings this application made
  - single id: return binding for this id
  - comma separated ids: return bindings for multiple ids
 
-Response: An Array of bindings
+Response: An Array of bindings with contents as  shown in
+{{bindingresponse}} below or {{failure}} for failed responses.
 
 | Attribute     | Req |   Type  |          Example                     |
 +---------------+----------+-------------------------------------------|
@@ -393,9 +394,7 @@ Response: An Array of bindings
 | bindings      |  T  |  array  | Array of BLE or Zigbee ids           |
 {: #bindingresponse title="Binding response"}
 
- \- or - 
-
-{{failure}}
+#### Delete a binding
 
 Method: DELETE /connectivity/binding
 
@@ -403,14 +402,13 @@ Description: Delete one or more bindings, based on ids provided in
 parameters
 
 Parameters: 
-
 One of following options:
-
  - None: delete all bindings this application made
  - single id: delete binding for this id
  - comma separated ids: delete bindings for multiple ids
 
-Response: See {{success}} for success, and {{failure}} for failed responses.
+Response: See {{success}} for success, and {{failure}} for failed
+responses.
 
 ### Binding by id
 
@@ -434,7 +432,8 @@ Description: Creates a binding by id
 
 Parameters: id
 
-Response: See {{success}} for success, and {{failure}} for failed responses.
+Response: See {{success}} for success, and {{failure}} for failed
+responses.
 
 #### Return active binding by id
 
@@ -443,7 +442,8 @@ Method: GET /connectivity/binding//id/{id}
 Description: Returns a binding by id 
 Parameters: id
 
-Response: See {{success}} for success, and {{failure}} for failed responses.
+Response: See {{success}} for success, and {{failure}} for failed 
+responses.
 
 #### Delete binding by id
 
@@ -453,7 +453,9 @@ Description: Delete a binding by id
 
 Parameters: id
 
-Response: See {{success}} for success, and {{failure}} for failed responses.
+Response: See {{success}} for success, and {{failure}} for failed
+responses.
+
 
 ### Connection
 
@@ -476,22 +478,17 @@ Description: Connect to a device
 
 Parameters: None
 
-Request Body: an Object, and optionally a set of services to be 
-discovered
-
-{{objectdef}}
-
-optionally, protocol-specific extensions can be supplied, such as BLE
-selective service discovery. 
-
-{{protext}}
-
-In the case of BLE, service discovery is performed when connecting to a
-device. Optionally, service discovery may be limited to services 
-defined in the "ble" protocol extension. The services to be discovered
-can be added in an array, as well as optional caching parameters.
-
-Contents of the BLE protocol extension for limited service discovery:
+Request Body: 
+ - an Object, as defined in {{objectdef}} 
+ - optionally a set of services to be discovered. These are supplied
+   in protocol-specific extensions, as defined in {{protext}}.
+   In the case of BLE, service discovery is performed when connecting to
+   a device. Optionally, service discovery may be limited to services 
+   defined in the "ble" protocol extension. The services to be 
+   discovered can be added in an array, as well as optional caching 
+   parameters. Please see table below {{servdisc}} for a definition of
+   the content of the BLE protocol extension for limited service 
+   discovery 
 
 | Attribute     | Req |   Type  |          Example                     |
 +---------------+-----+---------+--------------------------------------|
@@ -499,7 +496,7 @@ Contents of the BLE protocol extension for limited service discovery:
 | cached        |  F  | boolean | no                                   |
 | cacheIdlePurge|  F  |   int   | 3600                                 |
 | autoUpdate    |  F  | boolean | yes                                  |
-{: #servdisc title="Service Discovery "}
+{: #servdisc title="Service Discovery"}
 
 where-
 
@@ -513,12 +510,13 @@ where-
    "autoUpdate" allows the network to update services based on 
    notification (on by default)
 
-Response: Success with a list of supported services or Failure Response
-
-{{success}}
-
-and an array of services, characteristics and descriptors supported by the
-device.
+Response: Success responses include standard success response attributes
+as defined in {{success}} and also include cwan array of supported 
+services. This array of supported services in turn contains an array of 
+charateristics, which in turn contains an array of descriptors, as shown 
+{{services}}. For a description of the attributes found in this array, 
+please refer to {{servresp}} below. Please refer to {{failure}} for 
+failed responses.
 
 ~~~~~
     services
@@ -543,26 +541,22 @@ Attributes in the array of services:
 | descriptorID   |  F  |  uuid  | abcd0987-1234-5678-1234-56789abcdef4 |
 {: #servresp title="Service Discovery Response Attributes"}
 
- \- or - 
-
-{{failure}}
-
 #### Return active connections
 
 Method: GET /connectivity/connection
 
-Description: Returns one or more active connections, based on ids provided in
-parameters (none = return all)
+Description: Returns one or more active connections, based on ids 
+provided in parameters (none = return all).
 
 Parameters: 
-
 One of following options:
-
  - None: return all active connections for this application 
  - single id: return connection status for this id
  - comma separated ids: return connection status for multiple ids
 
-Response: An Array of connections
+Response: An Array of connections with attributes as defined in 
+{{connresponse}} or in case of a failed response, the attributes in 
+{{failure}}.
 
 | Attribute     | Req |   Type  |          Example                     |
 +---------------+-----+---------+--------------------------------------|
@@ -571,9 +565,7 @@ Response: An Array of connections
 | connections   |  T  |  array  | Array of connections                 |
 {: #connresponse title="Connection response"}
 
- \- or - 
-
-{{failure}}
+#### Disconnect a device 
 
 Method: DELETE /connectivity/connection
 
@@ -581,14 +573,13 @@ Description: Disconnect one or more devices, based on ids provided in
 parameters
 
 Parameters: 
-
 One of following options:
-
  - None: Disconnect all devices for connections this application made
  - single id: disconnect device with id
  - comma separated ids: disconnect multiple devices with ids
 
-Response: See {{success}} for success, and {{failure}} for failed responses.
+Response: See {{success}} for success, and {{failure}} for failed
+responses.
 
 ### Connections by id
 
@@ -612,7 +603,8 @@ Description: Creates a connection by id
 
 Parameters: id
 
-Response: See {{success}} for success, and {{failure}} for failed responses.
+Response: See {{success}} for success, and {{failure}} for failed
+responses.
 
 #### Return connection state by id
 
@@ -621,7 +613,8 @@ Method: GET /connectivity/connection/id/{id}
 Description: Returns connection state by id 
 Parameters: id
 
-Response: See {{success}} for success, and {{failure}} for failed responses.
+Response: See {{success}} for success, and {{failure}} for failed
+responses.
 
 #### Delete connection by id
 
@@ -631,7 +624,8 @@ Description: Delete a binding by id
 
 Parameters: id
 
-Response: See {{success}} for success, and {{failure}} for failed responses.
+Response: See {{success}} for success, and {{failure}} for failed
+responses.
 
 ### Discover services supported by a device
 
@@ -651,38 +645,18 @@ Method: GET /connectivity/service
 Description: Discover services supported by a device, this updates 
 cache in case services caching is enabled for a connection.
 
-Parameters: an Object, and optionally a set of services to be 
-discovered in case not all services should be discovered.
+Parameters: an Object as defined in {{objectdef}}  and optionally a set
+of services to be discovered in case not all services should be
+discovered. These services need to be provided in protocol-specific 
+extensions as defined in {{protext}}. The services to be discovered can
+be added in this extension in an array, as well as optional caching
+parameters, as described in {{servdisc}}.
 
-{{objectdef}}
-
-optionally, protocol-specific extensions can be supplied, such as BLE
-selective service discovery. 
-
-{{protext}}
-
-Optionally service discovery may be limited to services defined in the
-"ble" protocol extension. The services to be discovered can be added in
-an array, as well as optional caching parameters.
-
-{{servdisc}}
-
-Response: Success with a list of supported services or Failure Response
-
-{{success}}
-
-and an array of services, characteristics and descriptors supported by the
-device.
-
-{{services}}
-
-Attributes in the array of services:
-
-{{servresp}}
-
- \- or - 
-
-{{failure}}
+Response: A successful response will contain success attributes from 
+{{success}} with an array of supported services characteristics and 
+descriptors, as shown in {{services}}, with attributes defined in 
+{{servresp}}. 
+Failure Response is the standard response as defined in {{failure}}
 
 ### Discover services supported by a device by id
 
@@ -705,24 +679,11 @@ does not support partial service discovery, all services are discovered.
 
 Parameters: an Object id 
 
-{{objectdef}}
-
-Response: Success with a list of supported services or Failure Response
-
-{{success}}
-
-and an array of services, characteristics and descriptors supported by the
-device.
-
-{{services}}
-
-Attributes in the array of services:
-
-{{servresp}}
-
- \- or - 
-
-{{failure}}
+Response: A successful response will contain success attributes from 
+{{success}} with an array of supported services, characteristics and 
+descriptors, as shown in {{services}}, with attributes defined in 
+{{servresp}}. 
+Failure Response is the standard response as defined in {{failure}}.
 
 
 ## Data
@@ -755,11 +716,11 @@ Description: Writes a value to an attribute
 
 Parameters: None
 
-Request Body: an Object, a value and an attribute definition
-
-{{objectdef}}
-
-A value to be written:
+Request Body: an Object as defined in {{objectdef}}, a value to be 
+written, as defined in {{value}} below and an attribute definition in
+a protocol extension from {{protext}}. The protocol extension for BLE
+is defined in {{bleattr}} below. The protocol extension for Zigbee is 
+defined in {{zigbeeattr}} below.
 
 | Attribute     | Req |   Type  |          Example                     |
 +---------------+-----+---------+--------------------------------------|
@@ -771,14 +732,6 @@ where-
 
  - value is the value to be written
  - forcedresponse requests a specific response behavior of the device
-
-Protocol-specific extensions are supplied to identify the attributes to
-be written.
-
-{{protext}}
-
-In the case of BLE, we are writing characteristics, in the case of
-Zigbee, we are writing attributes.
 
 Contents of the BLE protocol extension defining an attribute:
 
@@ -797,7 +750,6 @@ where-
 
 Contents of the Zigbee protocol extension defining an attribute:
 
-| Attribute      | Req |   Type |          Example                     |
 +----------------+-----+--------+--------------------------------------|
 | endpointID     |  T  |  int   | 16                                   |
 | clusterID      |  T  |  int   | 6                                    |
@@ -813,15 +765,9 @@ where-
  - attributeID defines the Zigbee attribute
  - type defines the Zigbee attribute type
 
-Response: Success optionally with value written or Failure Response
-
-{{success}}
-
-{{value}}
-
- \- or - 
-
-{{failure}}
+Response: A successful response will contain success attributes from 
+{{success}} with optionally the value written as shown in {{value}}.
+Failure Response is the standard response as defined in {{failure}}
 
 #### Updating a value 
 
@@ -831,36 +777,15 @@ Description: Updates a value to an attribute
 
 Parameters: None
 
-Request Body: an Object, a value and an attribute definition
+Request Body: an Object as defined in {{objectdef}}, a value to be 
+written, as defined in {{value}} and an attribute definition in
+a protocol extension from {{protext}}. The protocol extension for BLE
+is defined in {{bleattr}}. The protocol extension for Zigbee is 
+defined in {{zigbeeattr}}.
 
-{{objectdef}}
-
-A value to be updated:
-{{value}}
-
-Protocol-specific extensions are supplied to identify the attributes to
-be written.
-
-{{protext}}
-
-In the case of BLE, we are writing characteristics, in the case of
-Zigbee, we are writing attributes.
-
-Contents of the BLE protocol extension defining an attribute:
-{{bleattr}}
-
-Contents of the Zigbee protocol extension defining an attribute:
-{{zigbeeattr}}
-
-Response: Success optionally with value written or Failure Response
-
-{{success}}
-
-{{value}}
-
- \- or - 
-
-{{failure}}
+Response: A successful response will contain success attributes from 
+{{success}} with optionally the value written as shown in {{value}}.
+Failure Response is the standard response as defined in {{failure}}
 
 #### Read an attribute
 
@@ -868,33 +793,14 @@ Method: GET /data/attribute
 
 Description: Reads an attribute from a device
 
-Parameters: An object and an atribute definition
+Parameters: an Object as defined in {{objectdef}} and an attribute 
+definition in a protocol extension from {{protext}}. The protocol 
+extension for BLE is defined in {{bleattr}}. The protocol extension for
+Zigbee is defined in {{zigbeeattr}}.
 
-{{objectdef}}
-
-Protocol-specific extensions are supplied to identify the attributes to
-be written.
-
-{{protext}}
-
-In the case of BLE, we are writing characteristics, in the case of
-Zigbee, we are writing attributes.
-
-Contents of the BLE protocol extension defining an attribute:
-{{bleattr}}
-
-Contents of the Zigbee protocol extension defining an attribute:
-{{zigbeeattr}}
-
-Response: Success optionally with value written or Failure Response
-
-{{success}}
-
-{{value}}
-
- \- or - 
-
-{{failure}}
+Response: A successful response will contain success attributes from 
+{{success}} with the value read as shown in {{value}}.
+Failure Response is the standard response as defined in {{failure}}
 
 #### clear the value from an attribute
 
@@ -902,33 +808,14 @@ Method: DELETE /data/attribute
 
 Description: Clear the value from an attribute of a device
 
-Parameters: An object and an atribute definition
+Parameters: an Object as defined in {{objectdef}} and an attribute 
+definition in a protocol extension from {{protext}}. The protocol 
+extension for BLE is defined in {{bleattr}}. The protocol extension for
+Zigbee is defined in {{zigbeeattr}}.
 
-{{objectdef}}
-
-Protocol-specific extensions are supplied to identify the attributes to
-be written.
-
-{{protext}}
-
-In the case of BLE, we are writing characteristics, in the case of
-Zigbee, we are writing attributes.
-
-Contents of the BLE protocol extension defining an attribute:
-{{bleattr}}
-
-Contents of the Zigbee protocol extension defining an attribute:
-{{zigbeeattr}}
-
-Response: Success optionally with current value or Failure Response
-
-{{success}}
-
-{{value}}
-
- \- or - 
-
-{{failure}}
+Response: A successful response will contain success attributes from 
+{{success}} with the optionally the value as null as shown in {{value}}.
+Failure Response is the standard response as defined in {{failure}}
 
 ### Subscription
 
@@ -953,26 +840,14 @@ attribute
 
 Parameters: None
 
-Request Body: an Object, an attribute definition and optionally a 
-pub/sub topic to stream data to.
+Request Body: an Object as defined in {{objectdef}} and an attribute 
+definition in a protocol extension from {{protext}}. The protocol 
+extension for BLE is defined in {{bleattr}}. The protocol extension 
+for Zigbee is defined in {{zigbeeattr}}. Optionally a pub/sub topic can
+be included in the request as defined in {{topic}} below. Including a
+topic allows the app to skip the topic registration process.
 
-{{objectdef}}
-
-Protocol-specific extensions are supplied to identify the attributes to
-be written.
-
-{{protext}}
-
-In the case of BLE, we are writing characteristics, in the case of
-Zigbee, we are writing attributes.
-
-Contents of the BLE protocol extension defining an attribute:
-{{bleattr}}
-
-Contents of the Zigbee protocol extension defining an attribute:
-{{zigbeeattr}}
-
-An optional topic to stream to:
+Topic attributes:
 
 | Attribute     | Req |   Type  |          Example                     |
 +---------------+-----+---------+--------------------------------------|
@@ -991,7 +866,8 @@ where-
  - forced ack ignores the attribute definition and forces packet ack
    behavior to the device
 
-Response: See {{success}} for success, and {{failure}} for failed responses.
+Response: See {{success}} for success, and {{failure}} for failed
+responses.
 
 #### Updating a subscription data stream 
 
@@ -1002,29 +878,14 @@ to a specific attribute
 
 Parameters: None
 
-Request Body: an Object, an attribute definition and optionally a 
-pub/sub topic to stream data to.
+Request Body: an Object as defined in {{objectdef}} and an attribute 
+definition in a protocol extension from {{protext}}. The protocol 
+extension for BLE is defined in {{bleattr}}. The protocol extension 
+for Zigbee is defined in {{zigbeeattr}}. Optionally a pub/sub topic can
+be included in the request as defined in {{topic}}.
 
-{{objectdef}}
-
-Protocol-specific extensions are supplied to identify the attributes to
-be written.
-
-{{protext}}
-
-In the case of BLE, we are writing characteristics, in the case of
-Zigbee, we are writing attributes.
-
-Contents of the BLE protocol extension defining an attribute:
-{{bleattr}}
-
-Contents of the Zigbee protocol extension defining an attribute:
-{{zigbeeattr}}
-
-An optional topic to stream to:
-{{topic}}
-
-Response: See {{success}} for success, and {{failure}} for failed responses.
+Response: See {{success}} for success, and {{failure}} for failed
+responses.
 
 #### Get status of a subscription data stream
 
@@ -1033,28 +894,14 @@ Method: GET /data/subscription
 Description: Gets the status of a subscription data stream, success if
 active, failure if not active 
 
-Parameters: An object and an atribute definition, optionally a topic
+Parameters: an Object as defined in {{objectdef}} and an attribute 
+definition in a protocol extension from {{protext}}. The protocol 
+extension for BLE is defined in {{bleattr}}. The protocol extension 
+for Zigbee is defined in {{zigbeeattr}}. Optionally a pub/sub topic can
+be included in the request as defined in {{topic}}.
 
-{{objectdef}}
-
-Protocol-specific extensions are supplied to identify the attributes to
-be written.
-
-{{protext}}
-
-In the case of BLE, we are writing characteristics, in the case of
-Zigbee, we are writing attributes.
-
-Contents of the BLE protocol extension defining an attribute:
-{{bleattr}}
-
-Contents of the Zigbee protocol extension defining an attribute:
-{{zigbeeattr}}
-
-An optional topic to stream to:
-{{topic}}
-
-Response: See {{success}} for success, and {{failure}} for failed responses.
+Response: See {{success}} for success, and {{failure}} for failed
+responses.
 
 #### stop a subscription data stream
 
@@ -1062,28 +909,14 @@ Method: DELETE /data/subscription
 
 Description: stops a subscription data stream
 
-Parameters: An object and an atribute definition, optionally a topic
+Parameters: an Object as defined in {{objectdef}} and an attribute 
+definition in a protocol extension from {{protext}}. The protocol 
+extension for BLE is defined in {{bleattr}}. The protocol extension 
+for Zigbee is defined in {{zigbeeattr}}. Optionally a pub/sub topic can
+be included in the request as defined in {{topic}}.
 
-{{objectdef}}
-
-Protocol-specific extensions are supplied to identify the attributes to
-be written.
-
-{{protext}}
-
-In the case of BLE, we are writing characteristics, in the case of
-Zigbee, we are writing attributes.
-
-Contents of the BLE protocol extension defining an attribute:
-{{bleattr}}
-
-Contents of the Zigbee protocol extension defining an attribute:
-{{zigbeeattr}}
-
-An optional topic to stream to:
-{{topic}}
-
-Response: See {{success}} for success, and {{failure}} for failed responses.
+Response: See {{success}} for success, and {{failure}} for failed
+responses.
 
 ### Subscriptions by id
 
@@ -1105,22 +938,13 @@ Description: Returns connection state by id
 
 Parameters: id
 
-Response: Success with array of subscriptions or Failure Response
-
-{{success}}
-
-And an object called "subscriptions" which contains an Array of active
-subscriptions, each consisting of:
- 
- - {{objectdef}}
- - Zigbee or BLE specific {{protext}} containing
-    - {{bleattr}}
-    - {{zigbeeattr}} 
- - an optional {{topic}}
-
- \- or - 
-
-{{failure}}
+Response: Success response as defines in {{success}} and an object 
+called "subscriptions" which contains an Array of active subscriptions.
+Each of these include an object as defined in {{objectdef}} and a 
+subscription attribute definition in a protocolextension from 
+{{protext}}. The protocol extension for BLE is defined in {{bleattr}}. 
+The protocol extension for Zigbee is defined in {{zigbeeattr}}. 
+Failure Response is the standard response as defined in {{failure}}
 
 #### Stop active subscriptions by id
 
@@ -1130,22 +954,13 @@ Description: Delete active subscriptions for an id
 
 Parameters: id
 
-Response: Success with array of subscriptions or Failure Response
-
-{{success}}
-
-And an object called "subscriptions" which contains an Array of active
-subscriptions, each consisting of:
- 
- - {{objectdef}}
- - Zigbee or BLE specific {{protext}} containing
-    - {{bleattr}}
-    - {{zigbeeattr}} 
- - an optional {{topic}}
-
- \- or - 
-
-{{failure}}
+Response: Success response as defines in {{success}} and an object 
+called "subscriptions" which contains an Array of active subscriptions.
+Each of these include an object as defined in {{objectdef}} and a 
+subscription attribute definition in a protocolextension from 
+{{protext}}. The protocol extension for BLE is defined in {{bleattr}}. 
+The protocol extension for Zigbee is defined in {{zigbeeattr}}. 
+Failure Response is the standard response as defined in {{failure}}
 
 ### Subscriptions by topic
 
@@ -1166,22 +981,13 @@ Description: Returns connection state by topic
 
 Parameters: topic
 
-Response: Success with array of subscriptions or Failure Response
-
-{{success}}
-
-And an object called "subscriptions" which contains an Array of active
-subscriptions, each consisting of:
- 
- - {{objectdef}}
- - Zigbee or BLE specific {{protext}} containing
-    - {{bleattr}}
-    - {{zigbeeattr}} 
- - an optional {{topic}}
-
- \- or - 
-
-{{failure}}
+Response: Success response as defines in {{success}} and an object 
+called "subscriptions" which contains an Array of active subscriptions.
+Each of these include an object as defined in {{objectdef}} and a 
+subscription attribute definition in a protocolextension from 
+{{protext}}. The protocol extension for BLE is defined in {{bleattr}}. 
+The protocol extension for Zigbee is defined in {{zigbeeattr}}. 
+Failure Response is the standard response as defined in {{failure}}
 
 #### Stop active subscriptions by topic
 
@@ -1191,23 +997,13 @@ Description: Delete all active subscriptions for a topic
 
 Parameters: topic
 
-Response: Success with array of subscriptions or Failure Response
-
-{{success}}
-
-And an object called "subscriptions" which contains an Array of active
-subscriptions, each consisting of:
- 
- - {{objectdef}}
- - Zigbee or BLE specific {{protext}} containing
-    - {{bleattr}}
-    - {{zigbeeattr}} 
- - an optional {{topic}}
-
- \- or - 
-
-{{failure}}
-
+Response: Success response as defines in {{success}} and an object 
+called "subscriptions" which contains an Array of active subscriptions.
+Each of these include an object as defined in {{objectdef}} and a 
+subscription attribute definition in a protocolextension from 
+{{protext}}. The protocol extension for BLE is defined in {{bleattr}}. 
+The protocol extension for Zigbee is defined in {{zigbeeattr}}. 
+Failure Response is the standard response as defined in {{failure}}
 
 ### Broadcast
 
@@ -1229,9 +1025,11 @@ Description: Broadcasts a message to a device
 
 Parameters: None
 
-Request Body: an Object, broadcast parameters and an attribute definition
-
-{{objectdef}}
+Request Body: an Object as defined in {{objectdef}} along with broadcast
+parameters, defined below in {{broadcastparams}}. Defining broadcast 
+attributes is mandatory and is done by adding an array of broadcast 
+attributes in a protocol extension from {{protext}}. The protocol 
+extension for BLE broadcasts is defined in {{blebcastattr}} below.
 
 Broadcast parameters:
 
@@ -1253,11 +1051,6 @@ where-
 Protocol-specific extensions are supplied to identify the attributes to 
 be broadcasted.
 
-{{protext}}
-
-Contents of the BLE protocol extension defining a broadcast is an array
-of following attributes:
-
 | Attribute      | Req |   Type |          Example                     |
 +----------------+-----+--------+--------------------------------------|
 | adType         |  T  |  byte  | ff                                   |
@@ -1269,7 +1062,9 @@ where-
  - adType is the BLE advertisement attribute type
  - adData is the BLE advertisement attribute data
 
-Response: See {{success}} for success, and {{failure}} for failed responses.
+Response: See {{success}} for success, and {{failure}} for failed
+responses.
+
 
 ## Registrations
 
@@ -1280,7 +1075,7 @@ operations on devices but register attributes on the gateway that
 support operations, such attributes are topics for data streaming and
 files to write files.
 
-### Topic {#topic-section}
+### Topic registration
 
 /registration/topic
 
@@ -1304,44 +1099,23 @@ Description: Register a pub/sub topic
 
 Parameters: None
 
-Request Body: A topic, data apps that can subscribe to the topic and 
-extensions for BLE and Zigbee that describe attributes that map to the
-topic.
+Request Body: A topic, including data apps that can subscribe to the 
+topic as defined in {{topic}} and protocol-specific extensions as per 
+{{protext}} that describe the attributes that will be reported on the
+topic. In the case of BLE, these are either BLE subscription attributes
+as in {{bleattr}}, device connection status, or Broadcast 
+(advertisement) data as in {{blebcastattr}}.
+For Zigbee, these are Zigbee attributes as described in {{zigbeeattr}}.
 
-{{topic}}
+Response: See {{success}} with a topic name as in {{topicname}} below 
+for success, and {{failure}} for failed responses.
 
-Protocol-specific extensions are supplied to describe attributes that
-map to the topic.
-
-{{protext}}
-
-In the case of BLE, these are either BLE subscription attributes, 
-connection status, or Broadcast (advertisement) data.
-For Zigbee, these are Zigbee attributes.
-
-Contents of the BLE protocol extension defining a topic are:
-
- - A Subscription for {{bleattr}}
- - Device connection state 
- - BLE Advertisement, with optional filters defined by an array of {{blebcastattr}}
-
-Contents of the Zigbee protocol extension defining a topic:
-{{zigbeeattr}}
-
-Response: Success or Failure Response
-
-{{success}}
-
-the topic name that was registered: 
+Topic name that was registered: 
 
 | Attribute     | Req |   Type  |          Example                     |
 +---------------+-----+---------+--------------------------------------|
 | topic         |  T  | string  | "enterprise/hospital/pulse"          |
 {: #topicname title="Topic Name"}
-
- \- or - 
-
-{{failure}}
 
 #### Updating a topic
 
@@ -1351,39 +1125,16 @@ Description: Update a pub/sub topic
 
 Parameters: None
 
-Request Body: A topic, data apps that can subscribe to the topic and 
-extensions for BLE and Zigbee that describe attributes that map to the
-topic.
+Request Body: A topic, including data apps that can subscribe to the 
+topic as defined in {{topic}} and protocol-specific extensions as per 
+{{protext}} that describe the attributes that will be reported on the
+topic. In the case of BLE, these are either BLE subscription attributes
+as in {{bleattr}}, device connection status, or Broadcast 
+(advertisement) data as in {{blebcastattr}}.
+For Zigbee, these are Zigbee attributes as described in {{zigbeeattr}}.
 
-{{topic}}
-
-Protocol-specific extensions are supplied to describe attributes that
-map to the topic.
-
-{{protext}}
-
-In the case of BLE,  these are either BLE subscription attributes, 
-connection status, or Broadcast (advertisement) data.
-For Zigbee, these are Zigbee attributes.
-
-Contents of the BLE protocol extension defining a topic are:
-
- - A Subscription for {{bleattr}}
- - Device connection state 
- - BLE Advertisement, with an optional filters defined by an array of {{blebcastattr}}
-
-Contents of the Zigbee protocol extension defining a topic:
-{{zigbeeattr}}
-
-Response: Success or Failure Response
-
-{{success}}
-
-{{topicname}}
-
- \- or - 
-
-{{failure}}
+Response: See {{success}} with a topic name as in {{topicname}} below 
+for success, and {{failure}} for failed responses.
 
 #### Get configuration of one or more topics
 
@@ -1391,44 +1142,13 @@ Method: GET /registration/topic
 
 Description: Gets the configuration of one or more topics
 
-Parameters: A topic, data apps that can subscribe to the topic and 
-extensions for BLE and Zigbee that describe attributes that map to the
-topic. Multiple topics can be added by comma-separated attributes.
+Parameters: A topic name. Multiple topics can be added by 
+comma-separated attributes.
 
-{{topic}}
-
-Protocol-specific extensions are supplied to describe attributes that
-map to the topic.
-
-{{protext}}
-
-In the case of BLE,  these are either BLE subscription attributes, 
-connection status, or Broadcast (advertisement) data.
-For Zigbee, these are Zigbee attributes.
-
-Contents of the BLE protocol extension defining a topic are:
-
- - A Subscription for {{bleattr}}
- - Device connection state 
- - BLE Advertisement, with an optional filters defined by an array of {{blebcastattr}}
-
-Contents of the Zigbee protocol extension defining a topic:
-{{zigbeeattr}}
-
-Response: Success with an array of topics or Failure Response
-
-{{success}}
-
-A topics object with an Array of topics returned, with following
-attributes:
-
- - the topic name {topicname}
- - the status of the topic {{success}}, with the object id the topic is
-   active on 
-
- \- or - 
-
-{{failure}}
+Response: A success response as in {{success}} with a "topics" object
+containing an array of returned topics names with attribute defined in
+{{topicname}}.
+For failed responses see {{failure}}.
 
 #### Delete one or more topics
 
@@ -1436,45 +1156,13 @@ Method: DELETE /registration/topic
 
 Description: Delete one or more topics
 
-Parameters: A topic, data apps that can subscribe to the topic and 
-extensions for BLE and Zigbee that describe attributes that map to the
-topic. Multiple topics can be added by comma-separated attributes
+Parameters: A topic name. Multiple topics can be added by 
+comma-separated attributes.
 
-{{topic}}
-
-Protocol-specific extensions are supplied to describe attributes that
-map to the topic.
-
-{{protext}}
-
-In the case of BLE,  these are either BLE subscription attributes, 
-connection status, or Broadcast (advertisement) data.
-For Zigbee, these are Zigbee attributes.
-
-Contents of the BLE protocol extension defining a topic are:
-
- - A Subscription for {{bleattr}}
- - Device connection state 
- - BLE Advertisement, with an optional filters defined by an array of 
-   {{blebcastattr}}
-
-Contents of the Zigbee protocol extension defining a topic:
-{{zigbeeattr}}
-
-Response: Success with an array of topics or Failure Response
-
-{{success}}
-
-A topics object with an Array of topics returned, with following
-attributes:
-
- - the topic name {{topicname}}
- - the status of the topic {{success}}, with the object id the topic is
-   active on 
-
-\- or - 
-
-{{failure}}
+Response: A success response as in {{success}} with a "topics" object
+containing an array of returned topics names with attribute defined in
+{{topicname}}.
+For failed responses see {{failure}}.
 
 ### Topic registrations by id
 
@@ -1496,20 +1184,10 @@ Description: Returns active topics by id
 
 Parameters: id
 
-Response: Success with an array of topics or Failure Response
-
-{{success}}
-
-A topics object with an Array of topics returned, with the following
-attributes:
-
- - the topic name {{topicname}}
- - the status of the topic {{success}}, with the object id the topic is
-   active on 
-
- \- or - 
-
-{{failure}}
+Response: A success response as in {{success}} with a "topics" object
+containing an array of returned topics names with attribute defined in
+{{topicname}}.
+For failed responses see {{failure}}.
 
 #### Delete active topics by id
 
@@ -1520,27 +1198,18 @@ are associated with a specific object id.
 
 Parameters: id
 
-Response: Success with an array of topics or Failure Response
-
-{{success}}
-
-A topics object with an Array of topics returned, with the following
-attributes:
-
- - the topic name {{topicname}}
- - the status of the topic {{success}}, with the object id the topic is
-   active on 
-
- \- or - 
-
-{{failure}}
+Response: A success response as in {{success}} with a "topics" object
+containing an array of returned topics names with attribute defined in
+{{topicname}}.
+For failed responses see {{failure}}.
 
 ### Topic registrations by data app
 
 /registration/topic/data-app/{data-app}
 
-The topic registration by data-app element allows an application to get or 
-delete topic registrations for which a specific data-application is registered. 
+The topic registration by data-app element allows an application to get
+or delete topic registrations for which a specific data-application is
+registered. 
 
 Operations:  
 
@@ -1555,44 +1224,24 @@ Description: Returns active topics by data-app
 
 Parameters: data-app
 
-Response: Success with an array of topics or Failure Response
-
-{{success}}
-
-A topics object with an Array of topics returned, with following
-attributes:  
-
- - the topic name {{topicname}}
- - the status of the topic {{success}}, with the object id the topic is
-   active on 
-
- \- or - 
-
-{{failure}}
+Response: A success response as in {{success}} with a "topics" object
+containing an array of returned topics names with attribute defined in
+{{topicname}}.
+For failed responses see {{failure}}.
 
 #### Delete active topics by data-app
 
 Method: DELETE /registration/topic/data-app/{data-app}
 
-Description: Deletes active topics by data-app, will delete all topics the
-specified data app is registered for. 
+Description: Deletes active topics by data-app, will delete all topics
+the specified data app is registered for. 
 
 Parameters: data-app
 
-Response: Success with an array of topics or Failure Response
-
-{{success}}
-
-A topics object with an Array of topics returned, with following
-attributes:  
-
- - the topic name {{topicname}}
- - the status of the topic {{success}}, with the object id the topic is
-   active on 
-
- \- or - 
-
-{{failure}}
+Response: A success response as in {{success}} with a "topics" object
+containing an array of returned topics names with attribute defined in
+{{topicname}}.
+For failed responses see {{failure}}.
 
 ### Topic registrations by topic name
 
@@ -1614,15 +1263,9 @@ Description: Returns active topics by topic name
 
 Parameters: topic
 
-Response: Success with a topic name or Failure Response
-
-{{success}}
-
-{{topicname}}
-
- \- or - 
-
-{{failure}}
+Response: A success response as in {{success}} with a topic name as 
+defined in {{topicname}}.
+For failed responses see {{failure}}.
 
 #### Delete active topics by topic name
 
@@ -1632,18 +1275,12 @@ Description: Deletes active topics by topic name
 
 Parameters: topic
 
-Response: Success with a topic name or Failure Response
-
-{{success}}
-
-{{topicname}}
-
- \- or - 
-
-{{failure}}
+Response: A success response as in {{success}} with a topic name as 
+defined in {{topicname}}.
+For failed responses see {{failure}}.
 
 
-### File {#file-section}
+### File registration 
 
 /registration/file
 
@@ -1665,18 +1302,20 @@ Description: Register a file
 
 Parameters: None
 
-Request Body: a file or URL. 
+Request Body: a file or URL point to a file, as described in {{file}}
+below. 
 
-File can be uploaded or referred to as a URL:
+File definition:
 
 | Attribute     | Req |   Type  |          Example                     |
-+---------------+----------+-------------------------------------------|
++---------------+-----+---------+--------------------------------------|
 | filename      |  T  | string  | "firmware.dat"                       |
 | file          |  F  | binary  | file                                 |
 | bindings      |  F  | string  | "https://domain.com/firmware.dat"    |
 {: #file title="File"}
 
-Response: See {{success}} for success, and {{failure}} for failed responses.
+Response: See {{success}} for success, and {{failure}} for failed
+responses.
 
 #### Updating a file
 
@@ -1686,11 +1325,11 @@ Description: Update a file
 
 Parameters: None
 
-Request Body: a file or URL. 
+Request Body: a file or URL point to a file, as described in {{file}}
+below. 
 
-{{file}}
-
-Response: See {{success}} for success, and {{failure}} for failed responses.
+Response: See {{success}} for success, and {{failure}} for failed
+responses.
 
 #### check presence of a registered file
 
@@ -1701,20 +1340,16 @@ no file name os present in parameters
 
 Parameters: filename 
 
-Response: Success with an array of file names or Failure Response
-
-{{success}}
+Response: Success as in {{success}} including a "filesnames" object with
+an array of file names as shown in {{filename}} or a Failure Response
+as described in {{failure}}.
 
 A filenames object with an Array of file names:
 
 | Attribute     | Req |   Type  |          Example                     |
 +---------------+-----+---------+--------------------------------------|
 | filename      |  T  | string  | "firmware.dat"                       |
-| id            |  T  |  uuid   | abcd0987-1234-5678-1234-56789abcdef4 |
-
- \- or - 
-
-{{failure}}
+{: #filename title="File name"}
 
 #### delete a registered file
 
@@ -1724,13 +1359,8 @@ Description: Delete a registered file
 
 Parameters: filename 
 
-Response: Success Failure Response
-
-{{success}}
-
- \- or - 
-
-{{failure}}
+Response: See {{success}} for success, and {{failure}} for failed
+responses.
 
 ### file registrations by file name
 
@@ -1748,17 +1378,12 @@ Operations:
 
 Method: GET /registration/file/{filename}
 
-Description: Returns file registrations by file name 
+Description: Checks the presence of a file and returns its name 
 
 Parameters: filename
 
-Response: Success Failure Response
-
-{{success}}
-
- \- or - 
-
-{{failure}}
+Response: Success as in {{success}} including a file name as shown in
+{{filename}} or a Failure Response as described in {{failure}}.
 
 #### Delete file registrations by file name
 
@@ -1768,17 +1393,11 @@ Description: Delete file registrations by file name
 
 Parameters: filename
 
-Response: Success Failure Response
-
-{{success}}
-
- \- or - 
-
-{{failure}}
+Response: See {{success}} for success, and {{failure}} for failed
+responses.
 
 
-NIPC Extensibility
-==================
+# NIPC Extensibility
 
 NIPC is extensible in two ways:
  
@@ -1821,7 +1440,7 @@ a new technology specific extension to the schema.
 This is performed by adding the new protocol to the technology enum in
 the base objext definition {{objectdef}}
 
-Furhtermore, the protocol objects need to be extended with the new
+Furthermore, the protocol objects need to be extended with the new
 protocol as well. Protocol objects will be extended as follows:
 
 | Attribute  | Req |   Type |          Example                         |
@@ -1836,10 +1455,7 @@ In the new protocol object, protocol specific attributes can be added.
 
 ## Interface extensions
 
-### Extension category
-
 /extensions
-
 
 The interface extension elements are freely extendible interfaces. These
 elements leverage the basic NIPC defined elements and combine them in 
@@ -1849,7 +1465,6 @@ In principle they do not add any basic functionality. In
 the OpenAPI model {{openAPI}} below, we have defined a few example 
 extensions, and we will describe them here at a high level to provide 
 some context on other possible extensions.
-
 
 ### Write file
 
@@ -1896,8 +1511,7 @@ Operations:
  - Bulk: POST
 
 
-Publish/Subscribe Interface
-===========================
+# Publish/Subscribe Interface
 
 The publish/subscribe interface, or data streaming interface, is an MQTT
 publishing interface. Pub/sub topics can be created and managed by means
@@ -1963,41 +1577,40 @@ The sequence of operations for this are:
  - Disconnect from the Zigbee device
    DELETE /connectivity/connection
 
-Security Considerations
-=======================
+# Security Considerations
 
 TBD.
 
-IANA Considerations
-===================
+
+# IANA Considerations
 
 TBD. 
 
 --- back
 
 
-OpenAPI definition
-==================
+# OpenAPI definition
 
 The following non-normative model is provide for convenience of
 the implementor.
 
 ~~~~~~
-<CODE BEGINS>file "openapi.yml"
+<CODE BEGINS>
+file "openapi.yml"
 {::include nipc-openapi/NIPC_REST.yaml}
 <CODE ENDS>
 ~~~~~~
 {: #openAPI}
 
 
-Protobuf definition
-===================
+# Protobuf definition
 
 The following non-normative protocol buffer definition is provide for 
 convenience of the implementor.
 
 ~~~~~~
-<CODE BEGINS>file "data_app.proto"
+<CODE BEGINS>
+file "data_app.proto"
 {::include proto/data_app.proto}
 <CODE ENDS>
 ~~~~~~
