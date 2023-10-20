@@ -1038,11 +1038,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: |-
+                $ref:
                    '#/components/schemas/MultiSubscriptionResponse'
             application/xml:
               schema:
-                $ref: |-
+                $ref:
                    '#/components/schemas/MultiSubscriptionResponse'
         '400':
           description: Bad request
@@ -1080,11 +1080,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: |-
+                $ref:
                    '#/components/schemas/MultiSubscriptionResponse'
             application/xml:
               schema:
-                $ref: |-
+                $ref:
                    '#/components/schemas/MultiSubscriptionResponse'
         '400':
           description: Bad request
@@ -1097,11 +1097,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: |-
+                $ref:
                    '#/components/schemas/MultiSubscriptionResponse'
             application/xml:
               schema:
-                $ref: |-
+                $ref:
                    '#/components/schemas/MultiSubscriptionResponse'
 
   /data/subscription/id/{id}:
@@ -1125,11 +1125,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: |-
+                $ref:
                    '#/components/schemas/MultiSubscriptionResponse'
             application/xml:
               schema:
-                $ref: |-
+                $ref:
                    '#/components/schemas/MultiSubscriptionResponse'
         '400':
           description: Bad request
@@ -1167,11 +1167,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: |-
+                $ref:
                    '#/components/schemas/MultiSubscriptionResponse'
             application/xml:
               schema:
-                $ref: |-
+                $ref:
                    '#/components/schemas/MultiSubscriptionResponse'
         '400':
           description: Bad request
@@ -3003,17 +3003,17 @@ components:
           discriminator:
             propertyName: operation
             mapping:
-              /extension/connection/create: |-
+              /extension/connection/create:
                 '#/components/schemas/Service'
-              /extension/attribute/read: |-
+              /extension/attribute/read:
                 '#/components/schemas/Attribute'
-              /extension/attribute/read/conditional: |-
+              /extension/attribute/read/conditional:
                 '#/components/schemas/AttributeConditional'
-              /extension/attribute/write: |-
+              /extension/attribute/write:
                 '#/components/schemas/AttributeValue'
-              /extension/attribute/write/file: |-
+              /extension/attribute/write/file:
                 '#/components/schemas/AttributeFile'
-              /extension/attribute/write/blob: |-
+              /extension/attribute/write/blob:
                 '#/components/schemas/AttributeBlob'
       xml:
         name: Operation
@@ -3314,19 +3314,19 @@ components:
           discriminator:
             propertyName: operation
             mapping:
-              /connectivity/connection/create: |-
+              /connectivity/connection/create:
                 '#/components/schemas/ServiceResponse'
-              /connectivity/connection/delete: |-
+              /connectivity/connection/delete:
                 '#/components/schemas/SuccessResponse'
-              /extension/attribute/read: |-
+              /extension/attribute/read:
                 '#/components/schemas/AttributeValueResponse'
-              /extension/attribute/write: |-
+              /extension/attribute/write:
                 '#/components/schemas/AttributeValueResponse'
-              /extension/attribute/write/file: |-
+              /extension/attribute/write/file:
                 '#/components/schemas/SuccessResponse'
-              /extension/attribute/write/blob: |-
+              /extension/attribute/write/blob:
                 '#/components/schemas/SuccessResponse'
-              /extension/attribute/read/conditional: |-
+              /extension/attribute/read/conditional:
                 '#/components/schemas/AttributeValueResponse'
       xml:
         name: Operation
