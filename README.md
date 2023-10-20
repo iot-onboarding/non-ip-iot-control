@@ -12,7 +12,7 @@ new branches.  Just create a PR, and we'll import.
 
 Correctness of vendor models are the responsibility of the vendor.
 
-**This work falls under the Internet Engineering Task Force's policeies.**
+**This work falls under the Internet Engineering Task Force's policies.**
 
 # Note Well
 
