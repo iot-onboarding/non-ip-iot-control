@@ -12,7 +12,8 @@ stand_alone: no
 pi: [toc, sortrefs, symrefs]
 
 author:
- -  ins: B. Brinckman
+ - 
+    ins: B. Brinckman
     name: Bart Brinckman
     org: Cisco Systems
     city: Brussels
@@ -70,9 +71,9 @@ devices to communicate with the applications that manage them.
 
 ~~~~~
                                                                
-    +-------------+   	         +---------+              +--------+        
+    +-------------+              +---------+              +--------+        
     | Application |<------------>| Gateway |<------------>| Non-IP |                     
-    |    app      |   IP-based	 |         |    Non-IP    | Device |
+    |    app      |   IP-based   |         |    Non-IP    | Device |
     +-------------+   Operation  +---------+   Operation  +--------+                 
 
 ~~~~~
@@ -191,26 +192,26 @@ will be supported on a gateway as show in {{arch}}.
 # Approach
 
 In non-IP protocols such as BLE or Zigbee, a number of basic operations
-are defined that are fairly similar across protocols. Basic examples of 
+are defined that are similar across protocols. Examples of 
 this are read and write data. Devices may choose to implement all of the
 operations or a subset. For example in BLE a device may choose to 
-implement a binding, but could also allow connect without a binding. 
+implement a binding, but could also allow connection without a binding. 
 In this memo we have therefore defined a control interface that exposes
 these basic operations with a communications protocol-agnostic schema,
-with protocol specific extensions to allow to transmit and receive 
+with protocol specific extensions to transmit and receive 
 attributes that are specific to the communications protocol supported 
-by the device. This allows for extensions to the schema to integrate new
-non-ip communications protocols, whithout the need to update the base
+by the device. This enables extensions  to integrate new
+non-ip communications protocols, without the need to update the base
 schema.
 
 ~~~~~
 
     ID
      - device/group attributes
-	|
-	|> BLE
-	|     - BLE attributes
-	|
+    |
+    |> BLE
+    |     - BLE attributes
+    |
         |> Zigbee
               - Zigbee attributes
 
@@ -219,11 +220,11 @@ schema.
 
 As shown in {{schema}}, the control interface addresses device and group
 objects as IDs, hence the requirement to declare a device to the gateway
-before addressing a NIPC operation to the device. This can be done by 
+before addressing a NIPC operation to the device. This is done by 
 means of SCIM. A NIPC operation can either be performed against a 
 device-id or a group-id. The gateway will leverage information from the 
-SCIM object to xecute a specific NIPC operation. For example, keying 
-material found in the SCIM object may be required to connect to ai
+SCIM object to execute a specific NIPC operation. For example, keying 
+material found in the SCIM object may be required to connect to a
 device. Please refer to {{!I-D.shahzad-scim-device-model}} for more 
 information on SCIM device objects.  
 
@@ -237,12 +238,13 @@ As described, most operations are executed against a device or a group.
 Control operations refer to either of these as "Object" with an ID as an
 identifier. The common schema for Object is defined as follows:
 
-
+~~~~~
 | Attribute     | Req |   Type  |          Example                     |
 +---------------+-----+---------+--------------------------------------|
 | id            |  T  |  uuid   | 12345678-1234-5678-1234-56789abcdef4 |
 | type          |  T  |  enum   | device                               |
-| technology    |  F  |  enum   | ble                                  |
+| technology    |  F  |  enum   | ble 
+~~~~~                                 |
 {: #objectdef title="Definition of an Object"}
 
 where-
@@ -303,7 +305,7 @@ where-
  - RequestID is a correlation ID that can be used for end-to-end 
    tracing.  
 
-## Categories of operations supported	
+## Categories of operations supported
 
 The common operations are categorized in common categories that describe 
 high level sets of functionalities. Each of the NIPC operations belong 
@@ -506,7 +508,7 @@ selective service discovery.
 {{protext}}
 
 In the case of BLE, service discovery is performed when connecting to a
-device. Optionally service discovery may be limited to services 
+device. Optionally, service discovery may be limited to services 
 defined in the "ble" protocol extension. The services to be discovered
 can be added in an array, as well as optional caching parameters.
 
@@ -524,7 +526,7 @@ where-
  - "services" is an array of services defined by their serviceIDs.
  - "cached" refers to whether the services need to be cached for 
    subsequent connects, in order not to perform service discovery on
-   ech request.
+   each request.
  - "cacheIdlepurge" defines how long the cache should be maintained 
    before purging
  - some devices support notifications on changes in services, 
@@ -541,11 +543,11 @@ device.
 
     services
      - serviceID
-	|
-	|> characteristics
-	    - charactericID
-	    - flags
-	       |
+    |
+    |> characteristics
+        - charactericID
+        - flags
+           |
                |> Descriptors
                    - descriptorID
 
@@ -796,7 +798,7 @@ Request Body: an Object, a value and an attribute definition
 A value to be written:
 | Attribute     | Req |   Type  |          Example                     |
 +---------------+-----+---------+--------------------------------------|
-| value         |  T  |  array  | 100				       |
+| value         |  T  |  array  | 100                                  |
 | forcedResponse|  F  | boolean | no                                   |
 {: #value title="Value"}
 
@@ -1007,8 +1009,8 @@ An optional topic to stream to:
 +---------------+-----+---------+--------------------------------------|
 | topic         |  F  | string  | "enterprise/hospital/pulse"          |
 | dataFormat    |  F  | enum    | "default"                            |
-| replay	|  F  | boolean | no                                   |
-| forced_ack	|  F  | boolean | no                                   |
+| replay        |  F  | boolean | no                                   |
+| forced_ack    |  F  | boolean | no                                   |
 {: #topic title="Topic"}
 
 where-
@@ -1162,7 +1164,7 @@ Response: Success with array of subscriptions or Failure Response
 {{success}}
 
 And an object called "subscriptions" which contains an Array of active
-subscriptions, each consisting of an: 
+subscriptions, each consisting of: 
  - {{objectdef}}
  - Zigbee or BLE specific {{protext}} containing
     - {{bleattr}}
@@ -1186,7 +1188,7 @@ Response: Success with array of subscriptions or Failure Response
 {{success}}
 
 And an object called "subscriptions" which contains an Array of active
-subscriptions, each consisting of an: 
+subscriptions, each consisting of: 
  - {{objectdef}}
  - Zigbee or BLE specific {{protext}} containing
     - {{bleattr}}
@@ -1221,7 +1223,7 @@ Response: Success with array of subscriptions or Failure Response
 {{success}}
 
 And an object called "subscriptions" which contains an Array of active
-subscriptions, each consisting of an: 
+subscriptions, each consisting of: 
  - {{objectdef}}
  - Zigbee or BLE specific {{protext}} containing
     - {{bleattr}}
@@ -1245,7 +1247,7 @@ Response: Success with array of subscriptions or Failure Response
 {{success}}
 
 And an object called "subscriptions" which contains an Array of active
-subscriptions, each consisting of an: 
+subscriptions, each consisting of: 
  - {{objectdef}}
  - Zigbee or BLE specific {{protext}} containing
     - {{bleattr}}
@@ -1261,8 +1263,8 @@ subscriptions, each consisting of an:
 
 /data/broadcast
 
-The beodcast element allows an application  to broadcast a message to a
-specific device. Note that broadcasts can be heard by other devices on 
+The brodcast element allows an application to broadcast a message to a
+specific device. Note: broadcasts can be heard by other devices on 
 the same L2 network.
 
 Operations:
@@ -1283,14 +1285,14 @@ Request Body: an Object, broadcast parameters and an attribute definition
 Broadcast parameters:
 | Attribute         | Req |   Type  |          Example                 |
 +-------------------+-----+---------+----------------------------------|
-| cycle        	    |  T  |  enum   | single			       |
+| cycle             |  T  |  enum   | single                           |
 | broadcastTime     |  F  |  int    | 30                               |
 | broadcastInterval |  F  |  int    | 5                                |
 {: #broadcast title="Broadcast parameters"}
 
 where-
 
- - cycle determines the repetitiveness of the boradcast, and is either
+ - cycle determines the repetitiveness of the broadcast, and is either
    single or repeat
  - broadcastTime is the maximum time in seconds the broadcast should 
    run
@@ -1355,7 +1357,7 @@ Description: Register a pub/sub topic
 
 Parameters: None
 
-Request Body: a Topic, data apps that can subscribe to the topic and 
+Request Body: A topic, data apps that can subscribe to the topic and 
 extensions for BLE and Zigbee that describe attributes that map to the
 topic.
 
@@ -1366,7 +1368,7 @@ map to the topic.
 
 {{protext}}
 
-In the case of BLE,  these are either BLE subscription attributes, 
+In the case of BLE, these are either BLE subscription attributes, 
 connection status, or Broadcast (advertisement) data.
 For Zigbee, these are Zigbee attributes.
 
@@ -1400,7 +1402,7 @@ Description: Update a pub/sub topic
 
 Parameters: None
 
-Request Body: a Topic, data apps that can subscribe to the topic and 
+Request Body: A topic, data apps that can subscribe to the topic and 
 extensions for BLE and Zigbee that describe attributes that map to the
 topic.
 
@@ -1439,7 +1441,7 @@ Method: GET /registration/topic
 
 Description: Gets the configuration of one or more topics
 
-Parameters: a Topic, data apps that can subscribe to the topic and 
+Parameters: A topic, data apps that can subscribe to the topic and 
 extensions for BLE and Zigbee that describe attributes that map to the
 topic. Multiple topics can be added by comma-separated attributes.
 
@@ -1482,7 +1484,7 @@ Method: DELETE /registration/topic
 
 Description: Delete one or more topics
 
-Parameters: a Topic, data apps that can subscribe to the topic and 
+Parameters: A topic, data apps that can subscribe to the topic and 
 extensions for BLE and Zigbee that describe attributes that map to the
 topic. Multiple topics can be added by comma-separated attributes
 
@@ -1543,7 +1545,7 @@ Response: Success with an array of topics or Failure Response
 
 {{success}}
 
-A topics object with an Array of topics returned, with following
+A topics object with an Array of topics returned, with the following
 attributes:
  - the topic name {topicname}
  - the status of the topic {{success}}, with the object id the topic is
@@ -1566,7 +1568,7 @@ Response: Success with an array of topics or Failure Response
 
 {{success}}
 
-A topics object with an Array of topics returned, with following
+A topics object with an Array of topics returned, with the following
 attributes:
  - the topic name {topicname}
  - the status of the topic {{success}}, with the object id the topic is
@@ -1685,7 +1687,7 @@ Response: Success with a topic name or Failure Response
 /registration/file
 
 The file registration element allows an application to register a file.
-a file can be used in operations to devices (such as attribute)
+a file can be used in operations to devices (such as an attribute)
 
 Operations:
  - Register a file: POST
@@ -1707,7 +1709,7 @@ File can be uploaded or referred to as a URL:
 | Attribute     | Req |   Type  |          Example                     |
 +---------------+----------+-------------------------------------------|
 | filename      |  T  | string  | "firmware.dat"                       |
-| file 	        |  F  | binary  | file                                 |
+| file          |  F  | binary  | file                                 |
 | bindings      |  F  | string  | "https://domain.com/firmware.dat"    |
 {: #file title="File"}
 
@@ -1828,7 +1830,7 @@ NIPC Extensibility
 
 # Introduction
 
-NIPC is extensible in 2 ways:
+NIPC is extensible in two ways:
  
  - Protocol extensions: Protocol extensions can extend NIPC with support
    for new non-IP protocols
@@ -1840,24 +1842,25 @@ NIPC is extensible in 2 ways:
 # Protocol extensions
 
 As described in {{schema}} the NIPC interface supports protocol specific
-extensions to allow to transmit and receive attributes that are specific
-to the communications protocol supported by the device. This allows for 
-extensions to the schema to integrate new non-ip communications 
-protocols, whithout the need to update the base schema.
+extensions that allow bi-directional communication of attributes
+that are specific to the protocol supported 
+by the device. This allows for extensions to the schema to 
+integrate new non-ip communications protocols, 
+without the need to update the base schema.
 
 ~~~~~
 
     ID
      - device/group attributes
-	|
-	|> BLE
-	|     - BLE attributes
-	|
+  |
+  |> BLE
+  |     - BLE attributes
+  |
         |> Zigbee
         |     - Zigbee attributes
-	|
+  |
         |> Protocol extension
-	|     - Protocol extension attributes	
+  |     - Protocol extension attributes
 
 ~~~~~
 {: #extschema title="Extended Schema"}
@@ -1886,15 +1889,14 @@ In the new protocol object, protocol specific attributes can be added.
 
 /extensions
 
-The interface extension elements are freely extendible interfaces. These
-elements leverage the basic NIPC defined elements, and combine them in 
+The interface extension catagory is freely extendible. These
+extensions leverage the basic NIPC defined elements, and combine them in 
 compound statements in order to streamline application operation against
-devices. In principle they do not add any basic functionality, but 
-rather they combine basic elements into one API call, in order to make
-application operation against devices more convenient and expedient. In
+devices, make operations more expediant and convenient in one API call.
+In principle they do not add any basic functionality. In
 the OpenAPI model {{openAPI}} below, we have defined a few example 
 extensions, and we will describe them here at a high level to provide 
-some context on possible extensions.
+some context on other possible extensions.
 
 ## Write file
 
@@ -1911,7 +1913,7 @@ Operations:
 
 /extension/read/conditional
 
-This extension perform a read operation sequentially for a defined 
+This extension performs a read operation sequentially for a defined 
 amount of time until a specified value is read.
 
 Operations:
@@ -1922,7 +1924,7 @@ Operations:
 /extension/bulk
 
 This extension allows you to create a compound operation made out of 
-multiple connection and data operations that are to be executed \
+multiple connections and data operations that are to be executed \
 sequentially until they all succeed or there is a failure.
 supported operations are:
  - /connectivity/connection/create
@@ -2036,7 +2038,7 @@ convenience of the implementor.
 
 ~~~~~~
 <CODE BEGINS>file "data_app.proto"
-{::include proto/NIPC_REST.yaml}
+{::include proto/data_app.proto}
 <CODE ENDS>
 ~~~~~~
 {#proto}
