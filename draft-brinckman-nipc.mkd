@@ -60,8 +60,8 @@ Zigbee as they are the most commonly deployed.
 
 --- middle
 
-Introduction
-============
+
+# Introduction
 
 Use cases in building management, healthcare, workplaces, manufacturing,
 logistics and hospitality have introduced low-power devices into these 
