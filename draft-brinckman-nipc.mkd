@@ -749,6 +749,7 @@ where-
  - long is an optional attribute that allows to force a write type
 
 Contents of the Zigbee protocol extension defining an attribute:
+
 +----------------+-----+--------+--------------------------------------|
 | endpointID     |  T  |  int   | 16                                   |
 | clusterID      |  T  |  int   | 6                                    |
