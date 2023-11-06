@@ -28,7 +28,7 @@ info:
   license:
     name: TBD
     url: TBD
-  version: 0.5.3
+  version: 0.5.5
 externalDocs:
   description: NIPC IETF draft
   url: TBD
@@ -67,12 +67,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Object'
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/Object'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Object'
         required: true
       responses:
         '200':
@@ -81,9 +75,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BindingResponse'          
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/BindingResponse'
         '400':
           description: Bad request
         '401':
@@ -96,9 +87,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FailureResponse' 
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/FailureResponse'
   
     get:
       tags:
@@ -126,9 +114,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MultiBindingsResponse'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/MultiBindingsResponse'
         '400':
           description: Bad request
         '401':
@@ -141,9 +126,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FailureResponse' 
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/FailureResponse'                
+                
     delete:
       tags:
         - connectivity
@@ -171,9 +154,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SuccessResponse'          
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/SuccessResponse'
         '400':
           description: Bad request
         '401':
@@ -186,9 +166,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FailureResponse' 
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/FailureResponse'
   
   /connectivity/binding/id/{id}:
     post:
@@ -217,9 +194,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BindingResponse'          
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/BindingResponse'
+
         '400':
           description: Bad request
         '401':
@@ -232,9 +207,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FailureResponse' 
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/FailureResponse'
   
     get:
       tags:
@@ -260,9 +232,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BindingResponse'          
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/BindingResponse'
+
         '400':
           description: Bad request
         '401':
@@ -275,9 +245,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FailureResponse' 
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/FailureResponse'
                 
     delete:
       tags:
@@ -301,9 +268,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SuccessResponse'          
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/SuccessResponse'
         '400':
           description: Bad request
         '401':
@@ -316,9 +280,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FailureResponse' 
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/FailureResponse'
   
   /connectivity/connection:
     post:
@@ -336,12 +297,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Connection'
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/Connection'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Connection'
         required: true
       responses:
         '200':
@@ -350,9 +305,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceResponse'          
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/ServiceResponse'
         '400':
           description: Bad request
         '401':
@@ -365,9 +317,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FailureResponse' 
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/FailureResponse'
     
     get:
       tags:
@@ -398,9 +347,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MultiConnectionsResponse'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/MultiConnectionsResponse'
         '400':
           description: Bad request
         '401':
@@ -413,9 +359,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FailureResponse' 
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/FailureResponse'
                 
     delete:
       tags:
@@ -443,9 +386,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SuccessResponse'          
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/SuccessResponse'
         '400':
           description: Bad request
         '401':
@@ -458,9 +398,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FailureResponse' 
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/FailureResponse'
 
   /connectivity/connection/id/{id}:
     post:
@@ -490,9 +427,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SuccessResponse'          
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/SuccessResponse'
         '400':
           description: Bad request
         '401':
@@ -505,9 +439,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FailureResponse' 
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/FailureResponse'
   
     get:
       tags:
@@ -533,9 +464,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SuccessResponse'          
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/SuccessResponse'
         '400':
           description: Bad request
         '401':
@@ -548,9 +476,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FailureResponse' 
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/FailureResponse'
                 
     delete:
       tags:
@@ -574,9 +499,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SuccessResponse'          
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/SuccessResponse'
         '400':
           description: Bad request
         '401':
@@ -589,9 +511,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FailureResponse' 
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/FailureResponse'
   
   /connectivity/services:
     get:
@@ -614,9 +533,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceResponse'          
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/ServiceResponse'
         '400':
           description: Bad request
         '401':
@@ -655,9 +571,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceResponse'          
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/ServiceResponse'
         '400':
           description: Bad request
         '401':
@@ -670,9 +583,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FailureResponse' 
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/FailureResponse'
 
 ### Data
   /data/attribute:
@@ -687,12 +597,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/AttributeValue'
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/AttributeValue'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/AttributeValue'
         required: true
       responses:
         '200':
@@ -701,9 +605,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AttributeValueResponse'          
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/AttributeValueResponse'
         '400':
           description: Bad request
         '401':
@@ -716,9 +617,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FailureResponse' 
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/FailureResponse'
     
     put:
       tags:
@@ -731,21 +629,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/AttributeValue'
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/AttributeValue'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/AttributeValue'
         required: true
       responses:
         '200':
           description: Success
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/AttributeValueResponse'
-            application/xml:
               schema:
                 $ref: '#/components/schemas/AttributeValueResponse'
         '400':
@@ -760,9 +649,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FailureResponse' 
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/FailureResponse'
   
     delete:
       tags:
@@ -784,9 +670,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AttributeValueResponse'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/AttributeValueResponse'
         '400':
           description: Bad request
         '401':
@@ -799,9 +682,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FailureResponse' 
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/FailureResponse'
                 
     get:
       tags:
@@ -823,9 +703,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AttributeValueResponse'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/AttributeValueResponse'
         '400':
           description: Bad request
         '401':
@@ -838,9 +715,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FailureResponse' 
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/FailureResponse'
   
   /data/subscription:
     post:
@@ -856,12 +730,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Subscription'
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/Subscription'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Subscription'
         required: true
       responses:
         '200':
@@ -870,9 +738,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SuccessResponse'          
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/SuccessResponse'
         '400':
           description: Bad request
         '401':
@@ -885,9 +750,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FailureResponse'   
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/FailureResponse'
                 
     put:
       tags:
@@ -904,12 +766,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Subscription'
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/Subscription'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Subscription'
         required: true
       responses:
         '200':
@@ -918,9 +774,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SuccessResponse'          
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/SuccessResponse'
         '400':
           description: Bad request
         '401':
@@ -933,9 +786,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FailureResponse' 
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/FailureResponse'
 
     delete:
       tags:
@@ -959,9 +809,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SuccessResponse'          
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/SuccessResponse'
         '400':
           description: Bad request
         '401':
@@ -972,9 +819,6 @@ paths:
           description: Server-side failure
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/FailureResponse'
-            application/xml:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
     
@@ -998,9 +842,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SuccessResponse'          
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/SuccessResponse'
         '400':
           description: Bad request
         '401':
@@ -1011,9 +852,6 @@ paths:
           description: Server-side failure
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/FailureResponse'
-            application/xml:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
 
@@ -1040,10 +878,6 @@ paths:
               schema:
                 $ref:
                    '#/components/schemas/MultiSubscriptionResponse'
-            application/xml:
-              schema:
-                $ref:
-                   '#/components/schemas/MultiSubscriptionResponse'
         '400':
           description: Bad request
         '401':
@@ -1054,9 +888,6 @@ paths:
           description: Server-side failure
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/FailureResponse'
-            application/xml:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
 
@@ -1082,10 +913,6 @@ paths:
               schema:
                 $ref:
                    '#/components/schemas/MultiSubscriptionResponse'
-            application/xml:
-              schema:
-                $ref:
-                   '#/components/schemas/MultiSubscriptionResponse'
         '400':
           description: Bad request
         '401':
@@ -1096,10 +923,6 @@ paths:
           description: Server-side failure
           content:
             application/json:
-              schema:
-                $ref:
-                   '#/components/schemas/MultiSubscriptionResponse'
-            application/xml:
               schema:
                 $ref:
                    '#/components/schemas/MultiSubscriptionResponse'
@@ -1127,10 +950,6 @@ paths:
               schema:
                 $ref:
                    '#/components/schemas/MultiSubscriptionResponse'
-            application/xml:
-              schema:
-                $ref:
-                   '#/components/schemas/MultiSubscriptionResponse'
         '400':
           description: Bad request
         '401':
@@ -1141,9 +960,6 @@ paths:
           description: Server-side failure
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/FailureResponse'
-            application/xml:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
 
@@ -1169,10 +985,6 @@ paths:
               schema:
                 $ref:
                    '#/components/schemas/MultiSubscriptionResponse'
-            application/xml:
-              schema:
-                $ref:
-                   '#/components/schemas/MultiSubscriptionResponse'
         '400':
           description: Bad request
         '401':
@@ -1183,9 +995,6 @@ paths:
           description: Server-side failure
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/FailureResponse'
-            application/xml:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
 
@@ -1201,21 +1010,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Broadcast'
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/Broadcast'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Broadcast'
         required: true
       responses:
         '200':
           description: Success
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/SuccessResponse'
-            application/xml:
               schema:
                 $ref: '#/components/schemas/SuccessResponse'
         '400':
@@ -1228,9 +1028,6 @@ paths:
           description: Server-side failure
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/FailureResponse'
-            application/xml:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
 
@@ -1247,21 +1044,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Topic'
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/Topic'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Topic'
         required: true
       responses:
         '200':
           description: Success
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/TopicResponse'
-            application/xml:
               schema:
                 $ref: '#/components/schemas/TopicResponse'
         '400':
@@ -1274,9 +1062,6 @@ paths:
           description: Server-side failure
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/FailureResponse'
-            application/xml:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
 
@@ -1291,21 +1076,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Topic'
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/Topic'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Topic'
         required: true
       responses:
         '200':
           description: Success
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/TopicResponse'
-            application/xml:
               schema:
                 $ref: '#/components/schemas/TopicResponse'
         '400':
@@ -1318,9 +1094,6 @@ paths:
           description: Server-side failure
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/FailureResponse'
-            application/xml:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
 
@@ -1349,9 +1122,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MultiTopicsResponse'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/MultiTopicsResponse'
         '400':
           description: Bad request
         '401':
@@ -1362,9 +1132,6 @@ paths:
           description: Server-side failure
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/FailureResponse'
-            application/xml:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
 
@@ -1393,9 +1160,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MultiTopicsResponse'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/MultiTopicsResponse'
         '400':
           description: Bad request
         '401':
@@ -1406,9 +1170,6 @@ paths:
           description: Server-side failure
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/FailureResponse'
-            application/xml:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
 
@@ -1434,9 +1195,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TopicResponse'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/TopicResponse'
         '400':
           description: Bad request
         '401':
@@ -1447,9 +1205,6 @@ paths:
           description: Server-side failure
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/FailureResponse'
-            application/xml:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
 
@@ -1474,9 +1229,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TopicResponse'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/TopicResponse'
         '400':
           description: Bad request
         '401':
@@ -1487,9 +1239,6 @@ paths:
           description: Server-side failure
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/FailureResponse'
-            application/xml:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
 
@@ -1516,9 +1265,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MultiTopicsResponse'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/MultiTopicsResponse'
         '400':
           description: Bad request
         '401':
@@ -1529,9 +1275,6 @@ paths:
           description: Server-side failure
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/FailureResponse'
-            application/xml:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
 
@@ -1556,9 +1299,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MultiTopicsResponse'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/MultiTopicsResponse'
         '400':
           description: Bad request
         '401':
@@ -1569,9 +1309,6 @@ paths:
           description: Server-side failure
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/FailureResponse'
-            application/xml:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
 
@@ -1597,9 +1334,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MultiTopicsResponse'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/MultiTopicsResponse'
         '400':
           description: Bad request
         '401':
@@ -1610,9 +1344,6 @@ paths:
           description: Server-side failure
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/FailureResponse'
-            application/xml:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
 
@@ -1637,9 +1368,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MultiTopicsResponse'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/MultiTopicsResponse'
         '400':
           description: Bad request
         '401':
@@ -1650,9 +1378,6 @@ paths:
           description: Server-side failure
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/FailureResponse'
-            application/xml:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
 
@@ -1668,21 +1393,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/File'
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/File'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/File'
         required: true
       responses:
         '200':
           description: Success
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/SuccessResponse'
-            application/xml:
               schema:
                 $ref: '#/components/schemas/SuccessResponse'
         '400':
@@ -1695,9 +1411,6 @@ paths:
           description: Server-side failure
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/FailureResponse'
-            application/xml:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
 
@@ -1712,21 +1425,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/File'
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/File'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/File'
         required: true
       responses:
         '200':
           description: Success
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/SuccessResponse'
-            application/xml:
               schema:
                 $ref: '#/components/schemas/SuccessResponse'
         '400':
@@ -1739,9 +1443,6 @@ paths:
           description: Server-side failure
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/FailureResponse'
-            application/xml:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
 
@@ -1767,9 +1468,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SuccessResponse'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/SuccessResponse'
         '400':
           description: Bad request
         '401':
@@ -1780,9 +1478,6 @@ paths:
           description: Server-side failure
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/FailureResponse'
-            application/xml:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
 
@@ -1810,9 +1505,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MultiFileResponse'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/MultiFileResponse'
         '400':
           description: Bad request
         '401':
@@ -1823,9 +1515,6 @@ paths:
           description: Server-side failure
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/FailureResponse'
-            application/xml:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
 
@@ -1851,9 +1540,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FileResponse'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/FileResponse'
         '400':
           description: Bad request
         '401':
@@ -1864,9 +1550,6 @@ paths:
           description: Server-side failure
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/FailureResponse'
-            application/xml:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
 
@@ -1891,9 +1574,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FileResponse'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/FileResponse'
         '400':
           description: Bad request
         '401':
@@ -1904,9 +1584,6 @@ paths:
           description: Server-side failure
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/FailureResponse'
-            application/xml:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
 
@@ -1927,21 +1604,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Connection'
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/Connection'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Connection'
         required: true
       responses:
         '200':
           description: Success
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/ServiceResponse'
-            application/xml:
               schema:
                 $ref: '#/components/schemas/ServiceResponse'
         '400':
@@ -1954,9 +1622,6 @@ paths:
           description: Server-side failure
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/FailureResponse'
-            application/xml:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
 
@@ -1976,21 +1641,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Object'
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/Object'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Object'
         required: true
       responses:
         '200':
           description: Success
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/SuccessResponse'
-            application/xml:
               schema:
                 $ref: '#/components/schemas/SuccessResponse'
         '400':
@@ -2003,9 +1659,6 @@ paths:
           description: Server-side failure
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/FailureResponse'
-            application/xml:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
 
@@ -2021,21 +1674,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/AttributeValue'
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/AttributeValue'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/AttributeValue'
         required: true
       responses:
         '200':
           description: Success
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/AttributeValueResponse'
-            application/xml:
               schema:
                 $ref: '#/components/schemas/AttributeValueResponse'
         '400':
@@ -2048,9 +1692,6 @@ paths:
           description: Server-side failure
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/FailureResponse'
-            application/xml:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
 
@@ -2067,21 +1708,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/AttributeFile'
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/AttributeFile'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/AttributeFile'
         required: true
       responses:
         '200':
           description: Success
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/SuccessResponse'
-            application/xml:
               schema:
                 $ref: '#/components/schemas/SuccessResponse'
         '400':
@@ -2094,9 +1726,6 @@ paths:
           description: Server-side failure
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/FailureResponse'
-            application/xml:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
 
@@ -2114,21 +1743,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/AttributeBlob'
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/AttributeBlob'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/AttributeBlob'
         required: true
       responses:
         '200':
           description: Success
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/SuccessResponse'
-            application/xml:
               schema:
                 $ref: '#/components/schemas/SuccessResponse'
         '400':
@@ -2141,9 +1761,6 @@ paths:
           description: Server-side failure
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/FailureResponse'
-            application/xml:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
 
@@ -2159,12 +1776,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Attribute'
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/Attribute'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Attribute'
         required: true
       responses:
         '200':
@@ -2172,10 +1783,6 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AttributeValueResponse'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/AttributeValueResponse'
         '400':
           description: Bad request
         '401':
@@ -2186,9 +1793,6 @@ paths:
           description: Server-side failure
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/FailureResponse'
-            application/xml:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
 
@@ -2208,21 +1812,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/AttributeConditional'
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/AttributeConditional'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/AttributeConditional'
         required: true
       responses:
         '200':
           description: Success
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/AttributeValueResponse'
-            application/xml:
               schema:
                 $ref: '#/components/schemas/AttributeValueResponse'
         '400':
@@ -2235,9 +1830,6 @@ paths:
           description: Server-side failure
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/FailureResponse'
-            application/xml:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
 
@@ -2253,21 +1845,12 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Bulk'
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/Bulk'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Bulk'
         required: true
       responses:
         '200':
           description: Success
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/BulkResponse'
-            application/xml:
               schema:
                 $ref: '#/components/schemas/BulkResponse'
         '400':
@@ -2280,9 +1863,6 @@ paths:
           description: Server-side failure
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/FailureResponse'
-            application/xml:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
 
