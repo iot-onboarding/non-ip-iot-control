@@ -2863,7 +2863,6 @@ components:
           example: default
           enum:
             - default # decorated with attribute ids
-            - timestamped
             - payload
         replay:
           type: boolean

@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+import "google/protobuf/timestamp.proto";
+
 option java_package = "org.ietf.nipc.proto";
 option java_multiple_files = true;
 
@@ -16,6 +18,9 @@ message DataSubscription {
         RawPayload raw_payload = 6;
         BLEConnectionStatus ble_connection_status = 7;
     }
+
+    google.protobuf.Timestamp timestamp = 8;
+    optional string ap_mac_address = 9;
 
     message BLESubscription {
         optional string service_uuid = 1;
