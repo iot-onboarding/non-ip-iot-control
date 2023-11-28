@@ -28,7 +28,7 @@ info:
   license:
     name: TBD
     url: TBD
-  version: 0.6.0
+  version: 0.6.1
 externalDocs:
   description: NIPC IETF draft
   url: TBD
@@ -102,7 +102,7 @@ paths:
           in: query
           description: device or group id that need to be filtered
           required: false
-          explode: true
+          explode: false
           schema:
             type: string
             format: uuid
@@ -142,7 +142,7 @@ paths:
           in: query
           description: device or group id that need to be filtered
           required: false
-          explode: true
+          explode: false
           schema:
             type: string
             format: uuid
@@ -336,7 +336,7 @@ paths:
           in: query
           description: device or group ids that need to be filtered
           required: false
-          explode: true
+          explode: false
           schema:
             type: string
             format: uuid
@@ -375,7 +375,7 @@ paths:
           in: query
           description: device or group ids that need to be filtered
           required: false
-          explode: true
+          explode: false
           schema:
             type: string
             format: uuid
@@ -557,7 +557,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/FailureResponse' 
 
-  /connectivity/services/selective:
+  /connectivity/services/discover:
     post:
       tags:
         - connectivity
@@ -568,6 +568,7 @@ paths:
         Selectively discover services on a device, limited 
         to services described in the parameters.
         Group ids will fail.
+      operationId: GetSelectiveServices
       requestBody:
         content:
           application/json:
@@ -2660,7 +2661,7 @@ components:
 ## A subscription attribute of an Device
     SubscriptionRaw:
       allOf:
-        - $ref: '#/components/schemas/Attribute'
+        - $ref: '#/components/schemas/AttributeRaw'
       type: object
       properties:
         forcedAck:
@@ -3154,7 +3155,7 @@ components:
               GET /connectivity/connection:
                 '#/components/schemas/SuccessResponse'
               POST /data/attribute:
-                '#/components/schemas/RegisteredAttributeValue'
+                '#/components/schemas/AttributeValueResponse'
               DELETE /data/attribute:
                 '#/components/schemas/AttributeValueResponse'
               GET /data/attribute:
