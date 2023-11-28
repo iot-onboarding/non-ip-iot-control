@@ -2860,7 +2860,7 @@ components:
               POST /data/attribute:
                 '#/components/schemas/AttributeValue'
               DELETE /data/attribute:
-                '#/components/schema/Attribute'
+                '#/components/schemas/Attribute'
               GET /data/attribute:
                 '#/components/schemas/Attribute'
               POST /data/attribute/Subscription:
