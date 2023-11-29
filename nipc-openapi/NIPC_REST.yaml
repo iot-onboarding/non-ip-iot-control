@@ -2824,7 +2824,7 @@ components:
       allOf:
         - type: object
           properties:
-            operation:
+            path:
               type: string
               enum:
                - /connectivity/connection
