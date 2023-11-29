@@ -2750,11 +2750,9 @@ components:
             - default
             - payload
         replay:
-          type: string
-          example: off
-          enum:
-            - off #default
-            - on
+          type: boolean
+          example: false
+          default: false
         id:
           type: string
           format: uuid
