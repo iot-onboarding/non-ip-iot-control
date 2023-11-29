@@ -2835,7 +2835,7 @@ components:
                - /extension/attribute/write/file
                - /extension/attribute/write/blob
                - /extension/attribute/read/conditional
-            type:  
+            method:  
               type: string
               enum:
                - POST
