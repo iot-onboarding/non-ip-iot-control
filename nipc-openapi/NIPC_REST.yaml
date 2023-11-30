@@ -689,7 +689,6 @@ paths:
         in: path
         description: attribute name that needs to be filtered
         required: true
-        explode: true
         schema:
           type: string
           example: "temperature"
@@ -732,7 +731,6 @@ paths:
         in: path
         description: attribute name that needs to be filtered
         required: true
-        explode: true
         schema:
           type: string
           example: "temperature"
@@ -921,7 +919,6 @@ paths:
         in: path
         description: attribute name that needs to be filtered
         required: true
-        explode: true
         schema:
           type: string
           example: "temperature" 
@@ -1317,7 +1314,7 @@ paths:
           in: query
           description: topic that need to be filtered
           required: false
-          explode: true
+          explode: false
           schema:
             type: string
             example: "enterprise/hospital/pulse_oximeter"
@@ -1354,7 +1351,7 @@ paths:
           in: query
           description: topic that need to be filtered
           required: false
-          explode: true
+          explode: false
           schema:
             type: string
             example: "enterprise/hospital/pulse_oximeter"
@@ -1664,7 +1661,7 @@ paths:
           in: query
           description: attribute name that needs to be filtered
           required: false
-          explode: true
+          explode: false
           schema:
             type: string
             example: "temperature"
@@ -1870,7 +1867,7 @@ paths:
           in: query
           description: file that needs to be filtered
           required: false
-          explode: true
+          explode: false
           schema:
             type: string
             example: "firmware.dat"
@@ -1907,7 +1904,7 @@ paths:
           in: query
           description: file that needs to be filtered
           required: false
-          explode: true
+          explode: false
           schema:
             type: string
             example: "firmware.dat"
