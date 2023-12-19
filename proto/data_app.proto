@@ -10,13 +10,17 @@ package nipc;
 message DataSubscription {
     optional string device_id = 1;
     bytes data = 2;
+    google.protobuf.Timestamp timestamp = 3;
+    optional string ap_mac_address = 4;
+
+    reserved 5 to 10;
 
     oneof subscription {
-        BLESubscription ble_subscription = 3;
-        BLEAdvertisement ble_advertisement = 4;
-        ZigbeeSubscription zigbee_subscription = 5;
-        RawPayload raw_payload = 6;
-        BLEConnectionStatus ble_connection_status = 7;
+        BLESubscription ble_subscription = 11;
+        BLEAdvertisement ble_advertisement = 12;
+        ZigbeeSubscription zigbee_subscription = 13;
+        RawPayload raw_payload = 14;
+        BLEConnectionStatus ble_connection_status = 15;
     }
 
     google.protobuf.Timestamp timestamp = 8;
