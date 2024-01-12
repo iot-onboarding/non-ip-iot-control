@@ -2730,41 +2730,6 @@ components:
         - $ref: '#/components/schemas/SuccessResponse'
         - $ref: '#/components/schemas/FailureResponse'
 
-## Success response for binding API
-    BindingResponse:
-      oneOf:
-        - $ref: '#/components/schemas/SuccessResponse'
-        - $ref: '#/components/schemas/ZigbeeBindingResponse'
-        - $ref: '#/components/schemas/FailureResponse'
-
-## Returning multiple bindings
-    MultiBindingsResponse:
-      allOf:
-        - $ref: '#/components/schemas/Success'
-      required:
-        - bindings
-      type: object
-      properties:
-        bindings:
-          type: array
-          items:
-            $ref: '#/components/schemas/BindingResponse'
-
-## Returns Zigbee node & pan ID
-    ZigbeeBindingResponse:
-      allOf:
-        - $ref: '#/components/schemas/SuccessResponse'
-      type: object
-      properties:
-        nodeID:
-          type: integer
-          format: int32
-          example: 65234
-        panID:
-          type: integer
-          format: int32
-          example: 48734
-
  ## Returns discovered services
     ServiceResponse:
       allOf:
