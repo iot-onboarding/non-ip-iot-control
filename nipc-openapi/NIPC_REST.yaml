@@ -1,0 +1,2963 @@
+openapi: 3.0.3
+info:
+  title: Non IP Device Control (NIPC) API
+  description: |-
+    There has been a large influx of non-IP devices supporting
+    processes in manufacturing, healthcare, hospitality, retail, the
+    home, and the office.  At the same time, wireless access points
+    have been deployed nearly everywhere, many of which have radios
+    that can transmit and receive different frame types, such as BLE,
+    Zigbee. To integrate multiple of these use cases leveraging a
+    single wireless infrastructure and avoid the need for parallel
+    infrastructure, a Non IP device gateway function is necessary.
+    The gateway provides the following functions:
+       - authentication and authorization of application clients that
+         will communicate with devices 
+       - APIs that onboard a device on the network (out of scope for
+         this specification, but covered in SCIM for devices)
+       - APIs that allow an app to set up a connection with a device
+       - APIs that allow an app to exchange data with a device
+       - APIs that allow a device to create registrations in the
+         network for a device 
+    These collection of these APIs, in combination with the
+    onboarding API (SCIM for devices) will allow an application to
+    perform a complete set of operations on Non-IP devices.
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: bbrinckm@cisco.com
+  license:
+    name: TBD
+    url: TBD
+  version: 0.7.0
+externalDocs:
+  description: NIPC IETF draft
+  url: TBD
+servers:
+  - url: https://{gw_host}/nipc
+    variables:
+      gw_host:
+        default: localhost
+        description: Gateway Host
+tags:
+  - name: connectivity
+    description: APIs that allow apps to manage device connections
+  - name: data
+    description: |-
+      APIs that allow apps to exchange data with non-IP devices
+  - name: registrations
+    description: |-
+      APIs that allow apps to make registrations in the network for
+      devices.
+  - name: extensions
+    description: |-
+      APIs that simplify application interaciton by implementing one
+      or more basic API's into a single API call.
+
+paths:
+### Connectivity
+  /connectivity/connection:
+    post:
+      tags:
+        - connectivity
+      summary: |-
+        Connect a device to the network, optionally with service
+        discovery 
+      description: |-
+        Connect a device to the network, optionally with service
+        discovery 
+      operationId: connConnect
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Connection'
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'          
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse' 
+    
+    get:
+      tags:
+        - connectivity
+      summary: |-
+        Get connection state devices for a device or group of
+        devices
+      description: |-
+        Get all connection status for connections made by control ap
+        or connection status by object ID, multiple ids can be
+        provided with comma separated strings, or a group id can be
+        provided  
+      operationId: GetConnections
+      parameters:
+        - name: id
+          in: query
+          description: device or group ids that need to be filtered
+          required: false
+          explode: false
+          schema:
+            type: string
+            format: uuid
+            example: 12345678-1234-5678-1234-56789abcdef4
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MultiConnectionsResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse' 
+                
+    delete:
+      tags:
+        - connectivity
+      summary: Disconnect a device or group of devices
+      description: |-
+        Disconnect a device or device group by object ID, Multiple
+        ids can be provided with comma separated strings, or a
+        group id can be provided 
+      operationId: DeleteConnections
+      parameters:
+        - name: id
+          in: query
+          description: device or group ids that need to be filtered
+          required: false
+          explode: false
+          schema:
+            type: string
+            format: uuid
+            example: 12345678-1234-5678-1234-56789abcdef4
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'          
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse' 
+
+  /connectivity/connection/id/{id}:
+    post:
+      tags:
+        - connectivity
+      summary: |-
+        Connect a device by device id (device technology needs to
+        support connection) 
+      description: |-
+        Connect a device by device id, full service discovery 
+        will be performed. Will fail if device has multiple 
+        technologies defined. Group ids will fail.
+      operationId: CreateConnectionbyID
+      parameters:
+        - name: id
+          in: path
+          description: device id that need to be filtered
+          required: true
+          schema:
+            type: string
+            format: uuid
+            example: 12345678-1234-5678-1234-56789abcdef4
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'          
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse' 
+  
+    get:
+      tags:
+        - connectivity
+      summary: Get connection by id for a device
+      description: |-
+        Get connection by id for a device, success when device
+        connected, failure when device not connected.
+        Group ids will also fail. 
+      operationId: GetConnectionbyId
+      parameters:
+        - name: id
+          in: path
+          description: device id that need to be filtered
+          required: true
+          schema:
+            type: string
+            format: uuid
+            example: 12345678-1234-5678-1234-56789abcdef4
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'          
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse' 
+                
+    delete:
+      tags:
+        - connectivity
+      summary: Delete connection by id for a device
+      description: |-
+        Disconnect a device by id, success when device
+        is disconnected, failure disconnect fails.
+        Group ids will also fail. 
+      operationId: DeleteConnectionbyID
+      parameters:
+        - name: id
+          in: path
+          description: device id that need to be filtered
+          required: true
+          schema:
+            type: string
+            format: uuid
+            example: 12345678-1234-5678-1234-56789abcdef4
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'          
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse' 
+  
+  /connectivity/services/{id}:            
+    get:
+      tags:
+        - connectivity
+      summary: Get all services by id for a device
+      description: |-
+        Get all services by id for a connected device, success
+        when service discovery succeeds failure, failure when 
+        Service discovery fails. This updates cache for cached
+        Services. Fails when using a group id.
+      operationId: GetServicesbyId
+      parameters:
+        - name: id
+          in: path
+          description: device id that need to be filtered
+          required: true
+          schema:
+            type: string
+            format: uuid
+            example: 12345678-1234-5678-1234-56789abcdef4
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'          
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse' 
+
+  /connectivity/services/discover:
+    post:
+      tags:
+        - connectivity
+      summary: |-
+        Selectively discover services on a device, limited 
+        to services described in the parameters
+      description: |-
+        Selectively discover services on a device, limited 
+        to services described in the parameters.
+        Group ids will fail.
+      operationId: GetSelectiveServices
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Service'
+        required: true    
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'          
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+
+### Data
+  /data/attribute:
+    post:
+      tags:
+        - data
+      summary: Write a value to an attribute on a device
+      description: Write a value to an attribute on a device
+      operationId: dataWrite
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AttributeValue'
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttributeValueResponse'          
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request       
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse' 
+    
+    put:
+      tags:
+        - data
+      summary: Update a value of an attribute on a device
+      description: Update a value of an attribute on a device
+      operationId: dataUpdate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AttributeValue'
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttributeValueResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request       
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse' 
+  
+  /data/attribute/{id}/{attributename}:
+    delete:
+      tags:
+        - data
+      summary: Delete a value from an attribute on a device
+      description: Delete a value to an attribute on a device
+      operationId: dataDelete
+      parameters:
+      - name: id
+        in: path
+        description: device id that need to be filtered
+        required: true
+        schema:
+          type: string
+          format: uuid
+          example: 12345678-1234-5678-1234-56789abcdef4
+      - name: attributename
+        in: path
+        description: attribute name that needs to be filtered
+        required: true
+        schema:
+          type: string
+          example: "temperature"
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttributeValueResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse' 
+                
+    get:
+      tags:
+        - data
+      summary: Read a value from an attribute on a device
+      description: Read a value to an attribute on a device
+      operationId: dataRead
+      parameters:
+      - name: id
+        in: path
+        description: device id that need to be filtered
+        required: true
+        schema:
+          type: string
+          format: uuid
+          example: 12345678-1234-5678-1234-56789abcdef4
+      - name: attributename
+        in: path
+        description: attribute name that needs to be filtered
+        required: true
+        schema:
+          type: string
+          example: "temperature"
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttributeValueResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse' 
+
+  /data/attribute/write:
+    post:
+      tags:
+        - data
+      summary: Write a value to an attribute using technology extensions
+      description: |-
+        Write a value to an attribute directly, addressing the attribute
+        with technology-specific extensions, this does not require
+        attribute registration. You cannot write to a group id.
+      operationId: dataAttrWrite
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AttributeValueRaw'
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttributeValueResponseRaw'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+                
+  /data/attribute/read:
+    post:
+      tags:
+        - data
+      summary: Read a value to an attribute using technology extensions
+      description: |-
+        Read a value to an attribute directly, addressing the attribute
+        with technology-specific extensions, this does not require
+        attribute registration. You cannot write to a group id.
+      operationId: dataAttrRead
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AttributeRaw'
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttributeValueResponseRaw'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+  
+  /data/attribute/subscription:
+    post:
+      tags:
+        - data
+      summary: |-
+         Subscribe to streaming data from an attribute on a device
+      description: |-
+        Subscribe to streaming data from an attribute on a device
+      operationId: dataSubscribe
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Subscription'
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'          
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request 
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'   
+                
+    put:
+      tags:
+        - data
+      summary: |-
+        update streaming data subscription from an attribute on a
+        device
+      description: |-
+        update streaming data subscription from an attribute on a 
+        device
+      operationId: dataUpdateSubscribe
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Subscription'
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'          
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request 
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse' 
+  
+  /data/attribute/subscription/{id}/{attributename}:
+    delete:
+      tags:
+        - data
+      summary: |-
+        Unsubscribe to streaming data from an attribute on a device
+      description: |-
+        Unsubscribe to streaming data from an attribute on a device
+      operationId: dataUnsubscribe
+      parameters:
+      - name: id
+        in: path
+        description: device id that need to be filtered
+        required: true
+        schema:
+          type: string
+          format: uuid
+          example: 12345678-1234-5678-1234-56789abcdef4
+      - name: attributename
+        in: path
+        description: attribute name that needs to be filtered
+        required: true
+        schema:
+          type: string
+          example: "temperature" 
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'          
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+                
+    get:
+      tags:
+        - data
+      summary: Get the status of a subscription on a device
+      description: Get the status of a subscription on a device
+      operationId: dataGetSubscription
+      parameters:
+      - name: id
+        in: path
+        description: device id that need to be filtered
+        required: true
+        schema:
+          type: string
+          format: uuid
+          example: 12345678-1234-5678-1234-56789abcdef4
+      - name: attributename
+        in: path
+        description: attribute name that needs to be filtered
+        required: true
+        explode: true
+        schema:
+          type: string
+          example: "temperature" 
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'          
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+
+  /data/attribute/subscription/topic/{topic}:    
+    delete:
+      tags:
+        - data
+      summary: delete all active subscriptions by topic
+      description: delete all active subscriptions by topic
+      operationId: deleteSubscriptionbyTopic
+      parameters:
+        - name: topic
+          in: path
+          description: topic that needs to be filtered
+          required: true
+          schema:
+            type: string
+            example: "enterprise/hospital/pulse_oximeter"
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref:
+                   '#/components/schemas/MultiSubscriptionResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+
+    get:
+      tags:
+        - data
+      summary: get all active subscriptions by topic
+      description: get all active subscriptions by topic
+      operationId: getSubsciptionsbyTopic
+      parameters:
+        - name: topic
+          in: path
+          description: topic that needs to be filtered
+          required: true
+          schema:
+            type: string
+            example: "enterprise/hospital/pulse_oximeter"
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref:
+                   '#/components/schemas/MultiSubscriptionResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref:
+                   '#/components/schemas/MultiSubscriptionResponse'
+
+  /data/attribute/subscription/id/{id}:
+    delete:
+      tags:
+        - data
+      summary: delete all subscriptions by id
+      description: delete all subscriptions by id
+      operationId: deleteSubscriptionbyID
+      parameters:
+        - name: id
+          in: path
+          description: object id that needs to be filtered
+          required: true
+          schema:
+            type: string
+            example: 12345678-1234-5678-1234-56789abcdef4
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref:
+                   '#/components/schemas/MultiSubscriptionResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+
+    get:
+      tags:
+        - data
+      summary: get all subscriptions by object id
+      description: get all subscriptions by object id
+      operationId: getSubscriptionbyID
+      parameters:
+        - name: id
+          in: path
+          description: object id that needs to be filtered
+          required: true
+          schema:
+            type: string
+            example: 12345678-1234-5678-1234-56789abcdef4
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref:
+                   '#/components/schemas/MultiSubscriptionResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+
+  /data/attribute/subscription/start:
+    post:
+      tags:
+        - data
+      summary: |-
+         Subscribe to streaming data from an attribute on a device
+         by directly addressing hte attribute (unregistered attr)
+      description: |-
+        Subscribe to streaming data from an attribute on a device
+        by directly addressing hte attribute (unregistered attr)
+      operationId: dataSubscriptionStart
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubscriptionRaw'
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'          
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request 
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'  
+  
+  /data/attribute/subscription/stop:
+    post:
+      tags:
+        - data
+      summary: |-
+         Stop streaming data from an attribute on a device
+         by directly addressing hte attribute (unregistered attr)
+      description: |-
+        Stop streaming data from an attribute on a device
+        by directly addressing hte attribute (unregistered attr)
+      operationId: dataSubscriptionStop
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubscriptionRaw'
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'          
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request 
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'  
+ 
+  /data/broadcast:
+    post:
+      tags:
+        - data
+      summary: Broadcast to a device
+      description: Broadcast to a device
+      operationId: dataBroadcast
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Broadcast'
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+
+### Registrations
+  /registration/topic:
+    post:
+      tags:
+        - registrations
+      summary: Register a publish/subscribe topic
+      description: Register a publish/subscribe topic
+      operationId: registerTopic
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Topic'
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TopicResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+
+    put:
+      tags:
+        - registrations
+      summary: Update a publish/subscribe topic
+      description: Update a publish/subscribe topic
+      operationId: UpdateTopic
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Topic'
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TopicResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+
+    delete:
+      tags:
+        - registrations
+      summary: unregister a publish/subscribe topic
+      description: |-
+        unregister a publish/subscribe topic, single topic,
+        multiple topics not allowed.
+      operationId: unregisterTopic
+      parameters:
+        - name: topic
+          in: query
+          description: topic that need to be filtered
+          required: false
+          explode: false
+          schema:
+            type: string
+            example: "enterprise/hospital/pulse_oximeter"
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TopicResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+
+    get:
+      tags:
+        - registrations
+      summary: get one or all publish/subscribe topic
+      description: |-
+        get publish/subscribe topic, if no topic is specified
+        in query, all topics will be returned
+      operationId: getTopic
+      parameters:
+        - name: topic
+          in: query
+          description: topic that need to be filtered
+          required: false
+          explode: false
+          schema:
+            type: string
+            example: "enterprise/hospital/pulse_oximeter"
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MultiTopicsResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+
+  /registration/topic/{topic}:
+    delete:
+      tags:
+        - registrations
+      summary: delete a publish/subscribe topic by name
+      description: unregister a publish/subscribe topic by Name
+      operationId: deleteTopicbyName
+      parameters:
+        - name: topic
+          in: path
+          description: topic that needs to be filtered
+          required: true
+          schema:
+            type: string
+            example: "enterprise/hospital/pulse_oximeter"
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TopicResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+
+    get:
+      tags:
+        - registrations
+      summary: get a publish/subscribe topic by name
+      description: get a publish/subscribe topic by name
+      operationId: getTopicbyName
+      parameters:
+        - name: topic
+          in: path
+          description: topic that needs to be filtered
+          required: true
+          schema:
+            type: string
+            example: "enterprise/hospital/pulse_oximeter"
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TopicResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+
+  /registration/topic/data-app/{data-app}:
+    delete:
+      tags:
+        - registrations
+      summary: delete all publish/subscribe topics by data-app
+      description: |-
+        unregister all publish/subscribe topics by data-app
+      operationId: deleteTopicbyDataApp
+      parameters:
+        - name: data-app
+          in: path
+          description: data app that needs to be filtered
+          required: true
+          schema:
+            type: string
+            example: https://data-app-1
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MultiTopicsResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+
+    get:
+      tags:
+        - registrations
+      summary: get all publish/subscribe topics by data-app
+      description: get all publish/subscribe topics by data-app
+      operationId: getTopicbyDataApp
+      parameters:
+        - name: data-app
+          in: path
+          description: data app that needs to be filtered
+          required: true
+          schema:
+            type: string
+            example: https://data-app-1
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MultiTopicsResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+
+  /registration/topic/id/{id}:
+    delete:
+      tags:
+        - registrations
+      summary: delete all publish/subscribe topics by object id
+      description: unregister all publish/subscribe topics by id
+      operationId: deleteTopicbyID
+      parameters:
+        - name: id
+          in: path
+          description: object id that needs to be filtered
+          required: true
+          schema:
+            type: string
+            example: 12345678-1234-5678-1234-56789abcdef4
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MultiTopicsResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+
+    get:
+      tags:
+        - registrations
+      summary: get all publish/subscribe topics by object id
+      description: get all publish/subscribe topics by object id
+      operationId: getTopicbyID
+      parameters:
+        - name: id
+          in: path
+          description: object id that needs to be filtered
+          required: true
+          schema:
+            type: string
+            example: 12345678-1234-5678-1234-56789abcdef4
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MultiTopicsResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+
+  /registration/attribute:
+    post:
+      tags:
+        - registrations
+      summary: Register an attribute
+      description: |-
+        Register an attribute for use in data APIs
+      operationId: registerAttribute
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AttributeRegistration'
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttributeRegistrationResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+
+    put:
+      tags:
+        - registrations
+      summary: Update an attribute registration
+      description: |-
+        Update an existing attribute registration
+      operationId: updateAttributeRegistration
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AttributeRegistration'
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttributeRegistrationResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+
+    delete:
+      tags:
+        - registrations
+      summary: Delete an attribute registration
+      description: Delete an attribute registration
+      operationId: deleteAttributeRegistration
+      parameters:
+        - name: attributename
+          in: query
+          description: attribute name that needs to be filtered
+          required: false
+          explode: false
+          schema:
+            type: string
+            example: "temperature"
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttributeRegistrationResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+
+    get:
+      tags:
+        - registrations
+      summary: list registered attributes
+      description: |-
+        get a registered attribute by name of get all 
+        attributes if no names supplied.
+      operationId: getAttributeRegistration
+      parameters:
+        - name: attributename
+          in: query
+          description: attribute name that needs to be filtered
+          required: false
+          explode: true
+          schema:
+            type: string
+            example: "temperature"
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MultiAttributeRegistrationResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+
+  /registration/attribute/{attributename}:
+    delete:
+      tags:
+        - registrations
+      summary: delete an attribute registration by name
+      description: delete an attribute registration by name
+      operationId: deleteAttributeRegistrationbyName
+      parameters:
+        - name: attributename
+          in: path
+          description: attribute that needs to be filtered
+          required: true
+          schema:
+            type: string
+            example: "temperature"
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttributeRegistrationResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+
+    get:
+      tags:
+        - registrations
+      summary: get an attribute registration by name
+      description: get an attribute registration by name
+      operationId: getAttirbuteRegistrationbyName
+      parameters:
+        - name: attributename
+          in: path
+          description: attribute that needs to be filtered
+          required: true
+          schema:
+            type: string
+            example: "temperature"
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttributeRegistrationResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+                
+  /registration/file:
+    post:
+      tags:
+        - registrations
+      summary: Register and upload a file for later use
+      description: Register and upload a file for later use
+      operationId: registerFile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/File'
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+
+    put:
+      tags:
+        - registrations
+      summary: Update an existing file registration
+      description: Update an existing file registration
+      operationId: UpdateFile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/File'
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+
+    delete:
+      tags:
+        - registrations
+      summary: Delete a file
+      description: Delete a file
+      operationId: DeleteFile
+      parameters:
+        - name: filename
+          in: query
+          description: file that needs to be filtered
+          required: false
+          explode: false
+          schema:
+            type: string
+            example: "firmware.dat"
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+
+    get:
+      tags:
+        - registrations
+      summary: get a file
+      description: |-
+        get a file by name of get all files if no names
+        supplied.
+      operationId: getFile
+      parameters:
+        - name: filename
+          in: query
+          description: file that needs to be filtered
+          required: false
+          explode: false
+          schema:
+            type: string
+            example: "firmware.dat"
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MultiFileResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+
+  /registration/file/{filename}:
+    delete:
+      tags:
+        - registrations
+      summary: delete a file by name
+      description: delete a file by name
+      operationId: deleteFilebyName
+      parameters:
+        - name: filename
+          in: path
+          description: file that needs to be filtered
+          required: true
+          schema:
+            type: string
+            example: "firmware.dat"
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+
+    get:
+      tags:
+        - registrations
+      summary: get a file by name
+      description: get a file by name
+      operationId: getFilebyName
+      parameters:
+        - name: filename
+          in: path
+          description: file that needs to be filtered
+          required: true
+          schema:
+            type: string
+            example: 12345678-1234-5678-1234-56789abcdef4
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+
+### Extensions
+
+  /extension/attribute/write/file:
+    post:
+      tags:
+        - extensions
+      summary: Write a file to an attribute across multiple writes
+      description: |-
+        Write a file to an attribute across multiple writes
+      operationId: dataWriteFile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AttributeFile'
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+
+  /extension/attribute/write/blob:
+    post:
+      tags:
+        - extensions
+      summary: |-
+        Write a binary blob to an attribute across multiple writes
+      description: |-
+        Write a binary blob to an attribute across multiple writes
+      operationId: dataWriteBlob
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AttributeBlob'
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+
+  /extension/attribute/read/conditional:
+    post:
+      tags:
+        - extensions
+      summary: |-
+        Read a value from attribute on a device until it matches a
+        specific value.
+      description: |-
+        Read a value from attribute on a device until it matches a
+        specific value.
+      operationId: dataReadCond
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AttributeConditional'
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttributeValueResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+
+  /extension/bulk:
+    post:
+      tags:
+        - extensions
+      summary: Compound operations on a device
+      description: Compound operations on a device
+      operationId: Bulk
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Bulk'
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+
+components:
+  schemas:
+# BLE objects
+##  An array for BLE services
+    BLEServiceslist:
+      required:
+        - services
+      type: object
+      properties:
+        services:
+          type: array
+          items:
+            $ref: '#/components/schemas/BLEService'
+
+## A BLE service with its characteristics
+    BLEService:
+      required:
+        - serviceID
+        - characteristics
+      type: object
+      properties:
+        serviceID:
+          type: string
+          format: uuid
+          example: 12345678-1234-5678-1234-56789abcdef4
+        characteristics:
+          type: array
+          items:
+            $ref: '#/components/schemas/BLECharacteristic'
+
+## A BLE characteristics with its descriptors
+    BLECharacteristic:
+      required:
+        - characteristicID
+        - flags
+        - descriptors
+      type: object
+      properties:
+        characteristicID:
+          type: string
+          format: uuid
+          example: 12345678-1234-5678-1234-56789abcdef4
+        flags:
+          type: array
+          example:
+          - read
+          - write
+          items:
+            type: string
+            enum:
+              - read
+              - write
+              - notify
+        descriptors:
+          type: array
+          items:
+            $ref: '#/components/schemas/BLEDescriptor'
+
+## A BLE descriptor
+    BLEDescriptor:
+      required:
+        - descriptorID
+      type: object
+      properties:
+        descriptorID:
+          type: string
+          format: uuid
+          example: 12345678-1234-5678-1234-56789abcdef4
+
+## BLE service ID only
+    BLEServiceID:
+      type: object
+      properties:
+        serviceID:
+          type: string
+          format: uuid
+          example: 12345678-1234-5678-1234-56789abcdef4
+
+## Attributes that define a BLE attribute
+    BLEAttributes:
+      required:
+        - ble
+      type: object
+      properties:
+        ble:
+          required:
+            - serviceID
+            - characteristicID
+          type: object
+          properties:
+            serviceID:
+              type: string
+              format: uuid
+              example: 12345678-1234-5678-1234-56789abcdef4
+            characteristicID:
+              type: string
+              format: uuid
+              example: 12345678-1234-5678-1234-56789abcdef4
+            long:
+              type: boolean
+              example: false
+
+## Defines different types of BLE topics
+    BLETopic:
+      required:
+        - ble
+      type: object
+      properties:
+        ble:
+          oneOf:
+            - $ref: '#/components/schemas/BLESubTopic'
+            - $ref: '#/components/schemas/BLEConnTopic'
+            - $ref: '#/components/schemas/BLEAdvTopic'
+
+## BLE Gatt Topic definition
+    BLESubTopic:
+      required:
+        - type
+        - serviceID
+        - characteristicID
+      type: object
+      properties:
+        type:
+          type: string
+          example: gatt
+          enum:
+            - gatt
+        serviceID:
+          type: string
+          example: 12345678-1234-5678-1234-56789abcdef0
+        characteristicID:
+          type: string
+          example: 12345678-1234-5678-1234-56789abcdef1
+
+## BLE Connection event Topic definition
+    BLEConnTopic:
+      required:
+        - type
+      type: object
+      properties:
+        type:
+          type: string
+          example: connection_events
+          enum:
+            - connection_events
+
+## BLE Advertisement Topic definition
+    BLEAdvTopic:
+      required:
+        - type
+      type: object
+      properties:
+        type:
+          type: string
+          example: advertisements
+          enum:
+            - advertisements
+        filterType:
+          type: string
+          example: deny
+          enum:
+            - deny
+            - allow
+        filters:
+          type: array
+          items:
+            $ref: '#/components/schemas/BLEAdvertisement'
+
+## BLE Advertisement attributes
+    BLEAdvertisement:
+      type: object
+      properties:
+        adTtype:
+          type: string
+          format: byte
+          example: ff
+        adData:
+          type: string
+          format: byte
+          example: 4c00*
+
+## Attributes that define a BLE broadcast
+    BLEBroadcast:
+      required:
+        - ble
+      type: object
+      properties:
+        ble:
+          required:
+            - advertisement
+          type: array
+          items:
+            $ref: '#/components/schemas/BLEAdvertisement'
+
+# Zigbee objects
+## An array for Zigbee Endpoints
+    ZigbeeEndpointlist:
+      required:
+        - endpoints
+      type: object
+      properties:
+        endpoints:
+          type: array
+          items:
+            $ref: '#/components/schemas/ZigbeeEndpoint'
+
+## A Zigbee endpoint with its clusters
+    ZigbeeEndpoint:
+      required:
+        - endpointID
+        - clusters
+      type: object
+      properties:
+        endpointID:
+          type: integer
+          format: int32
+          example: 10
+        clusters:
+          type: array
+          items:
+            $ref: '#/components/schemas/ZigbeeCluster'
+
+## A Zigbee cluster with its attributes
+    ZigbeeCluster:
+      required:
+        - clusterID
+        - attributes
+      type: object
+      properties:
+        clusterID:
+          type: integer
+          format: int32
+          example: 0
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/ZigbeeAttribute'
+
+## A Zigbee attribute
+    ZigbeeAttribute:
+      required:
+        - attributeID
+        - attributeType
+      type: object
+      properties:
+        attributeID:
+          type: integer
+          format: int32
+          example: 1
+        attributeType:
+          type: integer
+          format: int32
+          example: 32
+
+## Attributes that define a Zigbee attribute
+    ZigbeeAttributes:
+      required:
+        - zigbee
+      type: object
+      properties:
+        zigbee:
+          required:
+            - endpointID
+            - clusterID
+            - attributeID
+          type: object
+          properties:
+            endpointID:
+              type: integer
+              format: int32
+              example: 1
+            clusterID:
+              type: integer
+              format: int32
+              example: 6
+            attributeID:
+              type: integer
+              format: int32
+              example: 16
+            type:
+              type: integer
+              format: int32
+              example: 1
+
+## Attributes that define a Zigbee broadcast
+    ZigbeeBroadcast:
+      required:
+        - zigbee
+      type: object
+      properties:
+        zigbee:
+          required:
+            - endpointID
+            - clusterID
+            - attributeID
+            - value
+          type: object
+          properties:
+            endpointID:
+              type: integer
+              format: int32
+              example: 1
+            clusterID:
+              type: integer
+              format: int32
+              example: 6
+            attributeID:
+              type: integer
+              format: int32
+              example: 16
+            type:
+              type: integer
+              format: int32
+              example: 1
+            value:
+              type: integer
+              format: int32
+              example: 15
+
+# Common objects
+## A SCIM object, can be a  device or a group
+    Object:
+      required:
+        - id
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 12345678-1234-5678-1234-56789abcdef4
+        type:
+          type: string
+          example: device
+          enum:
+            - device
+            - group
+        technology:
+          type: string
+          example: ble
+          enum:
+            - ble
+            - zigbee
+
+## A Service is a device with optional service IDs
+    Service:
+      allOf:
+        - $ref: '#/components/schemas/Object'
+      type: object
+      properties:
+        ble:
+          type: object
+          properties:
+            services:
+              type: array
+              items:
+                $ref: '#/components/schemas/BLEServiceID'
+            cached:
+              description: |-
+                If we can cache information, then device doesn't need
+                to be rediscovered before every connected.
+              type: boolean
+              default: false
+            cacheIdlePurge:
+              description: cache expiry period, when device allows
+              type: integer
+              example: 3600 # default 1 hour
+            autoUpdate:
+              description: |-
+                autoupdate services if device supports it (default)
+              type: boolean
+              example: true
+            bonding: #optional, by default defined in SCIM object 
+              type: string
+              example: default
+              enum:
+                - default 
+                - none
+                - justworks
+                - passkey
+                - oob
+
+## A Connection
+    Connection:
+      allOf:
+        - $ref: '#/components/schemas/Service'
+      type: object
+      properties:
+        retries:
+          type: integer
+          format: int32
+          example: 3
+        retryMultipleAPs:
+          type: boolean
+          example: true
+
+## A specific attribute of an Device
+    AttributeRaw:
+      allOf:
+        - $ref: '#/components/schemas/Object'
+      oneOf:
+        - $ref: '#/components/schemas/BLEAttributes'
+        - $ref: '#/components/schemas/ZigbeeAttributes'
+      discriminator:
+        propertyName: technology
+        mapping:
+          ble: '#/components/schemas/BLEAttributes'
+          zigbee: '#/components/schemas/ZigbeeAttributes'
+
+## A value of an attribute of an Device
+    AttributeValueRaw:
+      allOf:
+        - $ref: '#/components/schemas/Attribute'
+      required:
+        - value
+      type: object
+      properties:
+        value:
+          type: string
+          format: byte
+          example: 0001
+        forcedResponse:
+          description: do or do not wait for a response?
+          type: boolean
+          example: true
+        
+## An attribute ID
+    AttributeID:
+      required:
+        - attributeID
+      type: object
+      properties:
+        attributeID:
+          type: string
+          example: "temperature"
+          
+## A specific attribute of an Device
+    Attribute:
+      allOf:
+        - $ref: '#/components/schemas/Object'
+        - $ref: '#/components/schemas/AttributeID'
+
+## A value of an attribute of an Device
+    AttributeValue:
+      allOf:
+        - $ref: '#/components/schemas/Attribute'
+      required:
+        - value
+      type: object
+      properties:
+        value:
+          type: string
+          format: byte
+          example: 0001
+        forcedResponse:
+          description: do or do not wait for a response?
+          type: boolean
+          example: true
+          
+## An attribute registration
+    AttributeRegistration:
+      allOf:
+        - $ref: '#/components/schemas/AttributeID'
+      oneOf:
+        - $ref: '#/components/schemas/BLEAttributes'
+        - $ref: '#/components/schemas/ZigbeeAttributes'
+      discriminator:
+        propertyName: technology
+        mapping:
+          ble: '#/components/schemas/BLEAttributes'
+          zigbee: '#/components/schemas/ZigbeeAttributes'
+
+## A file-based attribute of an Device
+    AttributeFile:
+      allOf:
+        - $ref: '#/components/schemas/Attribute'
+      required:
+        - filename
+      type: object
+      properties:
+        filename:
+          type: string
+          example: "firmware.dat"
+        chunksize:
+          type: integer
+        forcedResponse:
+          description: do or do not wait for a response?
+          type: boolean
+          example: true
+
+## A binary blob-based attribute of an Device
+    AttributeBlob:
+      allOf:
+        - $ref: '#/components/schemas/Attribute'
+      required:
+        - blob
+      type: object
+      properties:
+        blob:
+          type: string
+          format: binary
+        chunksize:
+          type: integer
+        forcedResponse:
+          description: do or do not wait for a response?
+          type: boolean
+          example: true
+
+## Conditional read of a value (read until specific value is read)
+    AttributeConditional:
+      allOf:
+        - $ref: '#/components/schemas/Attribute'
+      required:
+        - value
+      type: object
+      properties:
+        value:
+          type: string
+          format: byte
+          example: 0001
+        maxTime:
+          description: |-
+            maximum time the conditional read should run in seconds
+            (default 10 sec, max 60 sec)
+          type: integer
+        maxRepeat:
+          description: |-
+           maximum time the conditional read should repeat
+           (default 5, max 60)
+          type: integer
+        frequency:
+          description: |-
+            time between reads in seconds (default 1, max 60)
+          type: integer
+
+## A subscription attribute of an Device
+    SubscriptionRaw:
+      allOf:
+        - $ref: '#/components/schemas/AttributeRaw'
+      type: object
+      properties:
+        forcedAck:
+          description: |-
+            When not looking at device/attribute support MUST we
+            ackhnowledge?
+          type: boolean
+          example: true
+
+## A specific attribute of an Device
+    Subscription:
+      allOf:
+        - $ref: '#/components/schemas/Object'
+        - $ref: '#/components/schemas/AttributeID'
+      type: object
+      properties:
+        forcedAck:
+          description: |-
+            When not looking at device/attribute support MUST we
+            ackhnowledge?
+          type: boolean
+          example: true
+
+## A broadcast
+    Broadcast:
+      allOf:
+        - $ref: '#/components/schemas/Object'
+      oneOf:
+        - $ref: '#/components/schemas/BLEBroadcast'
+        - $ref: '#/components/schemas/ZigbeeBroadcast'
+      discriminator:
+        propertyName: technology
+        mapping:
+          ble: '#/components/schemas/BLEBroadcast'
+          zigbee: '#/components/schemas/ZigbeeBroadcast'
+      required:
+        - cycle
+      type: object
+      properties:
+        cycle:
+          type: string
+          example: single
+          enum:
+            - single
+            - repeat
+        # broadcast time in ms
+        broadcastTime:
+          type: integer
+          example: 3000
+        # interval between broadcasts in ms
+        broadcastInterval:
+          type: integer
+          example: 500
+
+## Topic Name
+    TopicName:
+      required:
+        - topic
+      type: object
+      properties:
+        topic:
+          type: string
+          example: enterprise/hospital/pulse_oximeter
+
+## DataStream Topic
+    Topic:
+      allOf:
+        - $ref: '#/components/schemas/TopicName'      
+      oneOf:
+        - $ref: '#/components/schemas/BLETopic'
+        - $ref: '#/components/schemas/ZigbeeAttributes'
+      discriminator:
+        propertyName: technology
+        mapping:
+          ble: '#/components/schemas/BLETopic'
+          zigbee: '#/components/schemas/ZigbeeAttributes'
+      type: object
+      properties:
+        dataFormat:
+          description: |-
+            How is information decorated?  Default: device
+            and attribute ids.
+          type: string
+          example: default
+          enum:
+            - default
+            - payload
+        replay:
+          type: string
+          example: off
+          enum:
+            - off #default
+            - on
+        id:
+          type: string
+          format: uuid
+          example: 12345678-1234-5678-1234-56789abcdef4
+        type:
+          type: string
+          example: device
+          enum:
+            - device
+            - group
+        dataApps:
+          type: array
+          items:
+            type: object
+            properties:
+              dataAppID:
+                type: string
+                example: https://data-app-1
+        technology:
+          type: string
+          example: ble
+          enum:
+            - ble
+            - zigbee
+
+## FileName
+    FileName:
+      required:
+        - filename
+      type: object
+      properties:
+        filename:
+          type: string
+          example: "firmware.dat"
+
+## FileName
+    FileURL:
+      required:
+        - fileURL
+      type: object
+      properties:
+        fileURL:
+          type: string
+          example: "https://domain.com/firmware.dat"
+          
+## FileName          
+    FileBin:
+      required:
+        - fileBin
+      type: object
+      properties:
+        fileBin:
+          type: string
+          format: binary
+          example: "firmware.dat"
+
+## File
+    File:
+      allOf:
+        - $ref: '#/components/schemas/FileName'
+      oneOf:
+        - $ref: '#/components/schemas/FileURL'
+        - $ref: '#/components/schemas/FileBin'
+
+## Defines an operation in a bulk API
+    Operation:
+      required:
+        - operation
+      allOf:
+        - type: object
+          properties:
+            operation:
+              type: string
+              enum:
+               - /connectivity/connection
+               - /data/attribute
+               - /data/attribute/subscription
+               - /extension/attribute/write/file
+               - /extension/attribute/write/blob
+               - /extension/attribute/read/conditional
+            type:  
+              type: string
+              enum:
+               - POST
+               - DELETE
+               - GET
+        - oneOf:
+            - $ref: '#/components/schemas/Object'
+            - $ref: '#/components/schemas/Attribute'
+            - $ref: '#/components/schemas/AttributeValue'
+            - $ref: '#/components/schemas/AttributeConditional'
+            - $ref: '#/components/schemas/AttributeFile'
+            - $ref: '#/components/schemas/AttributeBlob'
+            - $ref: '#/components/schemas/Subscription'
+          discriminator:
+            propertyName: operation
+            mapping:
+              POST /connectivity/connection:
+                '#/components/schemas/Service'
+              DELETE /connectivity/connection:
+                '#/components/schemas/Object'
+              GET /connectivity/connection:
+                '#/components/schemas/Object'
+              POST /data/attribute:
+                '#/components/schemas/AttributeValue'
+              DELETE /data/attribute:
+                '#/components/schemas/Attribute'
+              GET /data/attribute:
+                '#/components/schemas/Attribute'
+              POST /data/attribute/Subscription:
+                '#/components/schemas/Subscription'
+              DELETE /data/attribute/Subscription:
+                '#/components/schemas/Subscription'
+              GET /data/attribute/Subscription:
+                '#/components/schemas/Subscription'
+              POST /extension/attribute/read/conditional:
+                '#/components/schemas/AttributeConditional'
+              POST /extension/attribute/write/file:
+                '#/components/schemas/AttributeFile'
+              POST /extension/attribute/write/blob:
+                '#/components/schemas/AttributeBlob'
+
+## Bulk schema
+    Bulk:
+      allOf:
+        - $ref: '#/components/schemas/Object'
+      type: object
+      properties:
+        autoDisconnect:
+          description: |-
+            do we automatically disconnect after a RESTful operation?
+          type: boolean
+          example: true
+          default: true
+        operations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Operation'
+
+# responses
+## Baseline success reponse
+    Success:
+      required:
+        - status
+      type: object
+      properties:
+        status:
+          type: string
+          example: SUCCESS
+          enum:
+            - SUCCESS
+        requestID:
+          type: string
+          example: 12345678-5678-1234-5578-abcdef1234
+
+    SuccessResponse:
+      allOf:
+        - $ref: '#/components/schemas/Success'
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 12345678-1234-5678-1234-56789abcdef4
+
+## Error 500 application Failure response
+    FailureResponse:
+      required:
+        - status
+        - errorCode
+      type: object
+      properties:
+        status:
+          type: string
+          example: FAILURE
+          enum:
+            - FAILURE
+        reason:
+          type: string
+          example: Not Found
+        errorCode:
+          type: integer
+          format: int32
+          example: 12
+        requestID:
+          type: string
+          example: 12345678-5678-1234-5578-abcdef1234
+
+## Response, success or failure
+    Response:
+      oneOf:
+        - $ref: '#/components/schemas/SuccessResponse'
+        - $ref: '#/components/schemas/FailureResponse'
+
+## Success response for binding API
+    BindingResponse:
+      oneOf:
+        - $ref: '#/components/schemas/SuccessResponse'
+        - $ref: '#/components/schemas/ZigbeeBindingResponse'
+        - $ref: '#/components/schemas/FailureResponse'
+
+## Returning multiple bindings
+    MultiBindingsResponse:
+      allOf:
+        - $ref: '#/components/schemas/Success'
+      required:
+        - bindings
+      type: object
+      properties:
+        bindings:
+          type: array
+          items:
+            $ref: '#/components/schemas/BindingResponse'
+
+## Returns Zigbee node & pan ID
+    ZigbeeBindingResponse:
+      allOf:
+        - $ref: '#/components/schemas/SuccessResponse'
+      type: object
+      properties:
+        nodeID:
+          type: integer
+          format: int32
+          example: 65234
+        panID:
+          type: integer
+          format: int32
+          example: 48734
+
+ ## Returns discovered services
+    ServiceResponse:
+      allOf:
+        - $ref: '#/components/schemas/SuccessResponse'
+      oneOf:
+        - $ref: '#/components/schemas/BLEServiceslist'
+        - $ref: '#/components/schemas/ZigbeeEndpointlist'
+
+## Response to multiple connections
+    MultiConnectionsResponse:
+      allOf:
+        - $ref: '#/components/schemas/Success'
+      required:
+        - connections
+      type: object
+      properties:
+        connections:
+          type: array
+          items:
+            $ref: '#/components/schemas/Response'
+
+## Returns an attribute value
+    AttributeValueResponseRaw:
+      allOf:
+        - $ref: '#/components/schemas/SuccessResponse'
+      required:
+       - value
+      type: object
+      properties:
+        value:
+          type: string
+          example: 01
+          format: byte
+          
+## Returns an attribute value with ID
+    AttributeValueResponse:
+      allOf:
+        - $ref: '#/components/schemas/SuccessResponse'
+        - $ref: '#/components/schemas/AttributeID'
+      required:
+       - value
+      type: object
+      properties:
+        value:
+          type: string
+          example: 01
+          format: byte
+
+## Returns an attribute registration
+    AttributeRegistrationResponse:
+      allOf:
+        - $ref: '#/components/schemas/Success'
+        - $ref: '#/components/schemas/AttributeRegistration'
+        
+## Returning multiple attribute registrations
+    MultiAttributeRegistrationResponse:
+      allOf:
+        - $ref: '#/components/schemas/Success'
+      required:
+        - attributes
+      type: object
+      properties:
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/AttributeRegistration'
+
+## Returns a topic
+    TopicResponse:
+      allOf:
+        - $ref: '#/components/schemas/SuccessResponse'
+        - $ref: '#/components/schemas/Topic'
+
+## Returning multiple topics
+    MultiTopicsResponse:
+      allOf:
+        - $ref: '#/components/schemas/Success'
+      required:
+        - topics
+      type: object
+      properties:
+        topics:
+          type: array
+          items:
+            $ref: '#/components/schemas/Topic'
+
+## Returning multiple subscriptions
+    MultiSubscriptionResponse:
+      allOf:
+        - $ref: '#/components/schemas/Success'
+      required:
+        - subscriptions
+      type: object
+      properties:
+        subscriptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Subscription'
+
+## Returns a file name
+    FileResponse:
+      allOf:
+        - $ref: '#/components/schemas/SuccessResponse'
+      required:
+        - filename
+      type: object
+      properties:
+        filename:
+          type: string
+          example: "firmware.dat"
+
+## Returning multiple file names
+    MultiFileResponse:
+      allOf:
+        - $ref: '#/components/schemas/Success'
+      required:
+        - filenames
+      type: object
+      properties:
+        filenames:
+          type: array
+          items:
+            $ref: '#/components/schemas/FileName'
+
+## Multiple returns for a bulk operation
+    BulkResponse:
+      allOf:
+        - $ref: '#/components/schemas/SuccessResponse'
+      type: object
+      properties:
+        operations:
+          type: array
+          items:
+            $ref: '#/components/schemas/OperationResponse'
+
+## Return for an operation
+    OperationResponse:
+      required:
+        - operation
+      allOf:
+        - type: object
+          properties:
+            operation:
+              type: string
+              enum:
+               - /connectivity/connection
+               - /data/attribute
+               - /data/attribute/subscription
+               - /extension/attribute/write/file
+               - /extension/attribute/write/blob
+               - /extension/attribute/read/conditional
+            type:  
+              type: string
+              enum:
+               - POST
+               - DELETE
+               - GET
+        - oneOf:
+            - $ref: '#/components/schemas/SuccessResponse'
+            - $ref: '#/components/schemas/ServiceResponse'
+            - $ref: '#/components/schemas/AttributeValueResponse'
+          discriminator:
+            propertyName: operation
+            mapping:
+              POST /connectivity/connection:
+                '#/components/schemas/ServiceResponse'
+              DELETE /connectivity/connection:
+                '#/components/schemas/SuccessResponse'
+              GET /connectivity/connection:
+                '#/components/schemas/SuccessResponse'
+              POST /data/attribute:
+                '#/components/schemas/AttributeValueResponse'
+              DELETE /data/attribute:
+                '#/components/schemas/AttributeValueResponse'
+              GET /data/attribute:
+                '#/components/schemas/AttributeValueResponse'
+              POST /data/attribute/Subscription:
+                '#/components/schemas/SuccessResponse'
+              DELETE /data/attribute/Subscription:
+                '#/components/schemas/SuccessResponse'
+              GET /data/attribute/Subscription:
+                '#/components/schemas/SuccessResponse'
+              POST /extension/attribute/read/conditional:
+                '#/components/schemas/AttributeValueResponse'
+              POST /extension/attribute/write/file:
+                '#/components/schemas/SuccessResponse'
+              POST /extension/attribute/write/blob:
+                '#/components/schemas/SuccessResponse'
+
+ # API key authorization
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-KEY
+# Apply the API key globally to all operations
+security:
+  - ApiKeyAuth: []
