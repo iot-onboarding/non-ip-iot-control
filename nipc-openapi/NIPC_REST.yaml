@@ -28,7 +28,7 @@ info:
   license:
     name: TBD
     url: TBD
-  version: 0.7.0
+  version: 0.7.1
 externalDocs:
   description: NIPC IETF draft
   url: TBD
@@ -111,9 +111,11 @@ paths:
           required: false
           explode: false
           schema:
-            type: string
-            format: uuid
-            example: 12345678-1234-5678-1234-56789abcdef4
+            type: array
+            items:
+              type: string
+              format: uuid
+              example: 12345678-1234-5678-1234-56789abcdef4
       responses:
         '200':
           description: Success
@@ -150,9 +152,11 @@ paths:
           required: false
           explode: false
           schema:
-            type: string
-            format: uuid
-            example: 12345678-1234-5678-1234-56789abcdef4
+            type: array
+            items:
+              type: string
+              format: uuid
+              example: 12345678-1234-5678-1234-56789abcdef4
       responses:
         '200':
           description: Success
@@ -2075,7 +2079,7 @@ components:
     BLEAdvertisement:
       type: object
       properties:
-        adTtype:
+        adType:
           type: string
           format: byte
           example: ff
@@ -2314,7 +2318,7 @@ components:
 ## A value of an attribute of an Device
     AttributeValueRaw:
       allOf:
-        - $ref: '#/components/schemas/Attribute'
+        - $ref: '#/components/schemas/AttributeRaw'
       required:
         - value
       type: object
@@ -2529,11 +2533,9 @@ components:
             - default
             - payload
         replay:
-          type: string
-          example: off
-          enum:
-            - off #default
-            - on
+          type: boolean
+          example: false
+          default: false
         id:
           type: string
           format: uuid
@@ -2605,7 +2607,7 @@ components:
       allOf:
         - type: object
           properties:
-            operation:
+            path:
               type: string
               enum:
                - /connectivity/connection
@@ -2614,7 +2616,7 @@ components:
                - /extension/attribute/write/file
                - /extension/attribute/write/blob
                - /extension/attribute/read/conditional
-            type:  
+            method:
               type: string
               enum:
                - POST
