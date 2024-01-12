@@ -28,7 +28,7 @@ info:
   license:
     name: TBD
     url: TBD
-  version: 0.6.1
+  version: 0.7.0
 externalDocs:
   description: NIPC IETF draft
   url: TBD
@@ -55,237 +55,6 @@ tags:
 
 paths:
 ### Connectivity
-  /connectivity/binding:
-    post:
-      tags:
-        - connectivity
-      summary: Create a binding for a device id
-      description: Create a binding for a device
-      operationId: CreateBinding
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Object'
-        required: true
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BindingResponse'          
-        '400':
-          description: Bad request
-        '401':
-          description: Unauthorized
-        '405':
-          description: Invalid request
-        '500':
-          description: Server-side failure
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/FailureResponse' 
-  
-    get:
-      tags:
-        - connectivity
-      summary: Get bindings for a device
-      description: |-
-        Get all bindings control app made (no parameter) or binding
-        by object ID, Multiple ids can be provided with comma
-        separated strings, or a group id can be provided 
-      operationId: GetBindings
-      parameters:
-        - name: id
-          in: query
-          description: device or group id that need to be filtered
-          required: false
-          explode: false
-          schema:
-            type: array
-            items:
-              type: string
-              format: uuid
-              example: 12345678-1234-5678-1234-56789abcdef4
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MultiBindingsResponse'
-        '400':
-          description: Bad request
-        '401':
-          description: Unauthorized
-        '405':
-          description: Invalid request
-        '500':
-          description: Server-side failure
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/FailureResponse' 
-                
-    delete:
-      tags:
-        - connectivity
-      summary: |-
-        Delete bindings for a device or group of devices
-      description: |-
-        Delete all bindings control app made or bindings by object
-        ID, Multiple ids can be provided with comma separated
-        strings, or a group id can be provided 
-      operationId: DeleteBindings
-      parameters:
-        - name: id
-          in: query
-          description: device or group id that need to be filtered
-          required: false
-          explode: false
-          schema:
-            type: array
-            items:
-              type: string
-              format: uuid
-              example: 12345678-1234-5678-1234-56789abcdef4
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SuccessResponse'          
-        '400':
-          description: Bad request
-        '401':
-          description: Unauthorized
-        '405':
-          description: Invalid request
-        '500':
-          description: Server-side failure
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/FailureResponse' 
-  
-  /connectivity/binding/id/{id}:
-    post:
-      tags:
-        - connectivity
-      summary: |-
-        Create a binding for a device id (device technology needs to
-        support binding) 
-      description: |-
-        Create a binding for a device id, will fail if device has
-        multiple technologies defined, group ids will also fail
-      operationId: CreateBindingbyID
-      parameters:
-        - name: id
-          in: path
-          description: device id that need to be filtered
-          required: true
-          schema:
-            type: string
-            format: uuid
-            example: 12345678-1234-5678-1234-56789abcdef4
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BindingResponse'          
-
-        '400':
-          description: Bad request
-        '401':
-          description: Unauthorized
-        '405':
-          description: Invalid request
-        '500':
-          description: Server-side failure
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/FailureResponse' 
-  
-    get:
-      tags:
-        - connectivity
-      summary: Get binding by id for a device
-      description: |-
-        Get binding by id for a device, success when binding found,
-        failure when no binding, group ids will fail 
-      operationId: GetBindingbyId
-      parameters:
-        - name: id
-          in: path
-          description: device or group ids that need to be filtered
-          required: true
-          schema:
-            type: string
-            format: uuid
-            example: 12345678-1234-5678-1234-56789abcdef4
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BindingResponse'          
-
-        '400':
-          description: Bad request
-        '401':
-          description: Unauthorized
-        '405':
-          description: Invalid request
-        '500':
-          description: Server-side failure
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/FailureResponse' 
-                
-    delete:
-      tags:
-        - connectivity
-      summary: Delete binding by id for a device
-      description: |-
-        Delete binding by id for a device, group ids will fail
-      operationId: DeleteBindingbyID
-      parameters:
-        - name: id
-          in: path
-          description: device or group ids that need to be filtered
-          required: true
-          schema:
-            type: string
-            format: uuid
-            example: 12345678-1234-5678-1234-56789abcdef4
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SuccessResponse'          
-        '400':
-          description: Bad request
-        '401':
-          description: Unauthorized
-        '405':
-          description: Invalid request
-        '500':
-          description: Server-side failure
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/FailureResponse' 
-  
   /connectivity/connection:
     post:
       tags:
@@ -342,11 +111,9 @@ paths:
           required: false
           explode: false
           schema:
-            type: array
-            items:
-              type: string
-              format: uuid
-              example: 12345678-1234-5678-1234-56789abcdef4
+            type: string
+            format: uuid
+            example: 12345678-1234-5678-1234-56789abcdef4
       responses:
         '200':
           description: Success
@@ -383,11 +150,9 @@ paths:
           required: false
           explode: false
           schema:
-            type: array
-            items:
-              type: string
-              format: uuid
-              example: 12345678-1234-5678-1234-56789abcdef4
+            type: string
+            format: uuid
+            example: 12345678-1234-5678-1234-56789abcdef4
       responses:
         '200':
           description: Success
@@ -689,7 +454,6 @@ paths:
         in: path
         description: attribute name that needs to be filtered
         required: true
-        explode: true
         schema:
           type: string
           example: "temperature"
@@ -732,7 +496,6 @@ paths:
         in: path
         description: attribute name that needs to be filtered
         required: true
-        explode: true
         schema:
           type: string
           example: "temperature"
@@ -921,7 +684,6 @@ paths:
         in: path
         description: attribute name that needs to be filtered
         required: true
-        explode: true
         schema:
           type: string
           example: "temperature" 
@@ -1317,7 +1079,7 @@ paths:
           in: query
           description: topic that need to be filtered
           required: false
-          explode: true
+          explode: false
           schema:
             type: string
             example: "enterprise/hospital/pulse_oximeter"
@@ -1354,7 +1116,7 @@ paths:
           in: query
           description: topic that need to be filtered
           required: false
-          explode: true
+          explode: false
           schema:
             type: string
             example: "enterprise/hospital/pulse_oximeter"
@@ -1664,7 +1426,7 @@ paths:
           in: query
           description: attribute name that needs to be filtered
           required: false
-          explode: true
+          explode: false
           schema:
             type: string
             example: "temperature"
@@ -1870,7 +1632,7 @@ paths:
           in: query
           description: file that needs to be filtered
           required: false
-          explode: true
+          explode: false
           schema:
             type: string
             example: "firmware.dat"
@@ -1907,7 +1669,7 @@ paths:
           in: query
           description: file that needs to be filtered
           required: false
-          explode: true
+          explode: false
           schema:
             type: string
             example: "firmware.dat"
@@ -2313,7 +2075,7 @@ components:
     BLEAdvertisement:
       type: object
       properties:
-        adType:
+        adTtype:
           type: string
           format: byte
           example: ff
@@ -2512,6 +2274,15 @@ components:
                 autoupdate services if device supports it (default)
               type: boolean
               example: true
+            bonding: #optional, by default defined in SCIM object 
+              type: string
+              example: default
+              enum:
+                - default 
+                - none
+                - justworks
+                - passkey
+                - oob
 
 ## A Connection
     Connection:
@@ -2543,7 +2314,7 @@ components:
 ## A value of an attribute of an Device
     AttributeValueRaw:
       allOf:
-        - $ref: '#/components/schemas/AttributeRaw'
+        - $ref: '#/components/schemas/Attribute'
       required:
         - value
       type: object
@@ -2758,9 +2529,11 @@ components:
             - default
             - payload
         replay:
-          type: boolean
-          example: false
-          default: false
+          type: string
+          example: off
+          enum:
+            - off #default
+            - on
         id:
           type: string
           format: uuid
@@ -2832,7 +2605,7 @@ components:
       allOf:
         - type: object
           properties:
-            path:
+            operation:
               type: string
               enum:
                - /connectivity/connection
@@ -2841,7 +2614,7 @@ components:
                - /extension/attribute/write/file
                - /extension/attribute/write/blob
                - /extension/attribute/read/conditional
-            method:  
+            type:  
               type: string
               enum:
                - POST
