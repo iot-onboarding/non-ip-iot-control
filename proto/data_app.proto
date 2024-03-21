@@ -23,9 +23,6 @@ message DataSubscription {
         BLEConnectionStatus ble_connection_status = 15;
     }
 
-    google.protobuf.Timestamp timestamp = 8;
-    optional string ap_mac_address = 9;
-
     message BLESubscription {
         optional string service_uuid = 1;
         optional string characteristic_uuid = 2;
