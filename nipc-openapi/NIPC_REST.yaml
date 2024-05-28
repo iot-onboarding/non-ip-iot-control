@@ -28,7 +28,7 @@ info:
   license:
     name: TBD
     url: TBD
-  version: 0.7.1
+  version: 2.0.0
 externalDocs:
   description: NIPC IETF draft
   url: TBD
@@ -163,7 +163,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessResponse'          
+                $ref: '#/components/schemas/MultiConnectionsResponse'          
         '400':
           description: Bad request
         '401':
@@ -2227,8 +2227,8 @@ components:
               example: 15
 
 # Common objects
-## A SCIM object, can be a  device or a group
-    Object:
+## A SCIM id, can be a  device or a group
+    Id:
       required:
         - id
       type: object
@@ -2237,6 +2237,13 @@ components:
           type: string
           format: uuid
           example: 12345678-1234-5678-1234-56789abcdef4
+
+## A SCIM object, can be a  device or a group
+    Object:
+      allOf:
+        - $ref: '#/components/schemas/Id'
+      type: object
+      properties:
         type:
           type: string
           example: device
@@ -2514,6 +2521,7 @@ components:
       allOf:
         - $ref: '#/components/schemas/TopicName'      
       oneOf:
+        - $ref: '#/components/schemas/AttributeID'
         - $ref: '#/components/schemas/BLETopic'
         - $ref: '#/components/schemas/ZigbeeAttributes'
       discriminator:
@@ -2571,7 +2579,7 @@ components:
           type: string
           example: "firmware.dat"
 
-## FileName
+## FileURL
     FileURL:
       required:
         - fileURL
@@ -2581,7 +2589,7 @@ components:
           type: string
           example: "https://domain.com/firmware.dat"
           
-## FileName          
+## FileBinary        
     FileBin:
       required:
         - fileBin
@@ -2749,7 +2757,7 @@ components:
         connections:
           type: array
           items:
-            $ref: '#/components/schemas/Response'
+            $ref: '#/components/schemas/Id'
 
 ## Returns an attribute value
     AttributeValueResponseRaw:
