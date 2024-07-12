@@ -30,7 +30,7 @@ message DataSubscription {
 
     message BLEAdvertisement {
         string mac_address = 1;
-        optional int32 rssi = 2;
+        optional sint32 rssi = 2;
     }
     
     message ZigbeeSubscription {

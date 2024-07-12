@@ -2561,7 +2561,8 @@ components:
             properties:
               dataAppID:
                 type: string
-                example: https://data-app-1
+                format: uuid
+                example: 12345678-1234-5678-1234-56789abcdef4
         technology:
           type: string
           example: ble
@@ -2757,7 +2758,7 @@ components:
         connections:
           type: array
           items:
-            $ref: '#/components/schemas/Id'
+            $ref: '#/components/schemas/Response'
 
 ## Returns an attribute value
     AttributeValueResponseRaw:
