@@ -36,7 +36,7 @@ author:
     country: USA
     email: braeden.sanford@philips.com
 
-normative:
+informative:
   BLE53:
     title: Bluetooth Core Specification, Version 5.3
     author:
