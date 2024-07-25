@@ -1583,8 +1583,58 @@ TBD.
 
 
 # IANA Considerations
+   This section provides guidance to the Internet Assigned Numbers
+   Authority (IANA) regarding registration of values related to NIPC,
+   in accordance with [RFC5226].
 
-TBD. 
+## Connectivity
+
+    The Iana is requested to create a table for the following Connectivity resources
+  +============================+======================+=====================+  
+  | Resource                   |           ID         |  Reference          |
+  +============================+======================+=====================+
+  | /connectivity/binding      |           tbd        |                     |                   
+  | /connectivity/binding/id   |           tbd        |                     |
+  | /connectivity/connection   |           tbd        |                     |
+  | /connectivity/connection/id|           tbd        |                     |
+  | /connectivity/services     |           tbd        |                     |
+  | /connectivity/service      |           tbd        |                     |
+  | /connectivity/service/id   |           tbd        |                     |
+  +==========================================================================
+  ### Conectivity Attributes
+
+## Data
+
+    The Iana is requested to create a table for the following Data operations
+  +============================+======================+======================+
+  | Resource                   |          ID          |   Reference          |
+  +============================+======================+======================+
+  | /data                      |          tbd         |                      |
+  | /data/attribute            |          tbd         |                      |
+  | /data/subscription         |          tbd         |                      |
+  | /data/subscription/id      |          tbd         |                      |
+  | /data/subscription/topic   |          tbd         |                      |
+  | /data/broadcast            |          tbd         |                      |
+  +============================+======================+======================+
+
+  #### Data Attributes
+
+## Registrations
+
+    The Iana is requested to create a table for the following Registration operations
+  +=============================+======================+======================+
+  | Resource                    |         ID           |  Reference           |
+  +=============================+======================+======================+
+  | /registration               |        tbd           |                      |
+  | /registration/topic         |        tbd           |                      |
+  | /registration/topic/id      |        tbd           |                      |
+  | /registration/topic/data-app|        tbd           |                      |
+  | /registration/file          |        tbd           |                      |
+  +=============================+======================+======================+
+  ### Registration Attributes
+
+## Extensions
+    
 
 --- back
 
