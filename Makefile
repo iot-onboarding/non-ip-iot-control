@@ -1,6 +1,6 @@
-DOCS=	draft-brinckman-nipc.txt \
-	draft-brinckman-nipc.xml \
-	draft-brinckman-nipc.html
+DOCS=	draft-ietf-asdf-nipc.txt \
+	draft-ietf-asdf-nipc.xml \
+	draft-ietf-asdf-nipc.html
 
 FTXT=
 

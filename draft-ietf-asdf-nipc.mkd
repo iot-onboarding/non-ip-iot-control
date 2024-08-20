@@ -1,7 +1,7 @@
 ---
 title: An Application Layer Interface for Non-IP device control (NIPC)
 abbrev: NIPC
-docname: draft-ietf-asdf-nipc-00
+docname: draft-ietf-asdf-nipc-01
 submissionType: IETF
 category: std
 
@@ -105,7 +105,7 @@ The gateway provides at a minimum the following functions:
    in the system.
 
 Combined with a provisioning interface such as
-{{!I-D.shahzad-scim-device-model}}, this specification supports
+{{!I-D.ietf-scim-device-model}}, this specification supports
 these aspects, specifically focusing on providing bi-directional 
 communication with non-IP devices.
 
@@ -225,7 +225,7 @@ means of SCIM. A NIPC operation can either be performed against a
 device-id or a group-id. The gateway will leverage information from the 
 SCIM object to execute a specific NIPC operation. For example, keying 
 material found in the SCIM object may be required to connect to a
-device. Please refer to {{!I-D.shahzad-scim-device-model}} for more 
+device. Please refer to {{!I-D.ietf-scim-device-model}} for more 
 information on SCIM device objects.  
 
 Apart from enabling bi-directional communication with non-ip devices,
