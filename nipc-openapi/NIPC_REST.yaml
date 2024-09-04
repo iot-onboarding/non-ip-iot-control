@@ -16,7 +16,7 @@ info:
        - APIs that onboard a device on the network (out of scope for
          this specification, but covered in SCIM for devices)
        - APIs that allow an app to set up a connection with a device
-       - APIs that allow an app to exchange data with a device
+       - APIs that allow an app to exchange action with a device
        - APIs that allow a device to create registrations in the
          network for a device 
     These collection of these APIs, in combination with the
@@ -28,7 +28,7 @@ info:
   license:
     name: TBD
     url: TBD
-  version: 2.0.0
+  version: 0.3.2
 externalDocs:
   description: NIPC IETF draft
   url: TBD
@@ -39,33 +39,29 @@ servers:
         default: localhost
         description: Gateway Host
 tags:
-  - name: connectivity
-    description: APIs that allow apps to manage device connections
-  - name: data
-    description: |-
-      APIs that allow apps to exchange data with non-IP devices
+  - name: action
+    description: APIs that allow apps to perform actions on devices. 
   - name: registrations
     description: |-
-      APIs that allow apps to make registrations in the network for
-      devices.
+      APIs that allow apps to register properties of devices.
   - name: extensions
     description: |-
-      APIs that simplify application interaciton by implementing one
+      APIs that simplify application interaction by implementing one
       or more basic API's into a single API call.
 
 paths:
-### Connectivity
-  /connectivity/connection:
+### Action
+  /action/connection:
     post:
       tags:
-        - connectivity
+        - action
       summary: |-
         Connect a device to the network, optionally with service
         discovery 
       description: |-
         Connect a device to the network, optionally with service
         discovery 
-      operationId: connConnect
+      operationId: Connect
       requestBody:
         content:
           application/json:
@@ -94,7 +90,7 @@ paths:
     
     get:
       tags:
-        - connectivity
+        - action
       summary: |-
         Get connection state devices for a device or group of
         devices
@@ -138,7 +134,7 @@ paths:
                 
     delete:
       tags:
-        - connectivity
+        - action
       summary: Disconnect a device or group of devices
       description: |-
         Disconnect a device or device group by object ID, Multiple
@@ -177,10 +173,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/FailureResponse' 
 
-  /connectivity/connection/id/{id}:
+  /action/connection/id/{id}:
     post:
       tags:
-        - connectivity
+        - action
       summary: |-
         Connect a device by device id (device technology needs to
         support connection) 
@@ -220,7 +216,7 @@ paths:
   
     get:
       tags:
-        - connectivity
+        - action
       summary: Get connection by id for a device
       description: |-
         Get connection by id for a device, success when device
@@ -258,7 +254,7 @@ paths:
                 
     delete:
       tags:
-        - connectivity
+        - action
       summary: Delete connection by id for a device
       description: |-
         Disconnect a device by id, success when device
@@ -294,10 +290,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/FailureResponse' 
   
-  /connectivity/services/{id}:            
+  /action/services/{id}:            
     get:
       tags:
-        - connectivity
+        - action
       summary: Get all services by id for a device
       description: |-
         Get all services by id for a connected device, success
@@ -334,10 +330,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/FailureResponse' 
 
-  /connectivity/services/discover:
+  /action/services/discover:
     post:
       tags:
-        - connectivity
+        - action
       summary: |-
         Selectively discover services on a device, limited 
         to services described in the parameters
@@ -372,19 +368,18 @@ paths:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
 
-### Data
-  /data/attribute:
+  /action/property:
     post:
       tags:
-        - data
-      summary: Write a value to an attribute on a device
-      description: Write a value to an attribute on a device
-      operationId: dataWrite
+        - action
+      summary: Write a value to an property on a device
+      description: Write a value to an property on a device
+      operationId: Write
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AttributeValue'
+              $ref: '#/components/schemas/PropertyValue'
         required: true
       responses:
         '200':
@@ -392,7 +387,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AttributeValueResponse'          
+                $ref: '#/components/schemas/PropertyValueResponse'          
         '400':
           description: Bad request
         '401':
@@ -408,15 +403,15 @@ paths:
     
     put:
       tags:
-        - data
-      summary: Update a value of an attribute on a device
-      description: Update a value of an attribute on a device
-      operationId: dataUpdate
+        - action
+      summary: Update a value of an property on a device
+      description: Update a value of an property on a device
+      operationId: Update
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AttributeValue'
+              $ref: '#/components/schemas/PropertyValue'
         required: true
       responses:
         '200':
@@ -424,7 +419,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AttributeValueResponse'
+                $ref: '#/components/schemas/PropertyValueResponse'
         '400':
           description: Bad request
         '401':
@@ -438,13 +433,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/FailureResponse' 
   
-  /data/attribute/{id}/{attributename}:
+  /action/property/{id}/{propertyname}:
     delete:
       tags:
-        - data
-      summary: Delete a value from an attribute on a device
-      description: Delete a value to an attribute on a device
-      operationId: dataDelete
+        - action
+      summary: Delete a value from an property on a device
+      description: Delete a value to an property on a device
+      operationId: Delete
       parameters:
       - name: id
         in: path
@@ -454,9 +449,9 @@ paths:
           type: string
           format: uuid
           example: 12345678-1234-5678-1234-56789abcdef4
-      - name: attributename
+      - name: propertyname
         in: path
-        description: attribute name that needs to be filtered
+        description: property name that needs to be filtered
         required: true
         schema:
           type: string
@@ -467,7 +462,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AttributeValueResponse'
+                $ref: '#/components/schemas/PropertyValueResponse'
         '400':
           description: Bad request
         '401':
@@ -483,10 +478,10 @@ paths:
                 
     get:
       tags:
-        - data
-      summary: Read a value from an attribute on a device
-      description: Read a value to an attribute on a device
-      operationId: dataRead
+        - action
+      summary: Read a value from an property on a device
+      description: Read a value to an property on a device
+      operationId: Read
       parameters:
       - name: id
         in: path
@@ -496,9 +491,9 @@ paths:
           type: string
           format: uuid
           example: 12345678-1234-5678-1234-56789abcdef4
-      - name: attributename
+      - name: propertyname
         in: path
-        description: attribute name that needs to be filtered
+        description: property name that needs to be filtered
         required: true
         schema:
           type: string
@@ -509,7 +504,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AttributeValueResponse'
+                $ref: '#/components/schemas/PropertyValueResponse'
         '400':
           description: Bad request
         '401':
@@ -523,21 +518,21 @@ paths:
               schema:
                 $ref: '#/components/schemas/FailureResponse' 
 
-  /data/attribute/write:
+  /action/property/write:
     post:
       tags:
-        - data
-      summary: Write a value to an attribute using technology extensions
+        - action
+      summary: Write a value to an property using technology extensions
       description: |-
-        Write a value to an attribute directly, addressing the attribute
+        Write a value to an property directly, addressing the property
         with technology-specific extensions, this does not require
-        attribute registration. You cannot write to a group id.
-      operationId: dataAttrWrite
+        property registration. You cannot write to a group id.
+      operationId: AttrWrite
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AttributeValueRaw'
+              $ref: '#/components/schemas/PropertyValueRaw'
         required: true
       responses:
         '200':
@@ -545,7 +540,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AttributeValueResponseRaw'
+                $ref: '#/components/schemas/PropertyValueResponseRaw'
         '400':
           description: Bad request
         '401':
@@ -559,21 +554,21 @@ paths:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
                 
-  /data/attribute/read:
+  /action/property/read:
     post:
       tags:
-        - data
-      summary: Read a value to an attribute using technology extensions
+        - action
+      summary: Read a value to an property using technology extensions
       description: |-
-        Read a value to an attribute directly, addressing the attribute
+        Read a value to an property directly, addressing the property
         with technology-specific extensions, this does not require
-        attribute registration. You cannot write to a group id.
-      operationId: dataAttrRead
+        property registration. You cannot write to a group id.
+      operationId: AttrRead
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AttributeRaw'
+              $ref: '#/components/schemas/PropertyRaw'
         required: true
       responses:
         '200':
@@ -581,7 +576,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AttributeValueResponseRaw'
+                $ref: '#/components/schemas/PropertyValueResponseRaw'
         '400':
           description: Bad request
         '401':
@@ -595,15 +590,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
   
-  /data/attribute/subscription:
+  /action/property/subscription:
     post:
       tags:
-        - data
+        - action
       summary: |-
-         Subscribe to streaming data from an attribute on a device
+         Subscribe to streaming action from an property on a device
       description: |-
-        Subscribe to streaming data from an attribute on a device
-      operationId: dataSubscribe
+        Subscribe to streaming action from an property on a device
+      operationId: Subscribe
       requestBody:
         content:
           application/json:
@@ -632,14 +627,14 @@ paths:
                 
     put:
       tags:
-        - data
+        - action
       summary: |-
-        update streaming data subscription from an attribute on a
+        update streaming action subscription from an property on a
         device
       description: |-
-        update streaming data subscription from an attribute on a 
+        update streaming action subscription from an property on a 
         device
-      operationId: dataUpdateSubscribe
+      operationId: UpdateSubscribe
       requestBody:
         content:
           application/json:
@@ -666,15 +661,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/FailureResponse' 
   
-  /data/attribute/subscription/{id}/{attributename}:
+  /action/property/subscription/{id}/{propertyname}:
     delete:
       tags:
-        - data
+        - action
       summary: |-
-        Unsubscribe to streaming data from an attribute on a device
+        Unsubscribe to streaming action from an property on a device
       description: |-
-        Unsubscribe to streaming data from an attribute on a device
-      operationId: dataUnsubscribe
+        Unsubscribe to streaming action from an property on a device
+      operationId: Unsubscribe
       parameters:
       - name: id
         in: path
@@ -684,9 +679,9 @@ paths:
           type: string
           format: uuid
           example: 12345678-1234-5678-1234-56789abcdef4
-      - name: attributename
+      - name: propertyname
         in: path
-        description: attribute name that needs to be filtered
+        description: property name that needs to be filtered
         required: true
         schema:
           type: string
@@ -713,10 +708,10 @@ paths:
                 
     get:
       tags:
-        - data
+        - action
       summary: Get the status of a subscription on a device
       description: Get the status of a subscription on a device
-      operationId: dataGetSubscription
+      operationId: GetSubscription
       parameters:
       - name: id
         in: path
@@ -726,9 +721,9 @@ paths:
           type: string
           format: uuid
           example: 12345678-1234-5678-1234-56789abcdef4
-      - name: attributename
+      - name: propertyname
         in: path
-        description: attribute name that needs to be filtered
+        description: property name that needs to be filtered
         required: true
         explode: true
         schema:
@@ -754,17 +749,17 @@ paths:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
 
-  /data/attribute/subscription/topic/{topic}:    
+  /action/property/subscription/event/{event}:    
     delete:
       tags:
-        - data
-      summary: delete all active subscriptions by topic
-      description: delete all active subscriptions by topic
-      operationId: deleteSubscriptionbyTopic
+        - action
+      summary: delete all active subscriptions by event
+      description: delete all active subscriptions by event
+      operationId: deleteSubscriptionbyEvent
       parameters:
-        - name: topic
+        - name: event
           in: path
-          description: topic that needs to be filtered
+          description: event that needs to be filtered
           required: true
           schema:
             type: string
@@ -792,14 +787,14 @@ paths:
 
     get:
       tags:
-        - data
-      summary: get all active subscriptions by topic
-      description: get all active subscriptions by topic
-      operationId: getSubsciptionsbyTopic
+        - action
+      summary: get all active subscriptions by event
+      description: get all active subscriptions by event
+      operationId: getSubsciptionsbyEvent
       parameters:
-        - name: topic
+        - name: event
           in: path
-          description: topic that needs to be filtered
+          description: event that needs to be filtered
           required: true
           schema:
             type: string
@@ -826,10 +821,10 @@ paths:
                 $ref:
                    '#/components/schemas/MultiSubscriptionResponse'
 
-  /data/attribute/subscription/id/{id}:
+  /action/property/subscription/id/{id}:
     delete:
       tags:
-        - data
+        - action
       summary: delete all subscriptions by id
       description: delete all subscriptions by id
       operationId: deleteSubscriptionbyID
@@ -864,7 +859,7 @@ paths:
 
     get:
       tags:
-        - data
+        - action
       summary: get all subscriptions by object id
       description: get all subscriptions by object id
       operationId: getSubscriptionbyID
@@ -897,17 +892,17 @@ paths:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
 
-  /data/attribute/subscription/start:
+  /action/property/subscription/start:
     post:
       tags:
-        - data
+        - action
       summary: |-
-         Subscribe to streaming data from an attribute on a device
-         by directly addressing hte attribute (unregistered attr)
+         Subscribe to streaming action from an property on a device
+         by directly addressing hte property (unregistered attr)
       description: |-
-        Subscribe to streaming data from an attribute on a device
-        by directly addressing hte attribute (unregistered attr)
-      operationId: dataSubscriptionStart
+        Subscribe to streaming action from an property on a device
+        by directly addressing hte property (unregistered attr)
+      operationId: SubscriptionStart
       requestBody:
         content:
           application/json:
@@ -934,17 +929,17 @@ paths:
               schema:
                 $ref: '#/components/schemas/FailureResponse'  
   
-  /data/attribute/subscription/stop:
+  /action/property/subscription/stop:
     post:
       tags:
-        - data
+        - action
       summary: |-
-         Stop streaming data from an attribute on a device
-         by directly addressing hte attribute (unregistered attr)
+         Stop streaming action from an property on a device
+         by directly addressing hte property (unregistered attr)
       description: |-
-        Stop streaming data from an attribute on a device
-        by directly addressing hte attribute (unregistered attr)
-      operationId: dataSubscriptionStop
+        Stop streaming action from an property on a device
+        by directly addressing hte property (unregistered attr)
+      operationId: SubscriptionStop
       requestBody:
         content:
           application/json:
@@ -971,13 +966,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/FailureResponse'  
  
-  /data/broadcast:
+  /action/broadcast:
     post:
       tags:
-        - data
+        - action
       summary: Broadcast to a device
       description: Broadcast to a device
-      operationId: dataBroadcast
+      operationId: Broadcast
       requestBody:
         content:
           application/json:
@@ -1005,18 +1000,18 @@ paths:
                 $ref: '#/components/schemas/FailureResponse'
 
 ### Registrations
-  /registration/topic:
+  /registration/event:
     post:
       tags:
         - registrations
-      summary: Register a publish/subscribe topic
-      description: Register a publish/subscribe topic
-      operationId: registerTopic
+      summary: Register a publish/subscribe event
+      description: Register a publish/subscribe event
+      operationId: registerEvent
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Topic'
+              $ref: '#/components/schemas/Event'
         required: true
       responses:
         '200':
@@ -1024,7 +1019,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TopicResponse'
+                $ref: '#/components/schemas/EventResponse'
         '400':
           description: Bad request
         '401':
@@ -1041,14 +1036,14 @@ paths:
     put:
       tags:
         - registrations
-      summary: Update a publish/subscribe topic
-      description: Update a publish/subscribe topic
-      operationId: UpdateTopic
+      summary: Update a publish/subscribe event
+      description: Update a publish/subscribe event
+      operationId: UpdateEvent
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Topic'
+              $ref: '#/components/schemas/Event'
         required: true
       responses:
         '200':
@@ -1056,7 +1051,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TopicResponse'
+                $ref: '#/components/schemas/EventResponse'
         '400':
           description: Bad request
         '401':
@@ -1073,15 +1068,15 @@ paths:
     delete:
       tags:
         - registrations
-      summary: unregister a publish/subscribe topic
+      summary: unregister a publish/subscribe event
       description: |-
-        unregister a publish/subscribe topic, single topic,
-        multiple topics not allowed.
-      operationId: unregisterTopic
+        unregister a publish/subscribe event, single topic,
+        multiple events not allowed.
+      operationId: unregisterEvent
       parameters:
-        - name: topic
+        - name: event
           in: query
-          description: topic that need to be filtered
+          description: event that need to be filtered
           required: false
           explode: false
           schema:
@@ -1093,7 +1088,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TopicResponse'
+                $ref: '#/components/schemas/EventResponse'
         '400':
           description: Bad request
         '401':
@@ -1110,15 +1105,15 @@ paths:
     get:
       tags:
         - registrations
-      summary: get one or all publish/subscribe topic
+      summary: get one or all publish/subscribe event
       description: |-
-        get publish/subscribe topic, if no topic is specified
-        in query, all topics will be returned
-      operationId: getTopic
+        get publish/subscribe event, if no topic is specified
+        in query, all events will be returned
+      operationId: getEvent
       parameters:
-        - name: topic
+        - name: event
           in: query
-          description: topic that need to be filtered
+          description: event that need to be filtered
           required: false
           explode: false
           schema:
@@ -1130,7 +1125,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MultiTopicsResponse'
+                $ref: '#/components/schemas/MultiEventsResponse'
         '400':
           description: Bad request
         '401':
@@ -1144,17 +1139,17 @@ paths:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
 
-  /registration/topic/{topic}:
+  /registration/event/{event}:
     delete:
       tags:
         - registrations
-      summary: delete a publish/subscribe topic by name
-      description: unregister a publish/subscribe topic by Name
-      operationId: deleteTopicbyName
+      summary: delete a publish/subscribe event by name
+      description: unregister a publish/subscribe event by Name
+      operationId: deleteEventbyName
       parameters:
-        - name: topic
+        - name: event
           in: path
-          description: topic that needs to be filtered
+          description: event that needs to be filtered
           required: true
           schema:
             type: string
@@ -1165,7 +1160,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TopicResponse'
+                $ref: '#/components/schemas/EventResponse'
         '400':
           description: Bad request
         '401':
@@ -1182,13 +1177,13 @@ paths:
     get:
       tags:
         - registrations
-      summary: get a publish/subscribe topic by name
-      description: get a publish/subscribe topic by name
-      operationId: getTopicbyName
+      summary: get a publish/subscribe event by name
+      description: get a publish/subscribe event by name
+      operationId: getEventbyName
       parameters:
-        - name: topic
+        - name: event
           in: path
-          description: topic that needs to be filtered
+          description: event that needs to be filtered
           required: true
           schema:
             type: string
@@ -1199,7 +1194,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TopicResponse'
+                $ref: '#/components/schemas/EventResponse'
         '400':
           description: Bad request
         '401':
@@ -1213,18 +1208,18 @@ paths:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
 
-  /registration/topic/data-app/{data-app}:
+  /registration/event/data-app/{data-app}:
     delete:
       tags:
         - registrations
-      summary: delete all publish/subscribe topics by data-app
+      summary: delete all publish/subscribe events by data-app
       description: |-
-        unregister all publish/subscribe topics by data-app
-      operationId: deleteTopicbyDataApp
+        unregister all publish/subscribe events by data-app
+      operationId: deleteEventbyDataApp
       parameters:
         - name: data-app
           in: path
-          description: data app that needs to be filtered
+          description: action app that needs to be filtered
           required: true
           schema:
             type: string
@@ -1235,7 +1230,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MultiTopicsResponse'
+                $ref: '#/components/schemas/MultiEventsResponse'
         '400':
           description: Bad request
         '401':
@@ -1252,13 +1247,13 @@ paths:
     get:
       tags:
         - registrations
-      summary: get all publish/subscribe topics by data-app
-      description: get all publish/subscribe topics by data-app
-      operationId: getTopicbyDataApp
+      summary: get all publish/subscribe events by data-app
+      description: get all publish/subscribe events by data-app
+      operationId: getEventbyDataApp
       parameters:
         - name: data-app
           in: path
-          description: data app that needs to be filtered
+          description: action app that needs to be filtered
           required: true
           schema:
             type: string
@@ -1269,7 +1264,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MultiTopicsResponse'
+                $ref: '#/components/schemas/MultiEventsResponse'
         '400':
           description: Bad request
         '401':
@@ -1283,13 +1278,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
 
-  /registration/topic/id/{id}:
+  /registration/event/id/{id}:
     delete:
       tags:
         - registrations
-      summary: delete all publish/subscribe topics by object id
-      description: unregister all publish/subscribe topics by id
-      operationId: deleteTopicbyID
+      summary: delete all publish/subscribe events by object id
+      description: unregister all publish/subscribe events by id
+      operationId: deleteEventbyID
       parameters:
         - name: id
           in: path
@@ -1304,7 +1299,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MultiTopicsResponse'
+                $ref: '#/components/schemas/MultiEventsResponse'
         '400':
           description: Bad request
         '401':
@@ -1321,9 +1316,9 @@ paths:
     get:
       tags:
         - registrations
-      summary: get all publish/subscribe topics by object id
-      description: get all publish/subscribe topics by object id
-      operationId: getTopicbyID
+      summary: get all publish/subscribe events by object id
+      description: get all publish/subscribe events by object id
+      operationId: getEventbyID
       parameters:
         - name: id
           in: path
@@ -1338,7 +1333,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MultiTopicsResponse'
+                $ref: '#/components/schemas/MultiEventsResponse'
         '400':
           description: Bad request
         '401':
@@ -1352,19 +1347,19 @@ paths:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
 
-  /registration/attribute:
+  /registration/property:
     post:
       tags:
         - registrations
-      summary: Register an attribute
+      summary: Register an property
       description: |-
-        Register an attribute for use in data APIs
-      operationId: registerAttribute
+        Register an property for use in action APIs
+      operationId: registerProperty
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AttributeRegistration'
+              $ref: '#/components/schemas/PropertyRegistration'
         required: true
       responses:
         '200':
@@ -1372,7 +1367,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AttributeRegistrationResponse'
+                $ref: '#/components/schemas/PropertyRegistrationResponse'
         '400':
           description: Bad request
         '401':
@@ -1389,15 +1384,15 @@ paths:
     put:
       tags:
         - registrations
-      summary: Update an attribute registration
+      summary: Update an property registration
       description: |-
-        Update an existing attribute registration
-      operationId: updateAttributeRegistration
+        Update an existing property registration
+      operationId: updatePropertyRegistration
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AttributeRegistration'
+              $ref: '#/components/schemas/PropertyRegistration'
         required: true
       responses:
         '200':
@@ -1405,7 +1400,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AttributeRegistrationResponse'
+                $ref: '#/components/schemas/PropertyRegistrationResponse'
         '400':
           description: Bad request
         '401':
@@ -1422,13 +1417,13 @@ paths:
     delete:
       tags:
         - registrations
-      summary: Delete an attribute registration
-      description: Delete an attribute registration
-      operationId: deleteAttributeRegistration
+      summary: Delete an property registration
+      description: Delete an property registration
+      operationId: deletePropertyRegistration
       parameters:
-        - name: attributename
+        - name: propertyname
           in: query
-          description: attribute name that needs to be filtered
+          description: property name that needs to be filtered
           required: false
           explode: false
           schema:
@@ -1440,7 +1435,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AttributeRegistrationResponse'
+                $ref: '#/components/schemas/PropertyRegistrationResponse'
         '400':
           description: Bad request
         '401':
@@ -1457,15 +1452,15 @@ paths:
     get:
       tags:
         - registrations
-      summary: list registered attributes
+      summary: list registered properties
       description: |-
-        get a registered attribute by name of get all 
-        attributes if no names supplied.
-      operationId: getAttributeRegistration
+        get a registered property by name of get all 
+        properties if no names supplied.
+      operationId: getPropertyRegistration
       parameters:
-        - name: attributename
+        - name: propertyname
           in: query
-          description: attribute name that needs to be filtered
+          description: property name that needs to be filtered
           required: false
           explode: true
           schema:
@@ -1477,7 +1472,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MultiAttributeRegistrationResponse'
+                $ref: '#/components/schemas/MultiPropertyRegistrationResponse'
         '400':
           description: Bad request
         '401':
@@ -1491,17 +1486,17 @@ paths:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
 
-  /registration/attribute/{attributename}:
+  /registration/property/{propertyname}:
     delete:
       tags:
         - registrations
-      summary: delete an attribute registration by name
-      description: delete an attribute registration by name
-      operationId: deleteAttributeRegistrationbyName
+      summary: delete an property registration by name
+      description: delete an property registration by name
+      operationId: deletePropertyRegistrationbyName
       parameters:
-        - name: attributename
+        - name: propertyname
           in: path
-          description: attribute that needs to be filtered
+          description: property that needs to be filtered
           required: true
           schema:
             type: string
@@ -1512,7 +1507,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AttributeRegistrationResponse'
+                $ref: '#/components/schemas/PropertyRegistrationResponse'
         '400':
           description: Bad request
         '401':
@@ -1529,13 +1524,13 @@ paths:
     get:
       tags:
         - registrations
-      summary: get an attribute registration by name
-      description: get an attribute registration by name
+      summary: get an property registration by name
+      description: get an property registration by name
       operationId: getAttirbuteRegistrationbyName
       parameters:
-        - name: attributename
+        - name: propertyname
           in: path
-          description: attribute that needs to be filtered
+          description: property that needs to be filtered
           required: true
           schema:
             type: string
@@ -1546,7 +1541,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AttributeRegistrationResponse'
+                $ref: '#/components/schemas/PropertyRegistrationResponse'
         '400':
           description: Bad request
         '401':
@@ -1560,7 +1555,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
                 
-  /registration/file:
+  /registration/property/file:
     post:
       tags:
         - registrations
@@ -1593,194 +1588,21 @@ paths:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
 
-    put:
-      tags:
-        - registrations
-      summary: Update an existing file registration
-      description: Update an existing file registration
-      operationId: UpdateFile
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/File'
-        required: true
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SuccessResponse'
-        '400':
-          description: Bad request
-        '401':
-          description: Unauthorized
-        '405':
-          description: Invalid request
-        '500':
-          description: Server-side failure
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/FailureResponse'
-
-    delete:
-      tags:
-        - registrations
-      summary: Delete a file
-      description: Delete a file
-      operationId: DeleteFile
-      parameters:
-        - name: filename
-          in: query
-          description: file that needs to be filtered
-          required: false
-          explode: false
-          schema:
-            type: string
-            example: "firmware.dat"
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SuccessResponse'
-        '400':
-          description: Bad request
-        '401':
-          description: Unauthorized
-        '405':
-          description: Invalid request
-        '500':
-          description: Server-side failure
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/FailureResponse'
-
-    get:
-      tags:
-        - registrations
-      summary: get a file
-      description: |-
-        get a file by name of get all files if no names
-        supplied.
-      operationId: getFile
-      parameters:
-        - name: filename
-          in: query
-          description: file that needs to be filtered
-          required: false
-          explode: false
-          schema:
-            type: string
-            example: "firmware.dat"
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MultiFileResponse'
-        '400':
-          description: Bad request
-        '401':
-          description: Unauthorized
-        '405':
-          description: Invalid request
-        '500':
-          description: Server-side failure
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/FailureResponse'
-
-  /registration/file/{filename}:
-    delete:
-      tags:
-        - registrations
-      summary: delete a file by name
-      description: delete a file by name
-      operationId: deleteFilebyName
-      parameters:
-        - name: filename
-          in: path
-          description: file that needs to be filtered
-          required: true
-          schema:
-            type: string
-            example: "firmware.dat"
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/FileResponse'
-        '400':
-          description: Bad request
-        '401':
-          description: Unauthorized
-        '405':
-          description: Invalid request
-        '500':
-          description: Server-side failure
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/FailureResponse'
-
-    get:
-      tags:
-        - registrations
-      summary: get a file by name
-      description: get a file by name
-      operationId: getFilebyName
-      parameters:
-        - name: filename
-          in: path
-          description: file that needs to be filtered
-          required: true
-          schema:
-            type: string
-            example: 12345678-1234-5678-1234-56789abcdef4
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/FileResponse'
-        '400':
-          description: Bad request
-        '401':
-          description: Unauthorized
-        '405':
-          description: Invalid request
-        '500':
-          description: Server-side failure
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/FailureResponse'
-
 ### Extensions
 
-  /extension/attribute/write/file:
+  /extension/property/write/file:
     post:
       tags:
         - extensions
-      summary: Write a file to an attribute across multiple writes
+      summary: Write a file to an property across multiple writes
       description: |-
-        Write a file to an attribute across multiple writes
-      operationId: dataWriteFile
+        Write a file to an property across multiple writes
+      operationId: WriteFile
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AttributeFile'
+              $ref: '#/components/schemas/PropertyFile'
         required: true
       responses:
         '200':
@@ -1802,20 +1624,20 @@ paths:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
 
-  /extension/attribute/write/blob:
+  /extension/property/write/blob:
     post:
       tags:
         - extensions
       summary: |-
-        Write a binary blob to an attribute across multiple writes
+        Write a binary blob to an property across multiple writes
       description: |-
-        Write a binary blob to an attribute across multiple writes
-      operationId: dataWriteBlob
+        Write a binary blob to an property across multiple writes
+      operationId: WriteBlob
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AttributeBlob'
+              $ref: '#/components/schemas/PropertyBlob'
         required: true
       responses:
         '200':
@@ -1837,22 +1659,22 @@ paths:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
 
-  /extension/attribute/read/conditional:
+  /extension/property/read/conditional:
     post:
       tags:
         - extensions
       summary: |-
-        Read a value from attribute on a device until it matches a
+        Read a value from property on a device until it matches a
         specific value.
       description: |-
-        Read a value from attribute on a device until it matches a
+        Read a value from property on a device until it matches a
         specific value.
-      operationId: dataReadCond
+      operationId: ReadCond
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AttributeConditional'
+              $ref: '#/components/schemas/PropertyConditional'
         required: true
       responses:
         '200':
@@ -1860,7 +1682,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AttributeValueResponse'
+                $ref: '#/components/schemas/PropertyValueResponse'
         '400':
           description: Bad request
         '401':
@@ -1874,6 +1696,74 @@ paths:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
 
+  /extension/property/firmware:
+    post:
+      tags:
+        - extensions
+      summary: Write firmware to a device
+      description: |-
+        Write a file to an property across multiple writes
+      operationId: WriteFirmware
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Firmware'
+        required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FirmwareResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+                
+    get:
+      tags:
+        - extensions
+      summary: get the status of a firmware upgrade
+      description: get the status of a firmware upgrade
+      operationId: getFirmwareStatus
+      parameters:
+        - name: id
+          in: query
+          description: device id that needs to be filtered
+          required: true
+          schema:
+            type: string
+            example: "12345678-1234-5678-1234-56789abcdef4"
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FirmwareResponse'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '405':
+          description: Invalid request
+        '500':
+          description: Server-side failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailureResponse'
+                
   /extension/bulk:
     post:
       tags:
@@ -1985,8 +1875,8 @@ components:
           format: uuid
           example: 12345678-1234-5678-1234-56789abcdef4
 
-## Attributes that define a BLE attribute
-    BLEAttributes:
+## Properties that define a BLE property
+    BLEProperties:
       required:
         - ble
       type: object
@@ -2009,20 +1899,20 @@ components:
               type: boolean
               example: false
 
-## Defines different types of BLE topics
-    BLETopic:
+## Defines different types of BLE events
+    BLEEvent:
       required:
         - ble
       type: object
       properties:
         ble:
           oneOf:
-            - $ref: '#/components/schemas/BLESubTopic'
-            - $ref: '#/components/schemas/BLEConnTopic'
-            - $ref: '#/components/schemas/BLEAdvTopic'
+            - $ref: '#/components/schemas/BLESubEvent'
+            - $ref: '#/components/schemas/BLEConnEvent'
+            - $ref: '#/components/schemas/BLEAdvEvent'
 
-## BLE Gatt Topic definition
-    BLESubTopic:
+## BLE Gatt Event definition
+    BLESubEvent:
       required:
         - type
         - serviceID
@@ -2041,8 +1931,8 @@ components:
           type: string
           example: 12345678-1234-5678-1234-56789abcdef1
 
-## BLE Connection event Topic definition
-    BLEConnTopic:
+## BLE Connection event Event definition
+    BLEConnEvent:
       required:
         - type
       type: object
@@ -2053,8 +1943,8 @@ components:
           enum:
             - connection_events
 
-## BLE Advertisement Topic definition
-    BLEAdvTopic:
+## BLE Advertisement Event definition
+    BLEAdvEvent:
       required:
         - type
       type: object
@@ -2075,7 +1965,7 @@ components:
           items:
             $ref: '#/components/schemas/BLEAdvertisement'
 
-## BLE Advertisement attributes
+## BLE Advertisement properties
     BLEAdvertisement:
       type: object
       properties:
@@ -2088,7 +1978,7 @@ components:
           format: byte
           example: 4c00*
 
-## Attributes that define a BLE broadcast
+## Properties that define a BLE broadcast
     BLEBroadcast:
       required:
         - ble
@@ -2132,40 +2022,40 @@ components:
           items:
             $ref: '#/components/schemas/ZigbeeCluster'
 
-## A Zigbee cluster with its attributes
+## A Zigbee cluster with its properties
     ZigbeeCluster:
       required:
         - clusterID
-        - attributes
+        - properties
       type: object
       properties:
         clusterID:
           type: integer
           format: int32
           example: 0
-        attributes:
+        properties:
           type: array
           items:
-            $ref: '#/components/schemas/ZigbeeAttribute'
+            $ref: '#/components/schemas/ZigbeeProperty'
 
-## A Zigbee attribute
-    ZigbeeAttribute:
+## A Zigbee property
+    ZigbeeProperty:
       required:
-        - attributeID
-        - attributeType
+        - propertyID
+        - propertyType
       type: object
       properties:
-        attributeID:
+        propertyID:
           type: integer
           format: int32
           example: 1
-        attributeType:
+        propertyType:
           type: integer
           format: int32
           example: 32
 
-## Attributes that define a Zigbee attribute
-    ZigbeeAttributes:
+## Properties that define a Zigbee property
+    ZigbeeProperties:
       required:
         - zigbee
       type: object
@@ -2174,7 +2064,7 @@ components:
           required:
             - endpointID
             - clusterID
-            - attributeID
+            - propertyID
           type: object
           properties:
             endpointID:
@@ -2185,7 +2075,7 @@ components:
               type: integer
               format: int32
               example: 6
-            attributeID:
+            propertyID:
               type: integer
               format: int32
               example: 16
@@ -2194,7 +2084,7 @@ components:
               format: int32
               example: 1
 
-## Attributes that define a Zigbee broadcast
+## Properties that define a Zigbee broadcast
     ZigbeeBroadcast:
       required:
         - zigbee
@@ -2204,7 +2094,7 @@ components:
           required:
             - endpointID
             - clusterID
-            - attributeID
+            - propertyID
             - value
           type: object
           properties:
@@ -2216,7 +2106,7 @@ components:
               type: integer
               format: int32
               example: 6
-            attributeID:
+            propertyID:
               type: integer
               format: int32
               example: 16
@@ -2312,23 +2202,23 @@ components:
           type: boolean
           example: true
 
-## A specific attribute of an Device
-    AttributeRaw:
+## A specific property of an Device
+    PropertyRaw:
       allOf:
         - $ref: '#/components/schemas/Object'
       oneOf:
-        - $ref: '#/components/schemas/BLEAttributes'
-        - $ref: '#/components/schemas/ZigbeeAttributes'
+        - $ref: '#/components/schemas/BLEProperties'
+        - $ref: '#/components/schemas/ZigbeeProperties'
       discriminator:
         propertyName: technology
         mapping:
-          ble: '#/components/schemas/BLEAttributes'
-          zigbee: '#/components/schemas/ZigbeeAttributes'
+          ble: '#/components/schemas/BLEProperties'
+          zigbee: '#/components/schemas/ZigbeeProperties'
 
-## A value of an attribute of an Device
-    AttributeValueRaw:
+## A value of an property of an Device
+    PropertyValueRaw:
       allOf:
-        - $ref: '#/components/schemas/AttributeRaw'
+        - $ref: '#/components/schemas/PropertyRaw'
       required:
         - value
       type: object
@@ -2342,26 +2232,26 @@ components:
           type: boolean
           example: true
         
-## An attribute ID
-    AttributeID:
+## An property ID
+    PropertyID:
       required:
-        - attributeID
+        - propertyID
       type: object
       properties:
-        attributeID:
+        propertyID:
           type: string
           example: "temperature"
           
-## A specific attribute of an Device
-    Attribute:
+## A specific property of an Device
+    Property:
       allOf:
         - $ref: '#/components/schemas/Object'
-        - $ref: '#/components/schemas/AttributeID'
+        - $ref: '#/components/schemas/PropertyID'
 
-## A value of an attribute of an Device
-    AttributeValue:
+## A value of an property of an Device
+    PropertyValue:
       allOf:
-        - $ref: '#/components/schemas/Attribute'
+        - $ref: '#/components/schemas/Property'
       required:
         - value
       type: object
@@ -2375,30 +2265,25 @@ components:
           type: boolean
           example: true
           
-## An attribute registration
-    AttributeRegistration:
+## An property registration
+    PropertyRegistration:
       allOf:
-        - $ref: '#/components/schemas/AttributeID'
+        - $ref: '#/components/schemas/PropertyID'
       oneOf:
-        - $ref: '#/components/schemas/BLEAttributes'
-        - $ref: '#/components/schemas/ZigbeeAttributes'
+        - $ref: '#/components/schemas/BLEProperties'
+        - $ref: '#/components/schemas/ZigbeeProperties'
       discriminator:
         propertyName: technology
         mapping:
-          ble: '#/components/schemas/BLEAttributes'
-          zigbee: '#/components/schemas/ZigbeeAttributes'
+          ble: '#/components/schemas/BLEProperties'
+          zigbee: '#/components/schemas/ZigbeeProperties'
 
-## A file-based attribute of an Device
-    AttributeFile:
+## A file-based property of an Device
+    PropertyFile:
       allOf:
-        - $ref: '#/components/schemas/Attribute'
-      required:
-        - filename
+        - $ref: '#/components/schemas/Property'
       type: object
       properties:
-        filename:
-          type: string
-          example: "firmware.dat"
         chunksize:
           type: integer
         forcedResponse:
@@ -2406,10 +2291,10 @@ components:
           type: boolean
           example: true
 
-## A binary blob-based attribute of an Device
-    AttributeBlob:
+## A binary blob-based property of an Device
+    PropertyBlob:
       allOf:
-        - $ref: '#/components/schemas/Attribute'
+        - $ref: '#/components/schemas/Property'
       required:
         - blob
       type: object
@@ -2425,9 +2310,9 @@ components:
           example: true
 
 ## Conditional read of a value (read until specific value is read)
-    AttributeConditional:
+    PropertyConditional:
       allOf:
-        - $ref: '#/components/schemas/Attribute'
+        - $ref: '#/components/schemas/Property'
       required:
         - value
       type: object
@@ -2451,29 +2336,29 @@ components:
             time between reads in seconds (default 1, max 60)
           type: integer
 
-## A subscription attribute of an Device
+## A subscription property of an Device
     SubscriptionRaw:
       allOf:
-        - $ref: '#/components/schemas/AttributeRaw'
+        - $ref: '#/components/schemas/PropertyRaw'
       type: object
       properties:
         forcedAck:
           description: |-
-            When not looking at device/attribute support MUST we
+            When not looking at device/property support MUST we
             ackhnowledge?
           type: boolean
           example: true
 
-## A specific attribute of an Device
+## A specific property of an Device
     Subscription:
       allOf:
         - $ref: '#/components/schemas/Object'
-        - $ref: '#/components/schemas/AttributeID'
+        - $ref: '#/components/schemas/PropertyID'
       type: object
       properties:
         forcedAck:
           description: |-
-            When not looking at device/attribute support MUST we
+            When not looking at device/property support MUST we
             ackhnowledge?
           type: boolean
           example: true
@@ -2509,35 +2394,35 @@ components:
           type: integer
           example: 500
 
-## Topic Name
-    TopicName:
+## Event Name
+    EventName:
       required:
-        - topic
+        - event
       type: object
       properties:
-        topic:
+        event:
           type: string
           example: enterprise/hospital/pulse_oximeter
 
-## DataStream Topic
-    Topic:
+## DataStream Event
+    Event:
       allOf:
-        - $ref: '#/components/schemas/TopicName'      
+        - $ref: '#/components/schemas/EventName'      
       oneOf:
-        - $ref: '#/components/schemas/AttributeID'
-        - $ref: '#/components/schemas/BLETopic'
-        - $ref: '#/components/schemas/ZigbeeAttributes'
+        - $ref: '#/components/schemas/PropertyID'
+        - $ref: '#/components/schemas/BLEEvent'
+        - $ref: '#/components/schemas/ZigbeeProperties'
       discriminator:
         propertyName: technology
         mapping:
-          ble: '#/components/schemas/BLETopic'
-          zigbee: '#/components/schemas/ZigbeeAttributes'
+          ble: '#/components/schemas/BLEEvent'
+          zigbee: '#/components/schemas/ZigbeeProperties'
       type: object
       properties:
-        dataFormat:
+        actionFormat:
           description: |-
             How is information decorated?  Default: device
-            and attribute ids.
+            and property ids.
           type: string
           example: default
           enum:
@@ -2557,12 +2442,12 @@ components:
           enum:
             - device
             - group
-        dataApps:
+        actionApps:
           type: array
           items:
             type: object
             properties:
-              dataAppID:
+              actionAppID:
                 type: string
                 format: uuid
                 example: 12345678-1234-5678-1234-56789abcdef4
@@ -2572,16 +2457,6 @@ components:
           enum:
             - ble
             - zigbee
-
-## FileName
-    FileName:
-      required:
-        - filename
-      type: object
-      properties:
-        filename:
-          type: string
-          example: "firmware.dat"
 
 ## FileURL
     FileURL:
@@ -2607,10 +2482,23 @@ components:
 ## File
     File:
       allOf:
-        - $ref: '#/components/schemas/FileName'
+        - $ref: '#/components/schemas/PropertyID'
       oneOf:
         - $ref: '#/components/schemas/FileURL'
         - $ref: '#/components/schemas/FileBin'
+
+## Firmware
+    Firmware:
+      allOf:
+        - $ref: '#/components/schemas/Property'
+      type: object
+      properties:
+        upgradeType:
+          type: string
+          enum:
+            - nordics
+            - silabs
+            - wiliot
 
 ## Defines an operation in a bulk API
     Operation:
@@ -2622,12 +2510,12 @@ components:
             path:
               type: string
               enum:
-               - /connectivity/connection
-               - /data/attribute
-               - /data/attribute/subscription
-               - /extension/attribute/write/file
-               - /extension/attribute/write/blob
-               - /extension/attribute/read/conditional
+               - /action/connection
+               - /action/property
+               - /action/property/subscription
+               - /extension/property/write/file
+               - /extension/property/write/blob
+               - /extension/property/read/conditional
             method:
               type: string
               enum:
@@ -2636,39 +2524,39 @@ components:
                - GET
         - oneOf:
             - $ref: '#/components/schemas/Object'
-            - $ref: '#/components/schemas/Attribute'
-            - $ref: '#/components/schemas/AttributeValue'
-            - $ref: '#/components/schemas/AttributeConditional'
-            - $ref: '#/components/schemas/AttributeFile'
-            - $ref: '#/components/schemas/AttributeBlob'
+            - $ref: '#/components/schemas/Property'
+            - $ref: '#/components/schemas/PropertyValue'
+            - $ref: '#/components/schemas/PropertyConditional'
+            - $ref: '#/components/schemas/PropertyFile'
+            - $ref: '#/components/schemas/PropertyBlob'
             - $ref: '#/components/schemas/Subscription'
           discriminator:
             propertyName: operation
             mapping:
-              POST /connectivity/connection:
+              POST /action/connection:
                 '#/components/schemas/Service'
-              DELETE /connectivity/connection:
+              DELETE /action/connection:
                 '#/components/schemas/Object'
-              GET /connectivity/connection:
+              GET /action/connection:
                 '#/components/schemas/Object'
-              POST /data/attribute:
-                '#/components/schemas/AttributeValue'
-              DELETE /data/attribute:
-                '#/components/schemas/Attribute'
-              GET /data/attribute:
-                '#/components/schemas/Attribute'
-              POST /data/attribute/Subscription:
+              POST /action/property:
+                '#/components/schemas/PropertyValue'
+              DELETE /action/property:
+                '#/components/schemas/Property'
+              GET /action/property:
+                '#/components/schemas/Property'
+              POST /action/property/Subscription:
                 '#/components/schemas/Subscription'
-              DELETE /data/attribute/Subscription:
+              DELETE /action/property/Subscription:
                 '#/components/schemas/Subscription'
-              GET /data/attribute/Subscription:
+              GET /action/property/Subscription:
                 '#/components/schemas/Subscription'
-              POST /extension/attribute/read/conditional:
-                '#/components/schemas/AttributeConditional'
-              POST /extension/attribute/write/file:
-                '#/components/schemas/AttributeFile'
-              POST /extension/attribute/write/blob:
-                '#/components/schemas/AttributeBlob'
+              POST /extension/property/read/conditional:
+                '#/components/schemas/PropertyConditional'
+              POST /extension/property/write/file:
+                '#/components/schemas/PropertyFile'
+              POST /extension/property/write/blob:
+                '#/components/schemas/PropertyBlob'
 
 ## Bulk schema
     Bulk:
@@ -2763,8 +2651,8 @@ components:
           items:
             $ref: '#/components/schemas/Response'
 
-## Returns an attribute value
-    AttributeValueResponseRaw:
+## Returns an property value
+    PropertyValueResponseRaw:
       allOf:
         - $ref: '#/components/schemas/SuccessResponse'
       required:
@@ -2776,11 +2664,11 @@ components:
           example: 01
           format: byte
           
-## Returns an attribute value with ID
-    AttributeValueResponse:
+## Returns an property value with ID
+    PropertyValueResponse:
       allOf:
         - $ref: '#/components/schemas/SuccessResponse'
-        - $ref: '#/components/schemas/AttributeID'
+        - $ref: '#/components/schemas/PropertyID'
       required:
        - value
       type: object
@@ -2790,43 +2678,43 @@ components:
           example: 01
           format: byte
 
-## Returns an attribute registration
-    AttributeRegistrationResponse:
+## Returns an property registration
+    PropertyRegistrationResponse:
       allOf:
         - $ref: '#/components/schemas/Success'
-        - $ref: '#/components/schemas/AttributeRegistration'
+        - $ref: '#/components/schemas/PropertyRegistration'
         
-## Returning multiple attribute registrations
-    MultiAttributeRegistrationResponse:
+## Returning multiple property registrations
+    MultiPropertyRegistrationResponse:
       allOf:
         - $ref: '#/components/schemas/Success'
       required:
-        - attributes
+        - properties
       type: object
       properties:
-        attributes:
+        properties:
           type: array
           items:
-            $ref: '#/components/schemas/AttributeRegistration'
+            $ref: '#/components/schemas/PropertyRegistration'
 
-## Returns a topic
-    TopicResponse:
+## Returns a event
+    EventResponse:
       allOf:
         - $ref: '#/components/schemas/SuccessResponse'
-        - $ref: '#/components/schemas/Topic'
+        - $ref: '#/components/schemas/Event'
 
-## Returning multiple topics
-    MultiTopicsResponse:
+## Returning multiple events
+    MultiEventsResponse:
       allOf:
         - $ref: '#/components/schemas/Success'
       required:
-        - topics
+        - events
       type: object
       properties:
-        topics:
+        events:
           type: array
           items:
-            $ref: '#/components/schemas/Topic'
+            $ref: '#/components/schemas/Event'
 
 ## Returning multiple subscriptions
     MultiSubscriptionResponse:
@@ -2841,31 +2729,6 @@ components:
           items:
             $ref: '#/components/schemas/Subscription'
 
-## Returns a file name
-    FileResponse:
-      allOf:
-        - $ref: '#/components/schemas/SuccessResponse'
-      required:
-        - filename
-      type: object
-      properties:
-        filename:
-          type: string
-          example: "firmware.dat"
-
-## Returning multiple file names
-    MultiFileResponse:
-      allOf:
-        - $ref: '#/components/schemas/Success'
-      required:
-        - filenames
-      type: object
-      properties:
-        filenames:
-          type: array
-          items:
-            $ref: '#/components/schemas/FileName'
-
 ## Multiple returns for a bulk operation
     BulkResponse:
       allOf:
@@ -2877,6 +2740,20 @@ components:
           items:
             $ref: '#/components/schemas/OperationResponse'
 
+## Return ofr a firmware upgrade operation
+    FirmwareResponse:
+      allOf:
+        - $ref: '#/components/schemas/SuccessResponse'
+      type: object
+      properties:
+        upgradeStatus:
+          type: string
+          enum:
+            - completed
+            - in-progress
+            - rolled-back
+            - failed
+
 ## Return for an operation
     OperationResponse:
       required:
@@ -2887,12 +2764,12 @@ components:
             operation:
               type: string
               enum:
-               - /connectivity/connection
-               - /data/attribute
-               - /data/attribute/subscription
-               - /extension/attribute/write/file
-               - /extension/attribute/write/blob
-               - /extension/attribute/read/conditional
+               - /action/connection
+               - /action/property
+               - /action/property/subscription
+               - /extension/property/write/file
+               - /extension/property/write/blob
+               - /extension/property/read/conditional
             type:  
               type: string
               enum:
@@ -2902,33 +2779,33 @@ components:
         - oneOf:
             - $ref: '#/components/schemas/SuccessResponse'
             - $ref: '#/components/schemas/ServiceResponse'
-            - $ref: '#/components/schemas/AttributeValueResponse'
+            - $ref: '#/components/schemas/PropertyValueResponse'
           discriminator:
             propertyName: operation
             mapping:
-              POST /connectivity/connection:
+              POST /action/connection:
                 '#/components/schemas/ServiceResponse'
-              DELETE /connectivity/connection:
+              DELETE /action/connection:
                 '#/components/schemas/SuccessResponse'
-              GET /connectivity/connection:
+              GET /action/connection:
                 '#/components/schemas/SuccessResponse'
-              POST /data/attribute:
-                '#/components/schemas/AttributeValueResponse'
-              DELETE /data/attribute:
-                '#/components/schemas/AttributeValueResponse'
-              GET /data/attribute:
-                '#/components/schemas/AttributeValueResponse'
-              POST /data/attribute/Subscription:
+              POST /action/property:
+                '#/components/schemas/PropertyValueResponse'
+              DELETE /action/property:
+                '#/components/schemas/PropertyValueResponse'
+              GET /action/property:
+                '#/components/schemas/PropertyValueResponse'
+              POST /action/property/Subscription:
                 '#/components/schemas/SuccessResponse'
-              DELETE /data/attribute/Subscription:
+              DELETE /action/property/Subscription:
                 '#/components/schemas/SuccessResponse'
-              GET /data/attribute/Subscription:
+              GET /action/property/Subscription:
                 '#/components/schemas/SuccessResponse'
-              POST /extension/attribute/read/conditional:
-                '#/components/schemas/AttributeValueResponse'
-              POST /extension/attribute/write/file:
+              POST /extension/property/read/conditional:
+                '#/components/schemas/PropertyValueResponse'
+              POST /extension/property/write/file:
                 '#/components/schemas/SuccessResponse'
-              POST /extension/attribute/write/blob:
+              POST /extension/property/write/blob:
                 '#/components/schemas/SuccessResponse'
 
  # API key authorization
