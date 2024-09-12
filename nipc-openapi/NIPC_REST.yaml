@@ -1971,11 +1971,9 @@ components:
       properties:
         adType:
           type: string
-          format: byte
           example: ff
         adData:
           type: string
-          format: byte
           example: 4c00*
 
 ## Properties that define a BLE broadcast
@@ -1990,9 +1988,9 @@ components:
             - advertisement
           properties:
             advertisement:
-              type: array
-              items:
-                $ref: '#/components/schemas/BLEAdvertisement'
+              type: string
+              format: byte
+              example: AgEaAgoMFv9MABAHch9BsDkgeA==
 
 # Zigbee objects
 ## An array for Zigbee Endpoints
