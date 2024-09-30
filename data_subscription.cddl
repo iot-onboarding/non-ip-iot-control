@@ -1,0 +1,42 @@
+DataSubscription = {
+  data: bytes,
+  timestamp: time,
+  ? deviceId: text,
+  ? apMacAddress: text,
+  subscription
+}
+
+subscription = (
+  bleSubscription: BleSubscription //
+  bleAdvertisement: BleAdvertisement //
+  bleConnectionStatus: BleConnectionStatus //
+  zigbeeSubscription: ZigbeeSubscription //
+  rawPayload: RawPayload
+)
+
+BleSubscription = {
+  serviceId: text,
+  characteristicId: text
+}
+
+BleAdvertisement = {
+  macAddress: text,
+  ? rssi: nint,
+}
+
+BleConnectionStatus = {
+  macAddress: text,
+  connected: bool,
+  ? reason: int
+}
+
+ZigbeeSubscription = {
+  endpointId: int,
+  clusterId: int,
+  attributeId: int
+  attributeType: int
+}
+
+RawPayload = {
+  contextId: text
+}
