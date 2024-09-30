@@ -169,7 +169,7 @@ This specification is organized into three sections:
 - A specification that can be mapped to a publication/subscribe
   interface, such as MQTT.
 - Examples of use cases leveraging both BLE and Zigbee-based devices. 
-- OpenAPI definitions for the control interface and Protobuf definitions 
+- OpenAPI definitions for the control interface and CDDL definitions 
   for the streaming data interface
 
 ## Terminology
