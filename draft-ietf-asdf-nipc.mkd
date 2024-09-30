@@ -1515,14 +1515,106 @@ Operations:
 
 The publish/subscribe interface, or data streaming interface, is an MQTT
 publishing interface. Pub/sub topics can be created and managed by means
-of the /register/topic NIPC element.
+of the /registration/event NIPC element.
 
-In this memo we propose the data format to be protocol buffers, as 
-fully described in the {{proto}} protobuf definition.
+In this memo, we propose the data format to be CBOR {{!RFC8949}}.
+
+## CDDL Definition
+
+We have a CDDL {{!RFC8610}} definition where we define the
+DataSubscription struct that will be used by all the messages published 
+to the MQTT broker. 
+
+The DataSubscription struct is a CBOR map that will contain the raw data
+in bytes and a timestamp of the data. Optionally, the message will also
+have a deviceId that corresponds to the SCIM ID of the device if the 
+payload is associated to a known device.
+
+Other fields in the CDDL such as apMacAddress and rssi can be optionally
+included but these fields can expose the underlying network topology.
+
+Each message also has a subscription choice group that will define the
+type of data that is being published.
+
+~~~~ CDDL
+{::include data_subscription.cddl}
+~~~~
+{:cddl}
+
+## CBOR Examples
+
+This section contains a few examples of the DataSubscription struct 
+depicted in CBOR diagnostic notation.
+
+~~~
+{
+    "data": h'02011A020A0C16FF4C001007721F41B0392078',
+    "deviceId": "75fde96d-886f-4ac0-a1d5-df79f76e7c9c",
+    "timestamp": 1(1727484393),
+    "bleAdvertisement": {
+        "macAddress": "C1:5C:00:00:00:01",
+        "rssi": -25
+    }
+}
+~~~
+{: title="Onboarded BLE Device Advertisement" }
+
+~~~
+{
+    "data": h'02011A020A0C16FF4C001007721F41B0392078',
+    "timestamp": 1(1727484393),
+    "bleAdvertisement": {
+        "macAddress": "C1:5C:00:00:00:01",
+        "rssi": -25
+    }
+}
+~~~
+{: title="Non-onboarded BLE Device Advertisement" }
+
+~~~
+{
+    "data": h'434630374346303739453036',
+    "deviceId": "75fde96d-886f-4ac0-a1d5-df79f76e7c9c",
+    "timestamp": 1(1727484393),
+    "bleSubscription": {
+        "serviceId": "a4e649f4-4be5-11e5-885d-feff819cdc9f",
+        "characteristicId": "c4c1f6e2-4be5-11e5-885d-feff819cdc9f"
+    }
+}
+~~~
+{: title="BLE GATT Notification" }
+
+~~~
+{
+    "data": h'434630374346303739453036',
+    "deviceId": "75fde96d-886f-4ac0-a1d5-df79f76e7c9c",
+    "timestamp": 1(1727484393),
+    "bleConnectionStatus": {
+        "macAddress": "C1:5C:00:00:00:01",
+        "connected": true
+    }
+}
+~~~
+{: title="BLE Connection status event" }
+
+~~~
+{
+    "data": h'434630374346303739453036',
+    "deviceId": "75fde96d-886f-4ac0-a1d5-df79f76e7c9c",
+    "timestamp": 1(1727484393),
+    "zigbeeSubscription": {
+        "endpointId": 1,
+        "clusterId": 6,
+        "attributeId": 12,
+        "type": 1
+    }
+}
+~~~
+{: title="Zigbee Attribute Notification" }
+
 
 
 # Examples
-
 
 This section contains a few examples on how applications can leverage 
 NIPC operations to communicate with BLE and Zigbee devices.
@@ -1601,18 +1693,3 @@ file "openapi.yml"
 <CODE ENDS>
 ~~~~~~
 {: #openAPI}
-
-
-# Protobuf definition
-
-The following non-normative protocol buffer definition is provide for 
-convenience of the implementor.
-
-~~~~~~
-<CODE BEGINS>
-file "data_app.proto"
-{::include proto/data_app.proto}
-<CODE ENDS>
-~~~~~~
-{: #proto}
-
