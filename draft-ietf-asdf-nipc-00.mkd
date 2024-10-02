@@ -53,21 +53,27 @@ informative:
 
 --- abstract
 
-This memo specifies RESTful application layer interface for gateways 
-providing operations against non-IP devices. The described interface is
-extensible. This memo initially describes Bluetooth Low Energy and 
-Zigbee as they are the most commonly deployed.
+This memo specifies a RESTful application layer interface for network gateways
+providing network operations against devices that have network interfaces that
+do not support the IP protocol. This memo describes Bluetooth Low Energy and 
+Zigbee as they are the most commonly deployed, however the schema used is 
+extensible to other protocols.
 
 --- middle
 
 
 # Introduction
 
-Use cases in building management, healthcare, workplaces, manufacturing,
-logistics and hospitality have introduced low-power devices into these 
-environments. These devices typically do not support IP-based 
-interfaces, hence there is a need for gateway functions to allow these
-devices to communicate with the applications that manage them. 
+Low-power sensors, actuators and other connected devices introduced in 
+environments and use cases such as building management, healthcare, workplaces,
+manufacturing, logistics and hospitality are often battery-powered. Often they
+do not support wireless of wired interfaces that support the IP protocol. 
+Most of these environments however mainly leverage IP-based networking.
+Therefore, applications on the IP network that aim to communicate or receive
+telemetry from these non-IP low-power devices must do so through a gateway
+function that can translate to communication to the non-IP protocol that
+the low-power device supports. Promiment examples of such protocols 
+are {{BLE53}} and {{Zigbee22}}.
 
 ~~~~~
                                                                
@@ -79,35 +85,49 @@ devices to communicate with the applications that manage them.
 ~~~~~
 {: #gw title="Gateway for non-IP Devices"}
 
-In abscence of a standard describing how applications communicate with 
-such non-IP devices, vertically integrated infrastructure prolifilates
-and applications have bespoke integrations with that infrastructure for 
-every use case. The Application interfaces are non-standard. This 
-stunts the eco-system growth. At the same time, wireless access points 
-have been deployed nearly everywhere, many of which have soft or 
+There have been efforts to define Gateway functions for devices that support
+a particular protocol, such as a BLE RESTfull API for BLE Gateways 
+{{reference}}, however they have been limited to a single protocoli or a
+particular use case. In abscence of an open standard describing how
+applications on an IP network communicate with non-IP devices, bespoke and
+vendors specifica implementations heve proliferated. This results in 
+parallel infrastructure of both gateways and non-IP networks being deployed,
+each connecting separately into the IP network. As more use cases requiring
+non-IP connectivity are introduced, the infrastructure sprawl becomes 
+unmanageable. At the same time, wireless access points supporting IP-based
+wireless connectivity are deployed ubiquitiously, many of which have soft or 
 separate radios that can transmit and receive different frame types,
-such as {{BLE53}} and {{Zigbee22}}.  To avoid the need for parallel
-infrastructure and bespoke application integration, a standardized 
-gateway function is necessary.
+such as {{BLE53}} and {{Zigbee22}}. 
 
-The gateway provides at a minimum the following functions:
+A standardized Non-IP Gateway interface would have following benefits:
+ - Avoid the need for parallel Non-IP infrastructure.
+ - Avoid the need for Applications to perform bespoke integrations for 
+   different environments.
+ - Faster and more cost-effective adoption of Non-IP devices in IP network
+   environments.
 
- - authentication and authorization of application clients that
-   will access devices
- - the ability to onboard devices that are intended to be deployed 
-   within the use case
- - maintenance of an inventory of onboarded devices that are intended to
-   access and be accessed by the deployment and applications.
- - interfaces that allow for bi-directional communication to non-IP
-   devices
- - one or more channels to process requests, responses, and asymmetric
-   communciations with the non-IP radio resources (Access Points) 
-   in the system.
 
+A non-IP gateway MUST provide at least following functions:
+ - Authentication and authorization of application clients that
+   will access Non-IP devices.
+ - The ability to onboard Non-IP devices on the No-IP Gateway 
+ - An inventory of onboarded devices that can be reached from application
+   on the IP-network.
+ - An API that allows for bi-directional communication to non-IP devices
+ - One or more channels to process requests, responses, and asymmetric
+   communications with the non-IP radio resources (Access Points) 
+   in its inventory.
+ - The ability to stream telemetry received from non-IP devices in real time
+   to applications on the IP network.
+
+The onboarding function is out of scope of this document
 Combined with a provisioning interface such as
 {{!I-D.shahzad-scim-device-model}}, this specification supports
 these aspects, specifically focusing on providing bi-directional 
 communication with non-IP devices.
+
+The Application gateway is a network construct, so the goal is not to interpret
+Middleware functions may interpret, NIPC GW should not, it is transport function.
 
 ~~~~~
 
