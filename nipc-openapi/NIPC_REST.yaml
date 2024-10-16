@@ -28,7 +28,7 @@ info:
   license:
     name: TBD
     url: TBD
-  version: 0.3.2
+  version: 0.3.3
 externalDocs:
   description: NIPC IETF draft
   url: TBD
@@ -595,9 +595,9 @@ paths:
       tags:
         - action
       summary: |-
-         Subscribe to streaming action from an property on a device
+         Subscribe to streaming event action from an property on a device
       description: |-
-        Subscribe to streaming action from an property on a device
+        Subscribe to streaming event action from an property on a device
       operationId: Subscribe
       requestBody:
         content:
@@ -629,10 +629,10 @@ paths:
       tags:
         - action
       summary: |-
-        update streaming action subscription from an property on a
+        update streaming event action subscription from an property on a
         device
       description: |-
-        update streaming action subscription from an property on a 
+        update streaming event action subscription from an property on a 
         device
       operationId: UpdateSubscribe
       requestBody:
@@ -666,9 +666,9 @@ paths:
       tags:
         - action
       summary: |-
-        Unsubscribe to streaming action from an property on a device
+        Unsubscribe to streaming event action from an property on a device
       description: |-
-        Unsubscribe to streaming action from an property on a device
+        Unsubscribe to streaming event action from an property on a device
       operationId: Unsubscribe
       parameters:
       - name: id
@@ -709,8 +709,8 @@ paths:
     get:
       tags:
         - action
-      summary: Get the status of a subscription on a device
-      description: Get the status of a subscription on a device
+      summary: Get the status of an event subscription on a device
+      description: Get the status of an event subscription on a device
       operationId: GetSubscription
       parameters:
       - name: id
@@ -825,8 +825,8 @@ paths:
     delete:
       tags:
         - action
-      summary: delete all subscriptions by id
-      description: delete all subscriptions by id
+      summary: delete all event subscriptions by id
+      description: delete all event subscriptions by id
       operationId: deleteSubscriptionbyID
       parameters:
         - name: id
@@ -860,8 +860,8 @@ paths:
     get:
       tags:
         - action
-      summary: get all subscriptions by object id
-      description: get all subscriptions by object id
+      summary: get all event subscriptions by object id
+      description: get all event subscriptions by object id
       operationId: getSubscriptionbyID
       parameters:
         - name: id
@@ -2391,6 +2391,9 @@ components:
         broadcastInterval:
           type: integer
           example: 500
+        # optional external broker config
+        mqtt:
+          type: object
 
 ## Event Name
     EventName:
@@ -2440,15 +2443,32 @@ components:
           enum:
             - device
             - group
-        actionApps:
+        dataApps:
           type: array
           items:
             type: object
             properties:
-              actionAppID:
+              dataAppID:
                 type: string
                 format: uuid
                 example: 12345678-1234-5678-1234-56789abcdef4
+              mqttBroker: #fqdn or ip-address of MQTT broker
+                type: string
+                example: mqtt.broker.com
+              mqttPort: #mqtt broker on non-standard port
+                type: integer
+                example: 8883
+              mqttAuth: #fqdn or ip-address of MQTT broker
+                type: string
+                enum:
+                  - none
+                  - username:passwd # Basic auth: username:password Base64 encoded
+                  - certificate # Certficate PEM
+                  - apikey
+                example: apikey
+              mqttCred: #mqttAuth type
+                type: string
+                example: AIzaSyDaGmWKa4JsXZ-HjGw7ISLn_3namBGewQe
         technology:
           type: string
           example: ble
