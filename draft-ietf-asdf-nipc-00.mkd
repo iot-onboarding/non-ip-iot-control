@@ -1603,8 +1603,17 @@ TBD.
 
 
 # IANA Considerations
+   This section provides guidance to the Internet Assigned Numbers
+   Authority (IANA) regarding registration of values related to NIPC,
+   in accordance with [RFC5226].
 
-TBD. 
+## Extensions
+    The NIPC interface is extensible and additional protoctols 
+    can be added. {{protext}} details protocol extensions. 
+    Each new protocol extension must have a specification
+    required with the  exception of vendor specific 
+    protocols which may be registered on a first 
+    come first serve basis.
 
 --- back
 
