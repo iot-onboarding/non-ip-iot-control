@@ -1,6 +1,6 @@
 DataSubscription = {
   data: bytes,
-  timestamp: time,
+  timestamp: float, ; epoch in seconds
   ? deviceId: text,
   ? apMacAddress: text,
   subscription
