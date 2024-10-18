@@ -1550,7 +1550,7 @@ depicted in CBOR diagnostic notation.
 {
     "data": h'02011A020A0C16FF4C001007721F41B0392078',
     "deviceId": "75fde96d-886f-4ac0-a1d5-df79f76e7c9c",
-    "timestamp": 1(1727484393),
+    "timestamp": 1727484393,
     "bleAdvertisement": {
         "macAddress": "C1:5C:00:00:00:01",
         "rssi": -25
@@ -1562,7 +1562,7 @@ depicted in CBOR diagnostic notation.
 ~~~
 {
     "data": h'02011A020A0C16FF4C001007721F41B0392078',
-    "timestamp": 1(1727484393),
+    "timestamp": 1727484393,
     "bleAdvertisement": {
         "macAddress": "C1:5C:00:00:00:01",
         "rssi": -25
@@ -1575,7 +1575,7 @@ depicted in CBOR diagnostic notation.
 {
     "data": h'434630374346303739453036',
     "deviceId": "75fde96d-886f-4ac0-a1d5-df79f76e7c9c",
-    "timestamp": 1(1727484393),
+    "timestamp": 1727484393,
     "bleSubscription": {
         "serviceId": "a4e649f4-4be5-11e5-885d-feff819cdc9f",
         "characteristicId": "c4c1f6e2-4be5-11e5-885d-feff819cdc9f"
@@ -1588,7 +1588,7 @@ depicted in CBOR diagnostic notation.
 {
     "data": h'434630374346303739453036',
     "deviceId": "75fde96d-886f-4ac0-a1d5-df79f76e7c9c",
-    "timestamp": 1(1727484393),
+    "timestamp": 1727484393,
     "bleConnectionStatus": {
         "macAddress": "C1:5C:00:00:00:01",
         "connected": true
@@ -1601,7 +1601,7 @@ depicted in CBOR diagnostic notation.
 {
     "data": h'434630374346303739453036',
     "deviceId": "75fde96d-886f-4ac0-a1d5-df79f76e7c9c",
-    "timestamp": 1(1727484393),
+    "timestamp": 1727484393,
     "zigbeeSubscription": {
         "endpointId": 1,
         "clusterId": 6,
