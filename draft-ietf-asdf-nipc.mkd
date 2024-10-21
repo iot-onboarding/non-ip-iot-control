@@ -1,7 +1,7 @@
 ---
 title: An Application Layer Interface for Non-IP device control (NIPC)
 abbrev: NIPC
-docname: draft-ietf-asdf-nipc-02
+docname: draft-ietf-asdf-nipc-03
 submissionType: IETF
 category: std
 
@@ -88,15 +88,15 @@ supports. Promiment examples of such protocols are {{BLE53}} and {{Zigbee22}}.
 
 There have been efforts to define Gateway functions for devices that support
 a particular protocol, such as a BLE GATT REST API for BLE Gateways
-{{https://www.bluetooth.com/bluetooth-resources/gatt-rest-api/}}, however 
+({{https://www.bluetooth.com/bluetooth-resources/gatt-rest-api/}}), however 
 they have been limited to a single protocol or a particular use case. In
-abscence of an open standard describing how applications on an IP network
+absence of an open standard describing how applications on an IP network
 communicate with non-IP devices, bespoke and vendors specifia implementations
 have proliferated. This results in parallel infrastructure of both gateways 
 and non-IP networks being deployed on a case by case basis, each connecting
 separately into the IP network, with a distinct set of APIs. At the same time,
 wireless access points supporting IP-based wireless connectivity are deployed
-ubiquitiouslyr. Many of these wireless access points are equipped with multiple
+ubiquitiously. Many of these wireless access points are equipped with multiple
 wireless radios, of different types. These radios can transmit and receive
 different frame types, such as {{BLE53}} and {{Zigbee22}}. This specification
 aims to define a Gateway API for these Non-IP protocols that can be leveraged
@@ -104,8 +104,9 @@ by this wireless infrastructure in order to connect Non-IP devices into IP
 networks.
 
 A standardized Non-IP Gateway interface has following benefits:
+
  - Avoid the need for parallel Non-IP infrastructure.
- - Avoid the need for Applications to perform bespoke integrations for
+ - Avoid the need for applications to perform bespoke integrations for
    different environments.
  - Faster and more cost-effective adoption of Non-IP devices in IP network
    environments.
@@ -113,8 +114,9 @@ A standardized Non-IP Gateway interface has following benefits:
 ## Non-IP Gateway functions
 
 A non-IP gateway MUST provide at least following functions:
+
  - Authentication and authorization of application clients that
-   will leverage the gateway API to communicate with  Non-IP devices.
+   will leverage the gateway API to communicate with Non-IP devices.
  - The ability to onboard Non-IP devices on the Non-IP Gateway. Onboarding 
    ensures that the Non-IP Gateway can identify a device and has sufficient
    context about the device to service gateway API requests. It also ensures
@@ -177,6 +179,7 @@ administrator authorizes application(s) to perform operations on the Gateway.
 This happens out of band and may be accomplished by means of exchanging tokens
 or public keys.
 Authorization can be role-based. The 3 primary roles are:  
+
 1. Onboarding: Authorize an onboarding application against a SCIM server
    co-located with the gateway.  
 2. Control: Authorize applications that may control devices.
@@ -204,7 +207,6 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
 "OPTIONAL" in this document are to be interpreted as described in BCP
 14 {{!RFC2119}} {{!RFC8174}} when, and only when, they appear in all
 capitals, as shown here.
-
 
 # Architecture
 
@@ -234,7 +236,9 @@ Data and Interactions of Things {{!I-D.ietf-asdf-sdf}}. Therefore NIPC
 defines actions and events on properties. 
 
 ### Actions
-NIPC supports 3 types of action:
+
+NIPC supports 3 types of actions:
+
  - connection: Allows an application to establish to manage connections with
    a device (if so required by the technology).
  - property: Allows applications to read or write device properties. In case
@@ -247,6 +251,7 @@ NIPC supports 3 types of action:
 
 In absence of a model such as SDF that defines device properties, NIPC allows
 an application to register them. NIPC defines 2 types of registrations:
+
  - property: Manage registrations of properties and their protocol mappings.
    For example, a property called temperature can be mapped to a BLE Service
    Characteristic.
@@ -290,6 +295,7 @@ identifier. The common schema for Object is defined as follows:
 {: #objectdef title="Definition of an Object"}
 
 where-
+
  - id is the unique uuid of the device. This is generated when registering
    the device, for example against a SCIM server. As such this ID is known
    both to the application as well as the NIPC Server. 
@@ -478,6 +484,7 @@ Description: Connect to a device
 Parameters: None
 
 Request Body: 
+
  - an Object, as defined in {{objectdef}} 
  - optionally a set of properties to be discovered. These are supplied
    in protocol objects, as defined in {{proobj}}.
@@ -622,14 +629,15 @@ Description: Returns one or more active connections, based on ids
 provided in parameters (none = return all connections).
 
 Parameters, in query: 
-One of following options:
+One of following options-
+
  - None: return all active connections for this application 
  - single id: return connection status for this id
  - comma separated ids: return connection status for multiple ids
 
 Response: 
 A standard success ({{exsuccess}})i or failure ({{exfail}}) response, including
-an array of device objects and their connection status. Success if hte device
+an array of device objects and their connection status. Success if the device
 is connected, failure if the device is not connected.  
 
 Example get connection response:
@@ -667,7 +675,8 @@ Description: Disconnect one or more devices, based on ids provided in
 parameters
 
 Parameters, in query: 
-One of following options:
+One of following options-
+
  - None: Disconnect all devices for connections this application made
  - single id: disconnect device with id
  - comma separated ids: disconnect multiple devices with ids
@@ -702,6 +711,7 @@ Description: Writes a value to a property
 Parameters: None
 
 Request Body: 
+
  - an Object, as defined in {{objectdef}}
  - A propertyID to write to
  - A value to be written
@@ -722,6 +732,7 @@ Example body writing a property:
 {: #exwrite title="Example writing a property"}
 
 where-
+
  - "id", "type" and "technology" are part of the object definition (device
    or group), as defined in {{objectdef}}
  - "propertyID" is the ID of a previously registered property mapping
@@ -765,6 +776,7 @@ Description: Updates a value of a property
 Parameters: None
 
 Request Body: 
+
  - an Object, as defined in {{objectdef}}
  - A propertyID to write to
  - A value to be written
@@ -785,6 +797,7 @@ Example body updating a property:
 {: #exupd title="Example updating a property"}
 
 where-
+
  - "id", "type" and "technology" are part of the object definition (device
    or group), as defined in {{objectdef}}
  - "propertyID" is the ID of a previously registered property mapping
@@ -906,6 +919,7 @@ property
 Parameters: None
 
 Request Body: 
+
  - an Object, as defined in {{objectdef}}
  - A propertyID for which to start the subscription 
  - optional parameters
@@ -924,6 +938,7 @@ Example body for starting a subscription of a property:
 {: #exstartsub title="Example starting a subscription for a property"}
 
 where-
+
  - "id", "type" and "technology" are part of the object definition (device
    or group), as defined in {{objectdef}}
  - "propertyID" is the ID of a previously registered property mapping
@@ -1010,6 +1025,7 @@ Description: Register an event to a property
 Parameters: None
 
 Request Body:
+
  - An event name that matches to an MQTT pub/sub topic
  - The data format the event should be delivered in
  - The device or group id the event is valid for
@@ -1042,6 +1058,7 @@ Example body registering an event:
 {: #exregeve title="Example registering an event"}
 
 where-
+
  - "event" is the event identifier, which also maps to the MQTT topic name
  - "eventFormat" is the format the data stream is delivered in, either default
    (decorated with id and property) or just the payload 
@@ -1053,6 +1070,7 @@ where-
    this event
 
 The dataApps array consists of following-
+
  - "dataAppID" is the identity of the data application either configured 
    administratively or through SCIM.
  - "mqtt" optional MQTT broker connection parameters, in case an external MQTT
@@ -1102,6 +1120,7 @@ where-
    this event
 
 The dataApps array consists of following-
+
  - "dataAppID" is the identity of the data application either configured 
    administratively or through SCIM.
  - "mqtt" optional MQTT broker connection parameters, in case an external MQTT
@@ -1119,6 +1138,7 @@ Description: Update an existing event
 Parameters: None
 
 Request Body:
+
  - An event name that matches to an MQTT pub/sub topic
  - The data format the event should be delivered in
  - The device or group id the event is valid for
@@ -1156,6 +1176,7 @@ Example body updating an event:
 {: #exupdeve title="Example updating an event"}
 
 where-
+
  - "event" is the event identifier, which also maps to the MQTT topic name
  - "eventFormat" is the format the data stream is delivered in, either default
    (decorated with id and property) or just the payload
@@ -1167,6 +1188,7 @@ where-
    this event
 
 The dataApps array consists of following-
+
  - "dataAppID" is the identity of the data application either configured
    administratively or through SCIM.
  - "mqtt" optional MQTT broker connection parameters, in case an external MQTT
@@ -1225,6 +1247,7 @@ where-
    this event
 
 The dataApps array consists of following-
+
  - "dataAppID" is the identity of the data application either configured
    administratively or through SCIM.
  - "mqtt" optional MQTT broker connection parameters, in case an external MQTT
@@ -1313,11 +1336,13 @@ Example of a get event response:
 {: #exgeteveresp title="Example get event response"}
 
 where-
+
  - "id", "requestID" and "technology" are part of the standard {{success}}
    definition
  - "events" is an array of events
 
 where an event-
+
  - "event" is the event identifier, which also maps to the MQTT topic name
  - "eventFormat" is the format the data stream is delivered in, either default
    (decorated with id and property) or just the payload
@@ -1329,6 +1354,7 @@ where an event-
    this event
 
 The dataApps array consists of following-
+
  - "dataAppID" is the identity of the data application either configured
    administratively or through SCIM.
  - "mqtt" optional MQTT broker connection parameters, in case an external MQTT
@@ -1417,11 +1443,13 @@ Example of a delete event response:
 {: #exdeleveresp title="Example delete event response"}
 
 where-
+
  - "id", "requestID" and "technology" are part of the standard {{success}}
    definition
  - "events" is an array of events
 
 where an event-
+
  - "event" is the event identifier, which also maps to the MQTT topic name
  - "eventFormat" is the format the data stream is delivered in, either default
    (decorated with id and property) or just the payload
@@ -1433,6 +1461,7 @@ where an event-
    this event
 
 The dataApps array consists of following-
+
  - "dataAppID" is the identity of the data application either configured
    administratively or through SCIM.
  - "mqtt" optional MQTT broker connection parameters, in case an external MQTT
@@ -1469,6 +1498,7 @@ Description: Register a property mapping to a protocol-specific property
 Parameters: None
 
 Request Body:
+
  - a property ID
  - a protocol object containing a protocol mapping
 
@@ -1487,6 +1517,7 @@ Example body registering a property:
 {: #exregprop title="Example registering a property"}
 
 where-
+
  - "propertyID" is the propertyID that will be used in action APIs to refer
    to this property mapping
  - A protocol object with a protocol-specific property map, as decribed in
@@ -1534,6 +1565,7 @@ Description: Update a property mapping to a protocol-specific property
 Parameters: None
 
 Request Body:
+
  - a property ID
  - a protocol object containing a protocol mapping
 
@@ -1552,6 +1584,7 @@ Example body updating a property:
 {: #exupdprop title="Example registering a property"}
 
 where-
+
  - "propertyID" is the propertyID that will be used in action APIs to refer
    to this property mapping
  - A protocol object with a protocol-specific property map, as decribed in
@@ -1562,7 +1595,7 @@ Success responses include standard success response properties
 as defined in {{success}} as well as all the attributes that were configured
 from the request.
 
-Example of ain update property response:
+Example of an update property response:
 
 ~~~~~
 {
@@ -1634,11 +1667,13 @@ Example of a get property response:
 {: #exgetpropresp title="Example get property response"}
 
 where-
+
  - "id", "requestID" and "technology" are part of the standard {{success}}
    definition
  - "properties" is an array of properties
 
 where a property-
+
  - "id", "requestID" and "technology" are part of the standard {{success}}
    definition
  - "propertyID" is the propertyID that will be used in action APIs to refer
@@ -1693,11 +1728,13 @@ Example of a delete property response:
 {: #exdelpropresp title="Example delete property response"}
 
 where-
+
  - "id", "requestID" and "technology" are part of the standard {{success}}
    definition
  - "properties" is an array of properties
 
 where a property-
+
  - "id", "requestID" and "technology" are part of the standard {{success}}
    definition
  - "propertyID" is the propertyID that will be used in action APIs to refer
@@ -1936,8 +1973,8 @@ TBD.
 # IANA Considerations
 
 This section provides guidance to the Internet Assigned Numbers Authority
-(IANA) regarding registration of values related to NIPC, in accordancei
-with {{!RFC5226}}.
+(IANA) regarding registration of values related to NIPC, in accordance
+with {{!RFC8126}}.
 
 ## Protocol mapping
 
