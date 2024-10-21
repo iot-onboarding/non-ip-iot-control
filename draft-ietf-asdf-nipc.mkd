@@ -1,7 +1,7 @@
 ---
 title: An Application Layer Interface for Non-IP device control (NIPC)
 abbrev: NIPC
-docname: draft-ietf-asdf-nipc-01
+docname: draft-ietf-asdf-nipc-02
 submissionType: IETF
 category: std
 
@@ -129,8 +129,8 @@ A non-IP gateway MUST provide at least following functions:
    to applications on the IP network.
 
 The onboarding function is out of scope of this document, but can be provided
-by a provisioning interface such as {{?RFC7644}} leveraging 
-{{?I-D.draft-ietf-scim-device-model}}. All other defined functions are
+by a provisioning interface such as {{!RFC7644}} leveraging 
+{{!I-D.ietf-scim-device-model}}. All other defined functions are
 supported by Non IP-Control (NIPC).
 
 The Application gateway is a network functions, so its goal is to proxy payloads 
@@ -218,7 +218,7 @@ NIPC defines actions, which are implemented as REST over HTTP request-response
 APIs. NIPC Also defines events, which are implemented as MQTT topics.
 
 In case NIPC is not leveraged in combination with a data model such as ASDF
-{{?I-D.draft-ietf-asdf-sdf}}, which can define the properties of a devices,
+{{!I-D.ietf-asdf-sdf}}, which can define the properties of a devices,
 NIPC also support registrationsr. REgistrations perform mapping of 
 properties to protocol-specific attributes.
 
@@ -230,7 +230,7 @@ the application, for example in a SCIM response.
 ## NIPC Operations
 
 NIPC adheres to nomenclature defined by Semantic Definition Format (SDF) for
-Data and Interactions of Things {{?I-D.draft-ietf-asdf-sdf}}. Therefore NIPC
+Data and Interactions of Things {{!I-D.ietf-asdf-sdf}}. Therefore NIPC
 defines actions and events on properties. 
 
 ### Actions
@@ -299,6 +299,7 @@ where-
    new technologies.
 
 Example device object:
+
 ~~~~~
 {
   "id": "12345678-1234-5678-1234-56789abcdef4",
@@ -356,6 +357,7 @@ where-
    object
 
 Example property mapping:
+
 ~~~~~
 {
   "propertyID": "temperature",
@@ -395,6 +397,7 @@ Success response:
 {: #success title="Success response"}
 
 Example success response:
+
 ~~~~~
 {
   "status": "SUCCESS",
@@ -429,6 +432,7 @@ where-
  - reason is a human readable explanation of why the error occurred.
 
 Example failure response:
+
 ~~~~~
 {
   "status": "FAILURE",
@@ -486,6 +490,7 @@ Request Body:
  - Connection retry parameters 
 
 Example body of a connection without specific discovery of properties:
+
 ~~~~~
 {
   "id": "12345678-1234-5678-1234-56789abcdef4",
@@ -512,6 +517,7 @@ a protocol object can be added that defines what properties should be
 discovered.
 
 Example body of a BLE connection with specific discovery of properties:
+
 ~~~~~
 {
   "id": "12345678-1234-5678-1234-56789abcdef4",
@@ -570,6 +576,7 @@ descriptors, as shown in {{BLEservices}}.
 {: #BLEservices title="BLE Services"}
 
 Example of a BLE connection response with BLE discovered properties:
+
 ~~~~~
 {
   "status": "SUCCESS",
@@ -626,6 +633,7 @@ an array of device objects and their connection status. Success if hte device
 is connected, failure if the device is not connected.  
 
 Example get connection response:
+
 ~~~~~
 {
   "status": "SUCCESS",
@@ -700,6 +708,7 @@ Request Body:
  - optional parameters
 
 Example body writing a property:
+
 ~~~~~
 {
   "id": "12345678-1234-5678-1234-56789abcdef4",
@@ -725,6 +734,7 @@ Success responses include standard success response properties
 as defined in {{success}} as well as the propertyID and the value written.
 
 Example of a write property response:
+
 ~~~~~
 {
   "status": "SUCCESS",
@@ -761,6 +771,7 @@ Request Body:
  - optional parameters
 
 Example body updating a property:
+
 ~~~~~
 {
   "id": "12345678-1234-5678-1234-56789abcdef4",
@@ -786,6 +797,7 @@ Success responses include standard success response properties
 as defined in {{success}} as well as the propertyID and the value updated.
 
 Example of a write property response:
+
 ~~~~~
 {
   "status": "SUCCESS",
@@ -821,6 +833,7 @@ Success responses include standard success response properties
 as defined in {{success}} as well as the propertyID and the value read.
 
 Example of a read property response:
+
 ~~~~~
 {
   "status": "SUCCESS",
@@ -852,6 +865,7 @@ Success responses include standard success response properties
 as defined in {{success}} as well as the propertyID and the value deleted.
 
 Example of a delete property response:
+
 ~~~~~
 {
   "status": "SUCCESS",
@@ -897,6 +911,7 @@ Request Body:
  - optional parameters
 
 Example body for starting a subscription of a property:
+
 ~~~~~
 {
   "id": "12345678-1234-5678-1234-56789abcdef4",
@@ -1002,6 +1017,7 @@ Request Body:
  - the data applications that can consume the events
 
 Example body registering an event:
+
 ~~~~~
 {
   "event": "enterprise/hospital/pulse_oximeter",
@@ -1048,6 +1064,7 @@ as defined in {{success}} as well as all the attributes that were configured
 from the request.
 
 Example of a register event response:
+
 ~~~~~
 {
   "status": "SUCCESS",
@@ -1109,6 +1126,7 @@ Request Body:
  - the data applications that can consume the events
 
 Example body updating an event:
+
 ~~~~~
 {
   "event": "enterprise/hospital/pulse_oximeter",
@@ -1163,6 +1181,7 @@ as defined in {{success}} as well as all the attributes that were configured
 from the request.
 
 Example of an update register event response:
+
 ~~~~~
 {
   "status": "SUCCESS",
@@ -1231,6 +1250,7 @@ containing an array of returned event names with attributes defined in
 {{exupdeve}}.
 
 Example of a get event response:
+
 ~~~~~
 {
   "status": "SUCCESS",
@@ -1334,6 +1354,7 @@ containing an array of returned event names with attributes defined in
 {{exupdeve}}.
 
 Example of a delete event response:
+
 ~~~~~
 {
   "status": "SUCCESS",
@@ -1452,6 +1473,7 @@ Request Body:
  - a protocol object containing a protocol mapping
 
 Example body registering a property:
+
 ~~~~~
 {
   "propertyID": "temperature",
@@ -1476,6 +1498,7 @@ as defined in {{success}} as well as all the attributes that were configured
 from the request.
 
 Example of a register property response:
+
 ~~~~~
 {
   "status": "SUCCESS",
@@ -1515,6 +1538,7 @@ Request Body:
  - a protocol object containing a protocol mapping
 
 Example body updating a property:
+
 ~~~~~
 {
   "propertyID": "temperature",
@@ -1539,6 +1563,7 @@ as defined in {{success}} as well as all the attributes that were configured
 from the request.
 
 Example of ain update property response:
+
 ~~~~~
 {
   "status": "SUCCESS",
@@ -1580,6 +1605,7 @@ containing propertyID with protocol object containing a protocol-specific
 property mapping
 
 Example of a get property response:
+
 ~~~~~
 {
   "status": "SUCCESS",
@@ -1638,6 +1664,7 @@ containing propertyID with protocol object containing a protocol-specific
 property mapping
 
 Example of a delete property response:
+
 ~~~~~
 {
   "status": "SUCCESS",
@@ -1910,7 +1937,7 @@ TBD.
 
 This section provides guidance to the Internet Assigned Numbers Authority
 (IANA) regarding registration of values related to NIPC, in accordancei
-with [RFC5226].
+with {{!RFC5226}}.
 
 ## Protocol mapping
 
