@@ -28,7 +28,7 @@ info:
   license:
     name: TBD
     url: TBD
-  version: 0.3.3
+  version: 0.3.5
 externalDocs:
   description: NIPC IETF draft
   url: TBD
@@ -74,7 +74,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ServiceResponse'          
+                $ref: '#/components/schemas/PropertyResponse'          
         '400':
           description: Bad request
         '401':
@@ -290,20 +290,20 @@ paths:
               schema:
                 $ref: '#/components/schemas/FailureResponse' 
   
-  /action/services/{id}:            
+  /action/services/:            
     get:
       tags:
         - action
-      summary: Get all services by id for a device
+      summary: Get all services for a device
       description: |-
-        Get all services by id for a connected device, success
+        Get all services for a connected device, success
         when service discovery succeeds failure, failure when 
         Service discovery fails. This updates cache for cached
         Services. Fails when using a group id.
       operationId: GetServicesbyId
       parameters:
         - name: id
-          in: path
+          in: query
           description: device id that need to be filtered
           required: true
           schema:
@@ -316,7 +316,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ServiceResponse'          
+                $ref: '#/components/schemas/PropertyResponse'          
         '400':
           description: Bad request
         '401':
@@ -354,7 +354,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ServiceResponse'          
+                $ref: '#/components/schemas/PropertyResponse'          
         '400':
           description: Bad request
         '401':
@@ -433,7 +433,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/FailureResponse' 
   
-  /action/property/{id}/{propertyname}:
+  /action/property/{property}:
     delete:
       tags:
         - action
@@ -442,16 +442,16 @@ paths:
       operationId: Delete
       parameters:
       - name: id
-        in: path
+        in: query
         description: device id that need to be filtered
         required: true
         schema:
           type: string
           format: uuid
           example: 12345678-1234-5678-1234-56789abcdef4
-      - name: propertyname
+      - name: property
         in: path
-        description: property name that needs to be filtered
+        description: property that needs to be filtered
         required: true
         schema:
           type: string
@@ -484,16 +484,16 @@ paths:
       operationId: Read
       parameters:
       - name: id
-        in: path
+        in: query
         description: device id that need to be filtered
         required: true
         schema:
           type: string
           format: uuid
           example: 12345678-1234-5678-1234-56789abcdef4
-      - name: propertyname
+      - name: property
         in: path
-        description: property name that needs to be filtered
+        description: property that needs to be filtered
         required: true
         schema:
           type: string
@@ -624,44 +624,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FailureResponse'   
-                
-    put:
-      tags:
-        - action
-      summary: |-
-        update streaming event action subscription from an property on a
-        device
-      description: |-
-        update streaming event action subscription from an property on a 
-        device
-      operationId: UpdateSubscribe
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Subscription'
-        required: true
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SuccessResponse'          
-        '400':
-          description: Bad request
-        '401':
-          description: Unauthorized
-        '405':
-          description: Invalid request 
-        '500':
-          description: Server-side failure
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/FailureResponse' 
   
-  /action/property/subscription/{id}/{propertyname}:
+  /action/property/subscription/{property}:
     delete:
       tags:
         - action
@@ -672,16 +636,16 @@ paths:
       operationId: Unsubscribe
       parameters:
       - name: id
-        in: path
+        in: query
         description: device id that need to be filtered
         required: true
         schema:
           type: string
           format: uuid
           example: 12345678-1234-5678-1234-56789abcdef4
-      - name: propertyname
+      - name: property
         in: path
-        description: property name that needs to be filtered
+        description: property that needs to be filtered
         required: true
         schema:
           type: string
@@ -714,16 +678,16 @@ paths:
       operationId: GetSubscription
       parameters:
       - name: id
-        in: path
+        in: query
         description: device id that need to be filtered
         required: true
         schema:
           type: string
           format: uuid
           example: 12345678-1234-5678-1234-56789abcdef4
-      - name: propertyname
+      - name: property
         in: path
-        description: property name that needs to be filtered
+        description: property that needs to be filtered
         required: true
         explode: true
         schema:
@@ -1806,7 +1770,7 @@ components:
         - services
       type: object
       properties:
-        services:
+        ble:
           type: array
           items:
             $ref: '#/components/schemas/BLEService'
@@ -1996,10 +1960,10 @@ components:
 ## An array for Zigbee Endpoints
     ZigbeeEndpointlist:
       required:
-        - endpoints
+        - zigbee
       type: object
       properties:
-        endpoints:
+        zigbee:
           type: array
           items:
             $ref: '#/components/schemas/ZigbeeEndpoint'
@@ -2408,9 +2372,9 @@ components:
 ## DataStream Event
     Event:
       allOf:
-        - $ref: '#/components/schemas/EventName'      
-      oneOf:
+        - $ref: '#/components/schemas/EventName'  
         - $ref: '#/components/schemas/PropertyID'
+      oneOf:
         - $ref: '#/components/schemas/BLEEvent'
         - $ref: '#/components/schemas/ZigbeeProperties'
       discriminator:
@@ -2420,7 +2384,7 @@ components:
           zigbee: '#/components/schemas/ZigbeeProperties'
       type: object
       properties:
-        actionFormat:
+        eventFormat:
           description: |-
             How is information decorated?  Default: device
             and property ids.
@@ -2452,23 +2416,20 @@ components:
                 type: string
                 format: uuid
                 example: 12345678-1234-5678-1234-56789abcdef4
-              mqttBroker: #fqdn or ip-address of MQTT broker
-                type: string
-                example: mqtt.broker.com
-              mqttPort: #mqtt broker on non-standard port
-                type: integer
-                example: 8883
-              mqttAuth: #fqdn or ip-address of MQTT broker
-                type: string
-                enum:
-                  - none
-                  - username:passwd # Basic auth: username:password Base64 encoded
-                  - certificate # Certficate PEM
-                  - apikey
-                example: apikey
-              mqttCred: #mqttAuth type
-                type: string
-                example: AIzaSyDaGmWKa4JsXZ-HjGw7ISLn_3namBGewQe
+              mqtt:
+                type: object
+                properties: 
+                  brokerURI: 
+                    type: string
+                    example: mqtt.broker.com:8883
+                  username:
+                    type: string
+                    example: user1
+                  password: 
+                    type: string
+                    example: password1
+                  brokerCACert: 
+                    type: string
         technology:
           type: string
           example: ble
@@ -2649,7 +2610,7 @@ components:
         - $ref: '#/components/schemas/FailureResponse'
 
  ## Returns discovered services
-    ServiceResponse:
+    PropertyResponse:
       allOf:
         - $ref: '#/components/schemas/SuccessResponse'
       oneOf:
@@ -2796,7 +2757,7 @@ components:
                - GET
         - oneOf:
             - $ref: '#/components/schemas/SuccessResponse'
-            - $ref: '#/components/schemas/ServiceResponse'
+            - $ref: '#/components/schemas/PropertyResponse'
             - $ref: '#/components/schemas/PropertyValueResponse'
           discriminator:
             propertyName: operation
