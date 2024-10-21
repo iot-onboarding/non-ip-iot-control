@@ -63,11 +63,18 @@ Zigbee as they are the most commonly deployed.
 
 # Introduction
 
-Use cases in building management, healthcare, workplaces, manufacturing,
-logistics and hospitality have introduced low-power devices into these 
-environments. These devices typically do not support IP-based 
-interfaces, hence there is a need for gateway functions to allow these
-devices to communicate with the applications that manage them. 
+## Scope
+
+Low-power sensors, actuators and other connected devices introduced in
+environments and use cases such as building management, healthcare, workplaces,
+manufacturing, logistics and hospitality are often battery-powered. Often they
+do not support wireless of wired interfaces that support the IP protocol.
+Most of these environments however mainly support IP-based networking
+infrastructure. Therefore, applications on the IP network that aim to
+communicate or receive telemetry from these non-IP low-power devices must do
+so through a gateway function on the IP network. This gateway functions then 
+translates the communication to the non-IP protocol that the low-power device 
+supports. Promiment examples of such protocols are {{BLE53}} and {{Zigbee22}}.
 
 ~~~~~
                                                                
@@ -79,35 +86,56 @@ devices to communicate with the applications that manage them.
 ~~~~~
 {: #gw title="Gateway for non-IP Devices"}
 
-In abscence of a standard describing how applications communicate with 
-such non-IP devices, vertically integrated infrastructure prolifilates
-and applications have bespoke integrations with that infrastructure for 
-every use case. The Application interfaces are non-standard. This 
-stunts the eco-system growth. At the same time, wireless access points 
-have been deployed nearly everywhere, many of which have soft or 
-separate radios that can transmit and receive different frame types,
-such as {{BLE53}} and {{Zigbee22}}.  To avoid the need for parallel
-infrastructure and bespoke application integration, a standardized 
-gateway function is necessary.
+There have been efforts to define Gateway functions for devices that support
+a particular protocol, such as a BLE GATT REST API for BLE Gateways
+{{https://www.bluetooth.com/bluetooth-resources/gatt-rest-api/}}, however 
+they have been limited to a single protocol or a particular use case. In
+abscence of an open standard describing how applications on an IP network
+communicate with non-IP devices, bespoke and vendors specifia implementations
+have proliferated. This results in parallel infrastructure of both gateways 
+and non-IP networks being deployed on a case by case basis, each connecting
+separately into the IP network, with a distinct set of APIs. At the same time,
+wireless access points supporting IP-based wireless connectivity are deployed
+ubiquitiouslyr. Many of these wireless access points are equipped with multiple
+wireless radios, of different types. These radios can transmit and receive
+different frame types, such as {{BLE53}} and {{Zigbee22}}. This specification
+aims to define a Gateway API for these Non-IP protocols that can be leveraged
+by this wireless infrastructure in order to connect Non-IP devices into IP
+networks.
 
-The gateway provides at a minimum the following functions:
+A standardized Non-IP Gateway interface has following benefits:
+ - Avoid the need for parallel Non-IP infrastructure.
+ - Avoid the need for Applications to perform bespoke integrations for
+   different environments.
+ - Faster and more cost-effective adoption of Non-IP devices in IP network
+   environments.
 
- - authentication and authorization of application clients that
-   will access devices
- - the ability to onboard devices that are intended to be deployed 
-   within the use case
- - maintenance of an inventory of onboarded devices that are intended to
-   access and be accessed by the deployment and applications.
- - interfaces that allow for bi-directional communication to non-IP
-   devices
- - one or more channels to process requests, responses, and asymmetric
-   communciations with the non-IP radio resources (Access Points) 
-   in the system.
+## Non-IP Gateway functions
 
-Combined with a provisioning interface such as
-{{!I-D.ietf-scim-device-model}}, this specification supports
-these aspects, specifically focusing on providing bi-directional 
-communication with non-IP devices.
+A non-IP gateway MUST provide at least following functions:
+ - Authentication and authorization of application clients that
+   will leverage the gateway API to communicate with  Non-IP devices.
+ - The ability to onboard Non-IP devices on the Non-IP Gateway. Onboarding 
+   ensures that the Non-IP Gateway can identify a device and has sufficient
+   context about the device to service gateway API requests. It also ensures
+   segmentation of devices that were onboarded by particular applications.
+ - A persistent inventory of onboarded devices  mapping to the application
+   that onboarded them and the access point/radio that is serving them.
+ - An API that allows for bi-directional communication to non-IP devices.
+ - One or more channels to process requests, responses, and asymmetric
+   communications with the non-IP radio resources (Access Points)
+   in its inventory.
+ - The ability to stream telemetry received from non-IP devices in real-time
+   to applications on the IP network.
+
+The onboarding function is out of scope of this document, but can be provided
+by a provisioning interface such as {{?RFC7644}} leveraging 
+{{?I-D.draft-ietf-scim-device-model}}. All other defined functions are
+supported by Non IP-Control (NIPC).
+
+The Application gateway is a network functions, so its goal is to proxy payloads 
+between Non-IP and IP networks. It is not intended to be a middleware functioni
+that interprets, decodes or modifies these payloads.
 
 ~~~~~
 
@@ -130,47 +158,44 @@ communication with non-IP devices.
 ~~~~~
 {: #arch title="Basic Architecture"}
 
-{{arch}} shows us the application layer gateway (ALG), an access
-point (AP), and a device (D) in the enterprise environment.  The role
-of the ALG is to provide a application gateway to non-IP devices
-connecting into one or more AP. Applications implementing this memo can
-leverage RESTful interfaces to communicate with these devices and 
-subscribe to streaming data or broadcasts levering MQTT.
+{{arch}} shows us applications, the application layer gateway (ALG),
+an access point (AP), and a device (D). The applications, application layer
+gateway and access point are deployed on an IP-Network. The AP also has a
+Non-IP interface, which it uses to communicate with the device.
+The Application is deployed in a different administrative domain than the
+network elements (ALG & AP).
+The role of the ALG is to provide a gateway function to applications wishing
+to communicate with non-IP devices in the network domain served by the ALG.
+Applications implementing Non-IP Control can leverage RESTful interfaces
+to communicate with Non-IP devices in the network domain and subscribe to
+events levering MQTT.
 
-The flow of operations are as follows:
+## Interaction flow
 
-1. The operator of the network deployment authorizes application(s) to
-   perform operations on the Gateway. This happens out of band and may
-   be accomplished by means of exchanging tokens or public keys. 
-   Authorization can be role-based:  
-   a. Authorize an onboarding application against a SCIM endpoint
-   supported by the gateway.  
-   b. Provision and authorize applications that may control devices.  
-   c. Provision and authorize applications that may receive telemetry.  
-2. The authorized application can now provision one or more devices on
-   the gateway leveraging SCIM.
+In order to enable a network wishing to offer NIPC ALG functions, the network
+administrator authorizes application(s) to perform operations on the Gateway.
+This happens out of band and may be accomplished by means of exchanging tokens
+or public keys.
+Authorization can be role-based. The 3 primary roles are:  
+1. Onboarding: Authorize an onboarding application against a SCIM server
+   co-located with the gateway.  
+2. Control: Authorize applications that may control devices.
+3. Data: Authorize applications that may receive telemetry.  
+It is possible to further refine roles down to an API basis.
 
-Steps 1 and 2 are not within the scope of this specification, but are
-provided for context.
+Applications can perform the API requests they were authorized for.
+In order for application to perform a NIPC operation on a device, the device
+must be first onboarded, for example by means of SCIM.
 
-3. The authorized application can perform RESTful calls to the gateway
-   in order to establish bi-directional communication to one or more
-   devices. Optionally, set up a publish/subcribe topic to receive
+Previous steps are prerequisites and not within the scope of this specification, 
+but are provided for context.i Subsequent operations are defined by NIPC.
+
+1. An application authorized for Control can perform NIPC calls to the
+   gateway in order to establish bi-directional communication to one or more
+   devices. Optionally, also set up a publish/subcribe topic to receive
    streaming data from a device (telemetry interface).
-4. Optionally, an application can receive streaming data on a pub/sub 
+2. An application authorized can receive streaming data on a pub/sub 
    topic configured by the control interface (telemetry interface).
-
-Step 3 and 4 are the subject of this memo.
-
-This specification is organized into three sections:
-
-- Basic non-IP control functions described in narrative.
-- Extensibility of the interfaces.
-- A specification that can be mapped to a publication/subscribe
-  interface, such as MQTT.
-- Examples of use cases leveraging both BLE and Zigbee-based devices. 
-- OpenAPI definitions for the control interface and CDDL definitions 
-  for the streaming data interface
 
 ## Terminology
 
@@ -181,103 +206,184 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
 capitals, as shown here.
 
 
-# Non-IP Control Functions
+# Architecture
 
-This section will describe a standardized protocol-agnostic interface 
-that allows the application to establish bi-directional communication 
-with a non-IP device, such as a BLE or Zigbee device. The interface 
-will be supported on a gateway as show in {{arch}}.
+## Overview
+
+Non-IP protocols, such as BLE or Zigbee, typically define a number of basic
+operations that are similar across protocols. Examples of this are read and 
+write data. NIPC leverages a unified API to support those operations.
+
+NIPC defines actions, which are implemented as REST over HTTP request-response
+APIs. NIPC Also defines events, which are implemented as MQTT topics.
+
+In case NIPC is not leveraged in combination with a data model such as ASDF
+{{?I-D.draft-ietf-asdf-sdf}}, which can define the properties of a devices,
+NIPC also support registrationsr. REgistrations perform mapping of 
+properties to protocol-specific attributes.
+
+All operations pertain to a devices or a group of devices, which are addressed
+by UUIDs. These UUID's were generated at time of onboarding and returned to 
+the application, for example in a SCIM response.
+
  
+## NIPC Operations
 
-## Approach
+NIPC adheres to nomenclature defined by Semantic Definition Format (SDF) for
+Data and Interactions of Things {{?I-D.draft-ietf-asdf-sdf}}. Therefore NIPC
+defines actions and events on properties. 
 
-In non-IP protocols such as BLE or Zigbee, a number of basic operations
-are defined that are similar across protocols. Examples of 
-this are read and write data. Devices may choose to implement all of the
-operations or a subset. For example in BLE a device may choose to 
-implement a binding, but could also allow connection without a binding. 
-In this memo we have therefore defined a control interface that exposes
-these basic operations with a communications protocol-agnostic schema,
-with protocol specific extensions to transmit and receive 
-attributes that are specific to the communications protocol supported 
-by the device. This enables extensions  to integrate new
-non-ip communications protocols, without the need to update the base
-schema.
+### Actions
+NIPC supports 3 types of action:
+ - connection: Allows an application to establish to manage connections with
+   a device (if so required by the technology).
+ - property: Allows applications to read or write device properties. In case
+   the property supports streaming data, a subscription property can be
+   managed.
+ - broadcast: This allows the application to send a broadcast message to a
+   device or group of devices.
 
-~~~~~
+### Registrations
 
-    ID
-     - device/group attributes
-        |
-        |> BLE
-        |     - BLE attributes
-        |
-        |> Zigbee
-              - Zigbee attributes
+In absence of a model such as SDF that defines device properties, NIPC allows
+an application to register them. NIPC defines 2 types of registrations:
+ - property: Manage registrations of properties and their protocol mappings.
+   For example, a property called temperature can be mapped to a BLE Service
+   Characteristic.
+ - event: Manage registrations of events and their MQTT properties such as 
+   MQTT topic definition.
 
-~~~~~
-{: #schema title="Extensible Schema"}
+### Extensions
 
-As shown in {{schema}}, the control interface addresses device and group
-objects as IDs, hence the requirement to declare a device to the gateway
-before addressing a NIPC operation to the device. This is done by 
-means of SCIM. A NIPC operation can either be performed against a 
-device-id or a group-id. The gateway will leverage information from the 
-SCIM object to execute a specific NIPC operation. For example, keying 
-material found in the SCIM object may be required to connect to a
-device. Please refer to {{!I-D.ietf-scim-device-model}} for more 
-information on SCIM device objects.  
+The final set of operations are not fundamental NIPC operations, but are
+extensions. Extensions are compound API's. They leverage basic NIPC operations
+but combine multiple operations in to one API call for efficiency.
+An example of this is the the bulk operation, allowing to send multiple
+operations is one operation. extension allows for extensions, either generic
+extensions that anre IANA registered, or vendor specific extensions 
 
-Apart from enabling bi-directional communication with non-ip devices,
-NIPC also allows an application to register pub/sub topics in order to
-support a programmable data streaming interface. 
+### Events
 
-### Common base schema
+Events are published over MQTT. Events can be normal sreaming data, but also
+broadcasts or connection events.
 
-As described, most operations are executed against a device or a group.
-Control operations refer to either of these as "Object" with an ID as an
+## Protocols
+
+NIPC actions, registrations and extensions are request/response APIs. They makes
+use of a JSON schema over RESTful HTTP{{!RFC9114}}. 
+
+NIPC events are encoded in CBOR ({{!RFC8949}}) and delivered over MQTT.
+
+## Schema
+
+### Device schema
+
+Most operations (except registations) are executed against a device or a group.
+NIPC operations refer to either of these as "Object" with an ID as an
 identifier. The common schema for Object is defined as follows:
 
 | Attribute     | Req |   Type  |          Example                     |
 +---------------+-----+---------+--------------------------------------|
 | id            |  T  |  uuid   | 12345678-1234-5678-1234-56789abcdef4 |
-| type          |  T  |  enum   | device                               |
-| technology    |  F  |  enum   | ble                                  |
+| type          |  T  |  enum   | device, group                        |
+| technology    |  F  |  enum   | ble, zigbee                          |
 {: #objectdef title="Definition of an Object"}
 
 where-
-
- - id is the id returned in the response when registering a device 
-   against a SCIM server.
+ - id is the unique uuid of the device. This is generated when registering
+   the device, for example against a SCIM server. As such this ID is known
+   both to the application as well as the NIPC Server. 
  - type is either "group" or "device".
- - technology is the radio technology extension(s) supported by the 
-   device, in this memo either "ble" or "zigbee".
+ - technology is the radio technology supported by the device. The mappings
+   defined in this spec are "ble" or "zigbee". Mappings are extendable to 
+   new technologies.
 
-### Protocol extensions
+Example device object:
+~~~~~
+{
+  "id": "12345678-1234-5678-1234-56789abcdef4",
+  "type": "device",
+  "technology": "ble",
+}
+~~~~~
+{: #exdevobj title="Example device object"}
 
-An object can support one or more communications protocols. These 
-attributes must be described in a protocol object, for example a "ble"
-or a "zigbee" object.
+### Property mapping {#propertymap}
+
+An object can support one or more communications protocols. Even though Non-IP
+communications protocols all perform operations on properties, implementations
+differ between protocols. For example BLE will address a property as a service
+characteristic, while a property in Zigbee is addressed as a property in a 
+cluster of an endpoint. 
+
+In order for NIPC to support protocol-agnostic APIs, a property mapping is
+required between a NIPC property and a protocol-specific property. A property
+mapping can be done by means of a property registration API.
+
+Property mapping allows for integration of new protocols in NIPC, new mappings 
+can be created without the need to update the base schema.
+
+~~~~~
+
+     - property
+        |
+        |> BLE
+        |     - BLE property
+        |
+        |> Zigbee
+              - Zigbee property
+
+~~~~~
+{: #propmap title="Property Mapping"}
+
+As shown in {{propmap}}, protocol-specific properties must be described in a
+protocol object, for example a "ble" or a "zigbee" object.
+
 
 | Attribute | Req |   Type  |          Example                         |
 +-----------+-----+---------+------------------------------------------|
 | ble       |  T  |  object | an object with BLE-specific attributes   |
 | zigbee    |  T  |  object | an object with Zigbee-specific attributes|
-{: #protext title="Protocol extensions"}
+{: #proobj title="Protocol objects"}
 
 where-
 
- - "ble" is an object containing attributes that are specific to the BLE
+ - "ble" is an object containing properties that are specific to the BLE
    protocol.
- - "zigbee" is an object containing attributes that are specific to the
+ - "zigbee" is an object containing properties that are specific to the
    Zigbee protocol.
- - Other protocol extensions can be added
+ - Other protocol mapping objects can be added by creating a new protocol
+   object
+
+Example property mapping:
+~~~~~
+{
+  "propertyID": "temperature",
+  "ble": {
+    "serviceID": "12345678-1234-5678-1234-56789abcdef4",
+    "characteristicID": "12345678-1234-5678-1234-56789abcdef4",
+    "long": false
+  }
+}
+~~~~~
+{: #expropmap title="Example property mapping"}
+
+Protocol mapping allows applications to perform a one-time registration to
+a propertyID for a property, and leverage the propertyID in all API calls 
+that perform an operation on this property. It might be useful for applications
+to directly use protocol objects in action API's as well, therefore there are 
+a limited set of API's avaialbe that have protocol objects directly embedded 
+in the API, in ordur to perform operations on properties without having to 
+first register them.
 
 ### Response
 
-As most operations have a common base schema, so do responses. As 
-mandatory, a status is returned, optionally also device id and request 
-id.
+As most operations have a common base schema, based on a device ID and a
+property, so do responses. Every NIPC API returns a status in the response, as
+well as a requestID, which allows for tracking and logging of requests and 
+responses. If the operation was performed on a device or group, the ID is also
+returned. If the operation is to read or write a property, the resulting value
+is also returned. 
 
 Success response:
 
@@ -288,180 +394,67 @@ Success response:
 | requestID     |  F  |  uuid   | abcd0987-1234-5678-1234-56789abcdef4 |
 {: #success title="Success response"}
 
+Example success response:
+~~~~~
+{
+  "status": "SUCCESS",
+  "requestID": "12345678-5678-1234-5578-abcdef1234",
+  "id": "12345678-1234-5678-1234-56789abcdef4",
+}
+~~~~~
+{: #exsuccess title="Example success response"}
+
+Failure responses additionally include an error code and optionally a reason,
+which contains a textual explanation of the error.
+
 Failure response:
 
 | Attribute     | Req |   Type  |           Example                    |
 +---------------+-----+---------+--------------------------------------|
 | status        |  T  |  enum   | SUCCESS                              |
+| id            |  F  |  uuid   | 12345678-1234-5678-1234-56789abcdef4 |
+| requestID     |  F  |  uuid   | abcd0987-1234-5678-1234-56789abcdef4 |
 | errorCode     |  T  |  int    | 12                                   |
 | reason        |  T  |  string | "Not Found"                          |
-| requestID     |  F  |  uuid   | abcd0987-1234-5678-1234-56789abcdef4 |
 {: #failure title="Failure response"}
 
 where-
 
  - status is the status of the request, either "SUCCESS" or "FAILURE". 
-   In case of failure an error code and reason are added
+   In case of failure an error code and reason are added.
  - id is the id the operation was executed against, found in the request
  - requestID is a correlation ID that can be used for end-to-end 
    tracing.  
- - errorCode is a numerical value representing the error
- - reason is a human readable explanation of why the error occurred
+ - errorCode is a numerical value representing the error.
+ - reason is a human readable explanation of why the error occurred.
 
-### Categories of operations supported
+Example failure response:
+~~~~~
+{
+  "status": "FAILURE",
+  "reason": "Not Found",
+  "errorCode": 12,
+  "requestID": "12345678-5678-1234-5578-abcdef1234"
+}
+~~~~~
+{: #exfail title="Example failure response"}
 
-The common operations are categorized in common categories that describe 
-high level sets of functionalities. Each of the NIPC operations belong 
-to a category. The categories are:
+# NIPC Actions
 
- - /connectivity: Allows an application to establish connectivity with
-   a device (if so required by the technology)
- - /data: Allows applications to exchange data with a device
- - /registrations: Allows an application to make registrations in the 
-   network, for example to register a pub/sub topic
- - /extensions: This is a category of operations that leverage basic 
-   connectivity, data or registration operations, but are optimized for
-   application usage, allowing applications to perform functions with a
-   reduced number of round-trips. An example of this is the the bulk
-   operation, allowing to send multiple operations is one operation. 
-   This category also allows for further extensions based on the basic 
-   operations.
+The primary goal of NIPC actions is to exchange data with a Non-IP device, by
+means of reading, writing or streaming NIPC properties to applications. An
+explicit connection may be required, which is also an action. An application
+may also want to transmit a broadcast.
 
-### Connecting to the Non-IP Control Interface
+## Connections
 
-NIPC makes use of RESTful HTTP{{!RFC9114}}.  The connection endpoint is
-provided out of band, most likely through the SCIM devices model 
-extension, in which an authorized application can be registered for a
-SCIM object. Similarly authentication of the interface can be specified
-using that SCIM interface. It may be based on a device certificate or 
-an authorization token.
+A connection is an operation that establishes or tears down an association or
+connection with a device. Optionally during connection setup properties 
+supported by a device can be discovered. 
 
+/action/connection
 
-## Connectivity
-
-/connectivity
-
-Connectivity elements are elements that allow operations that establish
-or tear down associations & connectivity with devices. They also allow
-discovery of services that can be accessed during the connection.
-
-### Binding
-
-/connectivity/binding
-
-The binding element allows an application to request a binding or 
-association to a device.
-
-Operations:
-
- - Create binding: POST
- - Return active bindings: GET
- - Delete binding: DELETE 
-
-#### Create a Binding
-
-Method: POST /connectivity/binding
-
-Description: Creates a binding with a device
-
-Parameters: None
-
-Request Body: an Object as defined in {{objectdef}}
-
-Response: See {{success}} for success, and {{failure}} for failed
-responses.
-
-#### Return active bindings
-
-Method: GET /connectivity/binding
-
-Description: Returns one or more bindings, based on ids provided in
-parameters (none = return all)
-
-Parameters: 
-One of following options:
- - None: return all bindings this application made
- - single id: return binding for this id
- - comma separated ids: return bindings for multiple ids
-
-Response: An Array of bindings with contents as  shown in
-{{bindingresponse}} below or {{failure}} for failed responses.
-
-| Attribute     | Req |   Type  |          Example                     |
-+---------------+----------+-------------------------------------------|
-| status        |  T  |  enum   | SUCCESS                              |
-| requestID     |  F  |  uuid   | abcd0987-1234-5678-1234-56789abcdef4 |
-| bindings      |  T  |  array  | Array of BLE or Zigbee ids           |
-{: #bindingresponse title="Binding response"}
-
-#### Delete a binding
-
-Method: DELETE /connectivity/binding
-
-Description: Delete one or more bindings, based on ids provided in
-parameters
-
-Parameters: 
-One of following options:
- - None: delete all bindings this application made
- - single id: delete binding for this id
- - comma separated ids: delete bindings for multiple ids
-
-Response: See {{success}} for success, and {{failure}} for failed
-responses.
-
-### Binding by id
-
-/connectivity/binding//id/{id}
-
-The binding by id element allows an application to request a binding or 
-association to a device by id, which provides a simpler interface than 
-standard binding element, but pertains to a single device only.
-
-Operations:
-
- - Create binding by id: POST
- - Return active binding by id: GET
- - Delete binding by id: DELETE 
-
-#### Create a Binding by id
-
-Method: POST /connectivity/binding/id/{id}
-
-Description: Creates a binding by id 
-
-Parameters: id
-
-Response: See {{success}} for success, and {{failure}} for failed
-responses.
-
-#### Return active binding by id
-
-Method: GET /connectivity/binding//id/{id}
-
-Description: Returns a binding by id 
-Parameters: id
-
-Response: See {{success}} for success, and {{failure}} for failed 
-responses.
-
-#### Delete binding by id
-
-Method: DELETE /connectivity/binding/id/{id}
-
-Description: Delete a binding by id
-
-Parameters: id
-
-Response: See {{success}} for success, and {{failure}} for failed
-responses.
-
-
-### Connection
-
-/connectivity/connection
-
-The connection element allows an application to request to connect to 
+The connection API allows an application to request to connect to 
 a device.
 
 Operations:
@@ -470,9 +463,11 @@ Operations:
  - Return active connections: GET
  - Disconnect a device: DELETE 
 
-#### Connect to a device
+### Connection API
 
-Method: POST /connectivity/connection
+#### Connect to a device {#connect}
+
+Method: POST /action/connection
 
 Description: Connect to a device
 
@@ -480,25 +475,66 @@ Parameters: None
 
 Request Body: 
  - an Object, as defined in {{objectdef}} 
- - optionally a set of services to be discovered. These are supplied
-   in protocol-specific extensions, as defined in {{protext}}.
-   In the case of BLE, service discovery is performed when connecting to
-   a device. Optionally, service discovery may be limited to services 
+ - optionally a set of properties to be discovered. These are supplied
+   in protocol objects, as defined in {{proobj}}.
+   In the case of BLE, if no protocol object is included, service discovery is 
+   performed to discover all supported properties when connecting to
+   a device. Optionally, service discovery may be limited to properties 
    defined in the "ble" protocol extension. The services to be 
-   discovered can be added in an array, as well as optional caching 
-   parameters. Please see table below {{servdisc}} for a definition of
-   the content of the BLE protocol extension for limited service 
-   discovery 
+   discovered can be added in an array. Property discover can be buffered
+   across connections, so the API also supports caching parameters. 
+ - Connection retry parameters 
 
-| Attribute     | Req |   Type  |          Example                     |
-+---------------+-----+---------+--------------------------------------|
-| services      |  T  |  array  | Array of serviceIDs to be discovered |
-| cached        |  F  | boolean | no                                   |
-| cacheIdlePurge|  F  |   int   | 3600                                 |
-| autoUpdate    |  F  | boolean | yes                                  |
-{: #servdisc title="Service Discovery"}
+Example body of a connection without specific discovery of properties:
+~~~~~
+{
+  "id": "12345678-1234-5678-1234-56789abcdef4",
+  "type": "device",
+  "technology": "ble",
+  "retries": 3,
+  "retryMultipleAPs": true
+}
+~~~~~
+{: #exconn title="Example Connection"}
 
 where-
+
+ - "id", "type" and "technology" are part of the object definition (device
+   or group), as defined in {{objectdef}}. 
+ - "retries" defines the number of retries in case the operations does not 
+   succeed
+ - "retryMultipleAPs" can be used in case there is an infrastructure with 
+   multiple access points or radios that can reach the device. If set to "true"
+   a different access point may be used for retries.
+
+In case the application would like to discover specific properties of a device,
+a protocol object can be added that defines what properties should be
+discovered.
+
+Example body of a BLE connection with specific discovery of properties:
+~~~~~
+{
+  "id": "12345678-1234-5678-1234-56789abcdef4",
+  "type": "device",
+  "technology": "ble",
+  "ble": {
+    "services": [
+      {
+        "serviceID": "12345678-1234-5678-1234-56789abcdef4"
+      }
+    ],
+    "cached": false,
+    "cacheIdlePurge": 3600,
+    "autoUpdate": true,
+    "bonding": "default"
+  },
+  "retries": 3,
+  "retryMultipleAPs": true
+}
+~~~~~
+{: #exconnprp title="Example Connection with explicit discovery of connections"}  
+
+where in the BLE protocol object: 
 
  - "services" is an array of services defined by their serviceIDs.
  - "cached" refers to whether the services need to be cached for 
@@ -509,14 +545,16 @@ where-
  - some devices support notifications on changes in services, 
    "autoUpdate" allows the network to update services based on 
    notification (on by default)
+ - "bonding" allows you to override the bonding method configured when 
+   onboarding the device
 
-Response: Success responses include standard success response attributes
-as defined in {{success}} and also include cwan array of supported 
-services. This array of supported services in turn contains an array of 
-charateristics, which in turn contains an array of descriptors, as shown 
-{{services}}. For a description of the attributes found in this array, 
-please refer to {{servresp}} below. Please refer to {{failure}} for 
-failed responses.
+Response: 
+Success responses include standard success response properties
+as defined in {{success}} as well as a protocol object with an array of 
+discovered properties, as defined in the specific protocol.
+For example, for BLE, this is an array of supported services, which in turn
+contains an array of charateristics, which in turn contains an array of
+descriptors, as shown in {{BLEservices}}.
 
 ~~~~~
     services
@@ -529,177 +567,114 @@ failed responses.
                |> Descriptors
                    - descriptorID
 ~~~~~
-{: #services title="Services"}
+{: #BLEservices title="BLE Services"}
 
-Attributes in the array of services:
+Example of a BLE connection response with BLE discovered properties:
+~~~~~
+{
+  "status": "SUCCESS",
+  "requestID": "12345678-5678-1234-5578-abcdef1234",
+  "id": "12345678-1234-5678-1234-56789abcdef4",
+  "ble": [
+    {
+      "serviceID": "12345678-1234-5678-1234-56789abcdef4",
+      "characteristics": [
+        {
+          "characteristicID": "12345678-1234-5678-1234-56789abcdef4",
+          "flags": [
+            "read",
+            "write"
+          ],
+          "descriptors": [
+            {
+              "descriptorID": "12345678-1234-5678-1234-56789abcdef4"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+~~~~~
+{: #exconnresp title="Example Connection response"}
 
-| Attribute      | Req |  Type  |          Example                     |
-+----------------+-----+--------+--------------------------------------|
-| serviceID      |  F  |  uuid  | abcd0987-1234-5678-1234-56789abcdef4 |
-|characteristicID|  F  |  uuid  | abcd0987-1234-5678-1234-56789abcdef4 |
-| flags          |  F  |  enum  | write                                |
-| descriptorID   |  F  |  uuid  | abcd0987-1234-5678-1234-56789abcdef4 |
-{: #servresp title="Service Discovery Response Attributes"}
+where in the BLE protocol object:
+
+ - "id", "requestID" and "technology" are part of hte standard {{success}} definition 
+ - "ble" protocol object conatins an Array of BLE services as shown in
+   {{BLEservices}}
+
+A failure will generate a standard failed response. Please refer to {{failure}}
+definition of failed response.
 
 #### Return active connections
 
-Method: GET /connectivity/connection
+Method: GET /action/connection
 
 Description: Returns one or more active connections, based on ids 
-provided in parameters (none = return all).
+provided in parameters (none = return all connections).
 
-Parameters: 
+Parameters, in query: 
 One of following options:
  - None: return all active connections for this application 
  - single id: return connection status for this id
  - comma separated ids: return connection status for multiple ids
 
-Response: An Array of connections with attributes as defined in 
-{{connresponse}} or in case of a failed response, the attributes in 
-{{failure}}.
+Response: 
+A standard success ({{exsuccess}})i or failure ({{exfail}}) response, including
+an array of device objects and their connection status. Success if hte device
+is connected, failure if the device is not connected.  
 
-| Attribute     | Req |   Type  |          Example                     |
-+---------------+-----+---------+--------------------------------------|
-| status        |  T  |  enum   | SUCCESS                              |
-| requestID     |  F  |  uuid   | abcd0987-1234-5678-1234-56789abcdef4 |
-| connections   |  T  |  array  | Array of connections                 |
-{: #connresponse title="Connection response"}
+Example get connection response:
+~~~~~
+{
+  "status": "SUCCESS",
+  "requestID": "12345678-5678-1234-5578-abcdef1234",
+  "connections": [
+    {
+      "status": "SUCCESS",
+      "requestID": "12345678-5678-1234-5578-abcdef1234",
+      "id": "12345678-1234-5678-1234-56789abcdef4"
+    },
+    {
+      "status": "FAILURE",
+      "reason": "Not Found",
+      "errorCode": 12,
+      "requestID": "12345678-5678-1234-5578-abcdef1234"
+    }
+  ]
+}
+~~~~~
+{: #exgetresp title="Example Connection response"}
+
+In this example, status of 2 connections was requested. The request was
+successfully executed, 1 of the 2 connections was found active, the other
+one not.
 
 #### Disconnect a device 
 
-Method: DELETE /connectivity/connection
+Method: DELETE /action/connection
 
 Description: Disconnect one or more devices, based on ids provided in
 parameters
 
-Parameters: 
+Parameters, in query: 
 One of following options:
  - None: Disconnect all devices for connections this application made
  - single id: disconnect device with id
  - comma separated ids: disconnect multiple devices with ids
 
-Response: See {{success}} for success, and {{failure}} for failed
+Response: 
+The response for the DELETE function is the same as the response for the GET
+function. See {{exsuccess}} for success response, and {{exconnresp}} for failed
 responses.
 
-### Connections by id
+## Properties
 
-/connectivity/connection/id/{id}
+Property APIs allow applictions to read and write property values from/to
+devices.
 
-The connection by id element allows an application to request a
-connection to a device by id, which provides a simpler interface than 
-standard connection element, but pertains to a single device only.
-
-Operations:
-
- - Connect device by id: POST
- - Return connection state by id: GET
- - Disconnect device by id: DELETE 
-
-#### Connect device by id
-
-Method: POST /connectivity/connection/id/{id}
-
-Description: Creates a connection by id 
-
-Parameters: id
-
-Response: See {{success}} for success, and {{failure}} for failed
-responses.
-
-#### Return connection state by id
-
-Method: GET /connectivity/connection/id/{id}
-
-Description: Returns connection state by id 
-Parameters: id
-
-Response: See {{success}} for success, and {{failure}} for failed
-responses.
-
-#### Delete connection by id
-
-Method: DELETE /connectivity/connection/id/{id}
-
-Description: Delete a binding by id
-
-Parameters: id
-
-Response: See {{success}} for success, and {{failure}} for failed
-responses.
-
-### Discover services supported by a device
-
-/connectivity/services
-
-The services element allows an application to request a service 
-discovery for a device, possibly to update a cache 
-
-Operations:
-
- - Discover services: GET
-
-#### Discover services supported by a device
-
-Method: GET /connectivity/service
-
-Description: Discover services supported by a device, this updates 
-cache in case services caching is enabled for a connection.
-
-Parameters: an Object as defined in {{objectdef}}  and optionally a set
-of services to be discovered in case not all services should be
-discovered. These services need to be provided in protocol-specific 
-extensions as defined in {{protext}}. The services to be discovered can
-be added in this extension in an array, as well as optional caching
-parameters, as described in {{servdisc}}.
-
-Response: A successful response will contain success attributes from 
-{{success}} with an array of supported services characteristics and 
-descriptors, as shown in {{services}}, with attributes defined in 
-{{servresp}}. 
-Failure Response is the standard response as defined in {{failure}}
-
-### Discover services supported by a device by id
-
-/connectivity/services/id/{id}
-
-The services element allows an application to request a service 
-discovery for a device by id, possibly to update a cache 
-
-Operations:
-
- - Discover services by id: GET
-
-#### Discover services supported by a device by id
-
-Method: GET /connectivity/service/id/{id}
-
-Description: Discover services supported by a device, this updates 
-cache in case services caching is enabled for a connection. This method
-does not support partial service discovery, all services are discovered.
-
-Parameters: an Object id 
-
-Response: A successful response will contain success attributes from 
-{{success}} with an array of supported services, characteristics and 
-descriptors, as shown in {{services}}, with attributes defined in 
-{{servresp}}. 
-Failure Response is the standard response as defined in {{failure}}.
-
-
-## Data
-
-/data
-
-Data elements are elements that allow operations to exchange data with
-a device. This could be reading or writing attributes or enabling 
-streaming data.
-
-### Attribute
-
-/data/attribute
-
-The attribute element allows an application get an attribute value,
-write, update or delete a value. 
+/action/property
 
 Operations:
 
@@ -708,808 +683,1068 @@ Operations:
  - Read value: GET
  - Delete value: DELETE 
 
-#### Writing a value 
+### Property API
 
-Method: POST /data/attribute
+#### Writing a value {#write}
 
-Description: Writes a value to an attribute
+Method: POST /action/property/
 
-Parameters: None
-
-Request Body: an Object as defined in {{objectdef}}, a value to be 
-written, as defined in {{value}} below and an attribute definition in
-a protocol extension from {{protext}}. The protocol extension for BLE
-is defined in {{bleattr}} below. The protocol extension for Zigbee is 
-defined in {{zigbeeattr}} below.
-
-| Attribute     | Req |   Type  |          Example                     |
-+---------------+-----+---------+--------------------------------------|
-| value         |  T  |  array  | 100                                  |
-| forcedResponse|  F  | boolean | no                                   |
-{: #value title="Value"}
-
-where-
-
- - value is the value to be written
- - forcedresponse requests a specific response behavior of the device
-
-Contents of the BLE protocol extension defining an attribute:
-
-| Attribute      | Req |   Type |          Example                     |
-+----------------+-----+--------+--------------------------------------|
-| serviceID      |  T  |  uuid  | abcd0987-1234-5678-1234-56789abcdef4 |
-|characteristicID|  T  |  uuid  | abcd0987-1234-5678-1234-56789abcdef4 |
-| long           |  F  | boolean| no                                   |
-{: #bleattr title="BLE Attribute"}
-
-where-
-
- - serviceID defines the Service
- - characteristic ID defines the service characteristic
- - long is an optional attribute that allows to force a write type
-
-Contents of the Zigbee protocol extension defining an attribute:
-
-+----------------+-----+--------+--------------------------------------|
-| endpointID     |  T  |  int   | 16                                   |
-| clusterID      |  T  |  int   | 6                                    |
-| attributeID    |  T  |  int   | 12                                   |
-| type           |  T  |  int   | 1                                    |
-{: #zigbeeattr title="Zigbee Attribute"}
-
-where-
-
- - endpointID defines the Zigbee endpoint that contains a cluster of 
-   attributes
- - clusterID defines the Zigbee cluster that contains the attribute
- - attributeID defines the Zigbee attribute
- - type defines the Zigbee attribute type
-
-Response: A successful response will contain success attributes from 
-{{success}} with optionally the value written as shown in {{value}}.
-Failure Response is the standard response as defined in {{failure}}
-
-#### Updating a value 
-
-Method: PUT /data/attribute
-
-Description: Updates a value to an attribute
+Description: Writes a value to a property
 
 Parameters: None
 
-Request Body: an Object as defined in {{objectdef}}, a value to be 
-written, as defined in {{value}} and an attribute definition in
-a protocol extension from {{protext}}. The protocol extension for BLE
-is defined in {{bleattr}}. The protocol extension for Zigbee is 
-defined in {{zigbeeattr}}.
+Request Body: 
+ - an Object, as defined in {{objectdef}}
+ - A propertyID to write to
+ - A value to be written
+ - optional parameters
 
-Response: A successful response will contain success attributes from 
-{{success}} with optionally the value written as shown in {{value}}.
-Failure Response is the standard response as defined in {{failure}}
+Example body writing a property:
+~~~~~
+{
+  "id": "12345678-1234-5678-1234-56789abcdef4",
+  "type": "device",
+  "technology": "ble",
+  "propertyID": "temperature",
+  "value": "1",
+  "forcedResponse": true
+}
+~~~~~
+{: #exwrite title="Example writing a property"}
 
-#### Read an attribute
+where-
+ - "id", "type" and "technology" are part of the object definition (device
+   or group), as defined in {{objectdef}}
+ - "propertyID" is the ID of a previously registered property mapping
+ - "value" is the value to be written
+ - "forcedresponse" requests a specific response behavior of the device
+   that is not the default
 
-Method: GET /data/attribute
+Response:
+Success responses include standard success response properties
+as defined in {{success}} as well as the propertyID and the value written.
 
-Description: Reads an attribute from a device
+Example of a write property response:
+~~~~~
+{
+  "status": "SUCCESS",
+  "requestID": "12345678-5678-1234-5578-abcdef1234",
+  "id": "12345678-1234-5678-1234-56789abcdef4",
+  "propertyID": "temperature",
+  "value": "1"
+}
+~~~~~
+{: #exwrresp title="Example write property response"}
 
-Parameters: an Object as defined in {{objectdef}} and an attribute 
-definition in a protocol extension from {{protext}}. The protocol 
-extension for BLE is defined in {{bleattr}}. The protocol extension for
-Zigbee is defined in {{zigbeeattr}}.
+where- 
 
-Response: A successful response will contain success attributes from 
-{{success}} with the value read as shown in {{value}}.
-Failure Response is the standard response as defined in {{failure}}
+ - "id", "requestID" and "technology" are part of the standard {{success}} definition 
+ - "propertyID" is the ID of a previously registered property mapping
+ - "value" is the value to be written
+ - "propertyID" is the proper
 
-#### clear the value from an attribute
+A failure will generate a standard failed response. Please refer to {{failure}}
+definition of failed response.
 
-Method: DELETE /data/attribute
+#### Updating a value {#update}
 
-Description: Clear the value from an attribute of a device
+Method: PUT /action/property
 
-Parameters: an Object as defined in {{objectdef}} and an attribute 
-definition in a protocol extension from {{protext}}. The protocol 
-extension for BLE is defined in {{bleattr}}. The protocol extension for
-Zigbee is defined in {{zigbeeattr}}.
+Description: Updates a value of a property 
 
-Response: A successful response will contain success attributes from 
-{{success}} with the optionally the value as null as shown in {{value}}.
-Failure Response is the standard response as defined in {{failure}}
+Parameters: None
 
-### Subscription
+Request Body: 
+ - an Object, as defined in {{objectdef}}
+ - A propertyID to write to
+ - A value to be written
+ - optional parameters
 
-/data/subscription
+Example body updating a property:
+~~~~~
+{
+  "id": "12345678-1234-5678-1234-56789abcdef4",
+  "type": "device",
+  "technology": "ble",
+  "propertyID": "temperature",
+  "value": "1",
+  "forcedResponse": true
+}
+~~~~~
+{: #exupd title="Example updating a property"}
 
-The subscription element allows an application to ask a device to start
-streaming data attached to a certain attribute.
+where-
+ - "id", "type" and "technology" are part of the object definition (device
+   or group), as defined in {{objectdef}}
+ - "propertyID" is the ID of a previously registered property mapping
+ - "value" is the value to be updated
+ - "forcedresponse" requests a specific response behavior of the device
+   that is not the default
+
+Response:
+Success responses include standard success response properties
+as defined in {{success}} as well as the propertyID and the value updated.
+
+Example of a write property response:
+~~~~~
+{
+  "status": "SUCCESS",
+  "requestID": "12345678-5678-1234-5578-abcdef1234",
+  "id": "12345678-1234-5678-1234-56789abcdef4",
+  "propertyID": "temperature",
+  "value": "1"
+}
+~~~~~
+{: #exupresp title="Example update property response"}
+
+where- 
+
+ - "id", "requestID" and "technology" are part of the standard {{success}} definition 
+
+A failure will generate a standard failed response. Please refer to {{failure}}
+definition of failed response.
+
+#### Read a property 
+
+Method: GET /action/property/{property}
+
+Description: Read a property from a device
+
+Parameters, in path: 
+A propertyID {property} that needs to be read.
+
+Parameters, in query: 
+An id of a device on which the property has to be read.
+
+Response:
+Success responses include standard success response properties
+as defined in {{success}} as well as the propertyID and the value read.
+
+Example of a read property response:
+~~~~~
+{
+  "status": "SUCCESS",
+  "requestID": "12345678-5678-1234-5578-abcdef1234",                   
+  "id": "12345678-1234-5678-1234-56789abcdef4",                        
+  "propertyID": "temperature",
+  "value": "1"
+}
+~~~~~ 
+{: #exreresp title="Example read property response"}
+
+A failure will generate a standard failed response. Please refer to {{failure}}
+definition of failed response.
+
+#### Delete a property value
+
+Method: DELETE /action/property/{property}
+
+Description: Delete a property value from a device
+
+Parameters, in path:
+A propertyID {property} that needs to be deleted..
+
+Parameters, in query:
+An id of a device on which the property has to be deleted.
+
+Response:
+Success responses include standard success response properties
+as defined in {{success}} as well as the propertyID and the value deleted.
+
+Example of a delete property response:
+~~~~~
+{
+  "status": "SUCCESS",
+  "requestID": "12345678-5678-1234-5578-abcdef1234",
+  "id": "12345678-1234-5678-1234-56789abcdef4",
+  "propertyID": "temperature",
+  "value": "1"
+}
+~~~~~
+{: #exdelresp title="Example delete property response"}
+
+A failure will generate a standard failed response. Please refer to {{failure}}
+definition of failed response.
+
+## Subscriptions
+
+/action/property/subscription
+
+Subscriptions are properties that deliver a data stream instead of a single
+value. The property subscription API allows an application to manage these 
+data streams.
 
 Operations:
 
  - Start a subscription data stream: POST
- - Update a subscription data stream value: PUT
  - Get status of a subscription data stream: GET
  - Stop a subscription data stream: DELETE 
 
+### Property subscription API
+
 #### Starting a subscription data stream 
 
-Method: POST /data/subscription
+Method: POST /action/property/subscription
 
 Description: Start a subcription data stream pertaining to a specific 
-attribute
+property
 
 Parameters: None
 
-Request Body: an Object as defined in {{objectdef}} and an attribute 
-definition in a protocol extension from {{protext}}. The protocol 
-extension for BLE is defined in {{bleattr}}. The protocol extension 
-for Zigbee is defined in {{zigbeeattr}}. Optionally a pub/sub topic can
-be included in the request as defined in {{topic}} below. Including a
-topic allows the app to skip the topic registration process.
+Request Body: 
+ - an Object, as defined in {{objectdef}}
+ - A propertyID for which to start the subscription 
+ - optional parameters
 
-Topic attributes:
-
-| Attribute     | Req |   Type  |          Example                     |
-+---------------+-----+---------+--------------------------------------|
-| topic         |  F  | string  | "enterprise/hospital/pulse"          |
-| dataFormat    |  F  | enum    | "default"                            |
-| replay        |  F  | boolean | no                                   |
-| forced_ack    |  F  | boolean | no                                   |
-{: #topic title="Topic"}
+Example body for starting a subscription of a property:
+~~~~~
+{
+  "id": "12345678-1234-5678-1234-56789abcdef4",
+  "type": "device",
+  "technology": "ble",
+  "propertyID": "temperature",
+  "forcedAck": true
+}
+~~~~~
+{: #exstartsub title="Example starting a subscription for a property"}
 
 where-
+ - "id", "type" and "technology" are part of the object definition (device
+   or group), as defined in {{objectdef}}
+ - "propertyID" is the ID of a previously registered property mapping
+ - "forcedAck" requests a specific response behavior of the device
+   that is not the default
 
- - topic is the pub/sub topic the subscription can be consumed on
- - dataFormat is the data format in which the pub/sub topic is delivered
- - replay is a boolean which defines whether data should be replayed in 
-   case of application disconnection
- - forced ack ignores the attribute definition and forces packet ack
-   behavior to the device
+Response:
+Success responses is a standard success response when the
+subscription is started, as defined in {{success}}. 
 
-Response: See {{success}} for success, and {{failure}} for failed
-responses.
-
-#### Updating a subscription data stream 
-
-Method: PUT /data/subscription
-
-Description: Update parameters of a subscription data stream pertaining
-to a specific attribute
-
-Parameters: None
-
-Request Body: an Object as defined in {{objectdef}} and an attribute 
-definition in a protocol extension from {{protext}}. The protocol 
-extension for BLE is defined in {{bleattr}}. The protocol extension 
-for Zigbee is defined in {{zigbeeattr}}. Optionally a pub/sub topic can
-be included in the request as defined in {{topic}}.
-
-Response: See {{success}} for success, and {{failure}} for failed
-responses.
+A failure will generate a standard failed response. Please refer to {{failure}}
+definition of failed response.
 
 #### Get status of a subscription data stream
 
-Method: GET /data/subscription
+Method: GET /action/property/subscription/{property}
 
 Description: Gets the status of a subscription data stream, success if
 active, failure if not active 
 
-Parameters: an Object as defined in {{objectdef}} and an attribute 
-definition in a protocol extension from {{protext}}. The protocol 
-extension for BLE is defined in {{bleattr}}. The protocol extension 
-for Zigbee is defined in {{zigbeeattr}}. Optionally a pub/sub topic can
-be included in the request as defined in {{topic}}.
+Parameters, in path:
+A propertyID {property} for the subscription.
 
-Response: See {{success}} for success, and {{failure}} for failed
-responses.
+Parameters, in query:
+An id of a device on which the subscription has to be started.
+
+Response:
+Success responses is a standard success response when the
+subscription is started, as defined in {{success}}.
+
+A failure to find the subscription will generate a standard failed response. 
+Please refer to {{failure}} definition of failed response.
 
 #### stop a subscription data stream
 
-Method: DELETE /data/subscription
+Method: DELETE /action/property/subscription/{property}
 
 Description: stops a subscription data stream
 
-Parameters: an Object as defined in {{objectdef}} and an attribute 
-definition in a protocol extension from {{protext}}. The protocol 
-extension for BLE is defined in {{bleattr}}. The protocol extension 
-for Zigbee is defined in {{zigbeeattr}}. Optionally a pub/sub topic can
-be included in the request as defined in {{topic}}.
+Parameters, in path:
+A propertyID {property} for the subscription.
 
-Response: See {{success}} for success, and {{failure}} for failed
-responses.
+Parameters, in query:
+An id of a device on which the subscription has to be started.
 
-### Subscriptions by id
+Response:
+Success response is a standard success response when the
+subscription is deleted, as defined in {{success}}.
 
-/data/subscription/id/{id}
+A failure to delete the subscription will generate a standard failed response.
+Please refer to {{failure}} definition of failed response.
 
-The subscription by id element allows an application to operate on all
-subscriptions of a specific id. 
+# NIPC Registrations
 
-Operations:
+NIPC allows an application to register properties to use in action API's. NIPC
+supports 2 types of registrations: Registrations for properties and 
+registrations for events.
 
- - Return active subscriptions by id: GET
- - Terminate all subscriptions of an id: DELETE 
+## Event registration
 
-#### Return active subscriptions by id
+/registration/event
 
-Method: GET /data/subscription/id/{id}
-
-Description: Returns connection state by id 
-
-Parameters: id
-
-Response: Success response as defines in {{success}} and an object 
-called "subscriptions" which contains an Array of active subscriptions.
-Each of these include an object as defined in {{objectdef}} and a 
-subscription attribute definition in a protocolextension from 
-{{protext}}. The protocol extension for BLE is defined in {{bleattr}}. 
-The protocol extension for Zigbee is defined in {{zigbeeattr}}. 
-Failure Response is the standard response as defined in {{failure}}
-
-#### Stop active subscriptions by id
-
-Method: DELETE /data/subscription/id/{id}
-
-Description: Delete active subscriptions for an id 
-
-Parameters: id
-
-Response: Success response as defines in {{success}} and an object 
-called "subscriptions" which contains an Array of active subscriptions.
-Each of these include an object as defined in {{objectdef}} and a 
-subscription attribute definition in a protocolextension from 
-{{protext}}. The protocol extension for BLE is defined in {{bleattr}}. 
-The protocol extension for Zigbee is defined in {{zigbeeattr}}. 
-Failure Response is the standard response as defined in {{failure}}
-
-### Subscriptions by topic
-
-/data/subscription/topic/{topic}
-
-The subscription by topic element allows an application to operate on
-all subscriptions of a specific topic. 
-
-Operations: 
- - Return active subscriptions by topic: GET
- - Terminate all subscriptions active on a topic: DELETE 
-
-#### Return active subscriptions by topic
-
-Method: GET /data/subscription/topic/{topic}
-
-Description: Returns connection state by topic 
-
-Parameters: topic
-
-Response: Success response as defines in {{success}} and an object 
-called "subscriptions" which contains an Array of active subscriptions.
-Each of these include an object as defined in {{objectdef}} and a 
-subscription attribute definition in a protocolextension from 
-{{protext}}. The protocol extension for BLE is defined in {{bleattr}}. 
-The protocol extension for Zigbee is defined in {{zigbeeattr}}. 
-Failure Response is the standard response as defined in {{failure}}
-
-#### Stop active subscriptions by topic
-
-Method: DELETE /data/subscription/topic/{topic}
-
-Description: Delete all active subscriptions for a topic 
-
-Parameters: topic
-
-Response: Success response as defines in {{success}} and an object 
-called "subscriptions" which contains an Array of active subscriptions.
-Each of these include an object as defined in {{objectdef}} and a 
-subscription attribute definition in a protocolextension from 
-{{protext}}. The protocol extension for BLE is defined in {{bleattr}}. 
-The protocol extension for Zigbee is defined in {{zigbeeattr}}. 
-Failure Response is the standard response as defined in {{failure}}
-
-### Broadcast
-
-/data/broadcast
-
-The broadcast element allows an application to broadcast a message to a
-specific device. Note that broadcasts can be heard by other devices on 
-the same L2 network.
-
-Operations:  
-
- - Broadcast message: POST
-
-#### Broadcasting a message 
-
-Method: POST /data/broadcast
-
-Description: Broadcasts a message to a device
-
-Parameters: None
-
-Request Body: an Object as defined in {{objectdef}} along with broadcast
-parameters, defined below in {{broadcastparams}}. Defining broadcast 
-attributes is mandatory and is done by adding an array of broadcast 
-attributes in a protocol extension from {{protext}}. The protocol 
-extension for BLE broadcasts is defined in {{blebcastattr}} below.
-
-Broadcast parameters:
-
-| Attribute         | Req |   Type  |          Example                 |
-+-------------------+-----+---------+----------------------------------|
-| cycle             |  T  |  enum   | single                           |
-| broadcastTime     |  F  |  int    | 30                               |
-| broadcastInterval |  F  |  int    | 5                                |
-{: #broadcastparams title="Broadcast parameters"}
-
-where-
-
- - cycle determines the repetitiveness of the broadcast, and is either
-   single or repeat
- - broadcastTime is the maximum time in seconds the broadcast should 
-   run
- - broadcastInterval is the time between broadcasts in seconds 
-
-Protocol-specific extensions are supplied to identify the attributes to 
-be broadcasted.
-
-| Attribute      | Req |   Type |          Example                     |
-+----------------+-----+--------+--------------------------------------|
-| adType         |  T  |  byte  | ff                                   |
-| adData         |  T  |  byte  | 4c00                                 |
-{: #blebcastattr title="BLE Broadcast Attribute"}
-
-where-
-
- - adType is the BLE advertisement attribute type
- - adData is the BLE advertisement attribute data
-
-Response: See {{success}} for success, and {{failure}} for failed
-responses.
-
-
-## Registrations
-
-/registation
-
-Registration elements are elements that do not directly execute
-operations on devices but register attributes on the gateway that
-support operations, such attributes are topics for data streaming and
-files to write files.
-
-### Topic registration
-
-/registration/topic
-
-The topic registration element allows an application to register a pub/
-sub topic for the data interface. By activating a subscription on one 
-or more device(s), the application can then publish streaming data to 
-that topic.
+The event registration API allows an application to register an event for a
+data application to a specified property. This event is mapped to an MQTT
+pub/sub topic. By activating a subscription on one or more device(s) for that
+property, streaming data will get published to the associated pub/sub topic
+on MQTT.
 
 Operations:
 
- - Register a topic: POST
- - Update a topic: PUT
- - Get configuration of one or more topics: GET
- - Delete a topic: DELETE
+ - Register an event: POST
+ - Update an event: PUT
+ - Get configuration of one or more events: GET
+ - Delete an event: DELETE
 
-#### Registering a topic
+### Event registration API
 
-Method: POST /registration/topic
+#### Registering an event
 
-Description: Register a pub/sub topic 
+Method: POST /registration/event
+
+Description: Register an event to a property 
 
 Parameters: None
 
-Request Body: A topic, including data apps that can subscribe to the 
-topic as defined in {{topic}} and protocol-specific extensions as per 
-{{protext}} that describe the attributes that will be reported on the
-topic. In the case of BLE, these are either BLE subscription attributes
-as in {{bleattr}}, device connection status, or Broadcast 
-(advertisement) data as in {{blebcastattr}}.
-For Zigbee, these are Zigbee attributes as described in {{zigbeeattr}}.
+Request Body:
+ - An event name that matches to an MQTT pub/sub topic
+ - The data format the event should be delivered in
+ - The device or group id the event is valid for
+ - Whether the event needs to be cached for replay
+ - the data applications that can consume the events
 
-Response: See {{success}} with a topic name as in {{topicname}} below 
-for success, and {{failure}} for failed responses.
+Example body registering an event:
+~~~~~
+{
+  "event": "enterprise/hospital/pulse_oximeter",
+  "eventFormat": "default",
+  "replay": false,
+  "id": "12345678-1234-5678-1234-56789abcdef4",
+  "type": "device",
+  "dataApps": [
+    {
+      "dataAppID": "12345678-1234-5678-1234-56789abcdef4",
+      "mqtt": {
+        "brokerURI": "mqtt.broker.com:8883",
+        "username": "user1",
+        "password": "password1",
+        "brokerCACert": "string"
+      }
+    }
+  ],
+  "propertyID": "temperature"
+}
+~~~~~
+{: #exregeve title="Example registering an event"}
 
-Topic name that was registered: 
+where-
+ - "event" is the event identifier, which also maps to the MQTT topic name
+ - "eventFormat" is the format the data stream is delivered in, either default
+   (decorated with id and property) or just the payload 
+ - "replay" defines whether the event should be cached for replay or not
+ - "id" is hte id of the device or group the event is valid for
+ - "type" is the type if the id, either device or group
+ - "dataApps" is an array of data appplications that can subscribe to the event
+ - "propertyID" is the propertyID that will be used in action APIs to activate
+   this event
 
-| Attribute     | Req |   Type  |          Example                     |
-+---------------+-----+---------+--------------------------------------|
-| topic         |  T  | string  | "enterprise/hospital/pulse"          |
-{: #topicname title="Topic Name"}
+The dataApps array consists of following-
+ - "dataAppID" is the identity of the data application either configured 
+   administratively or through SCIM.
+ - "mqtt" optional MQTT broker connection parameters, in case an external MQTT
+   needs to be configured
+
+Response:
+Success responses include standard success response properties
+as defined in {{success}} as well as all the attributes that were configured
+from the request.
+
+Example of a register event response:
+~~~~~
+{
+  "status": "SUCCESS",
+  "requestID": "12345678-5678-1234-5578-abcdef1234",
+  "id": "12345678-1234-5678-1234-56789abcdef4",
+  "event": "enterprise/hospital/pulse_oximeter",
+  "eventFormat": "default",
+  "replay": false,
+  "type": "device",
+  "dataApps": [
+    {
+      "dataAppID": "12345678-1234-5678-1234-56789abcdef4",
+      "mqtt": {
+        "brokerURI": "mqtt.broker.com:8883",
+        "username": "user1",
+        "password": "password1",
+        "brokerCACert": "string"
+      }
+    }
+  ],
+  "propertyID": "temperature"
+}
+~~~~~
+{: #exregeveresp title="Example register event response"}
+
+where-
+
+ - "id", "requestID" and "technology" are part of the standard {{success}} definition
+ - "event" is the event identifier, which also maps to the MQTT topic name
+ - "eventFormat" is the format the data stream is delivered in, either default 
+   (decorated with id and property) or just the payload
+ - "replay" defines whether the event should be cached for replay or not
+ - "dataApps" is an array of data appplications that can subscribe to the event
+ - "propertyID" is the propertyID that will be used in action APIs to activate
+   this event
+
+The dataApps array consists of following-
+ - "dataAppID" is the identity of the data application either configured 
+   administratively or through SCIM.
+ - "mqtt" optional MQTT broker connection parameters, in case an external MQTT
+   needs to be configured
+
+A failure will generate a standard failed response. Please refer to {{failure}}
+definition of failed response.
 
 #### Updating a topic
 
-Method: PUT /registration/topic
+Method: PUT /registration/event
 
-Description: Update a pub/sub topic 
+Description: Update an existing event 
 
 Parameters: None
 
-Request Body: A topic, including data apps that can subscribe to the 
-topic as defined in {{topic}} and protocol-specific extensions as per 
-{{protext}} that describe the attributes that will be reported on the
-topic. In the case of BLE, these are either BLE subscription attributes
-as in {{bleattr}}, device connection status, or Broadcast 
-(advertisement) data as in {{blebcastattr}}.
-For Zigbee, these are Zigbee attributes as described in {{zigbeeattr}}.
+Request Body:
+ - An event name that matches to an MQTT pub/sub topic
+ - The data format the event should be delivered in
+ - The device or group id the event is valid for
+ - Whether the event needs to be cached for replay
+ - the data applications that can consume the events
 
-Response: See {{success}} with a topic name as in {{topicname}} below 
-for success, and {{failure}} for failed responses.
+Example body updating an event:
+~~~~~
+{
+  "event": "enterprise/hospital/pulse_oximeter",
+  "eventFormat": "default",
+  "replay": false,
+  "id": "12345678-1234-5678-1234-56789abcdef4",
+  "type": "device",
+  "dataApps": [
+    {
+      "dataAppID": "12345678-1234-5678-1234-56789abcdef4",
+      "mqtt": {
+        "brokerURI": "mqtt.broker.com:8883",
+        "username": "user1",
+        "password": "password1",
+        "brokerCACert": "string"
+      }
+    }
+  ],
+  "propertyID": "temperature"
+  "ble": {
+    "type": "gatt",
+    "serviceID": "12345678-1234-5678-1234-56789abcdef0",
+    "characteristicID": "12345678-1234-5678-1234-56789abcdef1"
+  }
+}
+~~~~~
+{: #exupdeve title="Example updating an event"}
 
-#### Get configuration of one or more topics
+where-
+ - "event" is the event identifier, which also maps to the MQTT topic name
+ - "eventFormat" is the format the data stream is delivered in, either default
+   (decorated with id and property) or just the payload
+ - "replay" defines whether the event should be cached for replay or not
+ - "id" is hte id of the device or group the event is valid for
+ - "type" is the type if the id, either device or group
+ - "dataApps" is an array of data appplications that can subscribe to the event
+ - "propertyID" is the propertyID that will be used in action APIs to activate
+   this event
 
-Method: GET /registration/topic
+The dataApps array consists of following-
+ - "dataAppID" is the identity of the data application either configured
+   administratively or through SCIM.
+ - "mqtt" optional MQTT broker connection parameters, in case an external MQTT
+   needs to be configured
 
-Description: Gets the configuration of one or more topics
+The propertyID gets mapped to a protocol-specific property with a 
+property mapping, through a protocol object-
 
-Parameters: A topic name. Multiple topics can be added by 
-comma-separated attributes.
+Response:
+Success responses include standard success response properties
+as defined in {{success}} as well as all the attributes that were configured
+from the request.
 
-Response: A success response as in {{success}} with a "topics" object
-containing an array of returned topics names with attribute defined in
-{{topicname}}.
-For failed responses see {{failure}}.
+Example of an update register event response:
+~~~~~
+{
+  "status": "SUCCESS",
+  "requestID": "12345678-5678-1234-5578-abcdef1234",
+  "id": "12345678-1234-5678-1234-56789abcdef4",
+  "event": "enterprise/hospital/pulse_oximeter",
+  "eventFormat": "default",
+  "replay": false,
+  "type": "device",
+  "dataApps": [
+    {
+      "dataAppID": "12345678-1234-5678-1234-56789abcdef4",
+      "mqtt": {
+        "brokerURI": "mqtt.broker.com:8883",
+        "username": "user1",
+        "password": "password1",
+        "brokerCACert": "string"
+      }
+    }
+  ],
+  "propertyID": "temperature"
+  "ble": {
+    "type": "gatt",
+    "serviceID": "12345678-1234-5678-1234-56789abcdef0",
+    "characteristicID": "12345678-1234-5678-1234-56789abcdef1"
+  }
+}
+~~~~~
+{: #exupdeveresp title="Example update event response"}
+
+where-
+
+ - "id", "requestID" and "technology" are part of the standard {{success}} 
+   definition
+ - "event" is the event identifier, which also maps to the MQTT topic name
+ - "eventFormat" is the format the data stream is delivered in, either default
+   (decorated with id and property) or just the payload
+ - "replay" defines whether the event should be cached for replay or not
+ - "dataApps" is an array of data appplications that can subscribe to the event
+ - "propertyID" is the propertyID that will be used in action APIs to activate
+   this event
+
+The dataApps array consists of following-
+ - "dataAppID" is the identity of the data application either configured
+   administratively or through SCIM.
+ - "mqtt" optional MQTT broker connection parameters, in case an external MQTT
+   needs to be configured
+
+The propertyID gets mapped to a protocol-specific property with a
+property mapping, through a protocol object-
+
+A failure will generate a standard failed response. Please refer to {{failure}}
+definition of failed response.
+
+#### Get configuration of one or more events
+
+Method: GET /registration/event
+
+Description: Gets the configuration of one or more events
+
+Parameters: An event name. Multiple events can be added by comma-separated
+attributes. If no parameters are present, all events are returned.
+
+Response: A success response as in {{success}} with a "events" object
+containing an array of returned event names with attributes defined in
+{{exupdeve}}.
+
+Example of a get event response:
+~~~~~
+{
+  "status": "SUCCESS",
+  "requestID": "12345678-5678-1234-5578-abcdef1234",
+  "events": [
+    {
+      "ble": {
+        "type": "gatt",
+        "serviceID": "12345678-1234-5678-1234-56789abcdef0",
+        "characteristicID": "12345678-1234-5678-1234-56789abcdef1"
+      },
+      "event": "enterprise/hospital/pulse_oximeter",
+      "propertyID": "temperature",
+      "eventFormat": "default",
+      "replay": false,
+      "id": "12345678-1234-5678-1234-56789abcdef4",
+      "type": "device",
+      "dataApps": [
+        {
+          "dataAppID": "12345678-1234-5678-1234-56789abcdef4",
+          "mqtt": {
+            "brokerURI": "mqtt.broker.com:8883",
+            "username": "user1",
+            "password": "password1",
+            "brokerCACert": "string"
+          }
+        }
+      ],
+      "technology": "ble"
+    },
+    {
+      "zigbee": {
+        "endpointID": 1,
+        "clusterID": 6,
+        "propertyID": 16,
+        "type": 1
+      },
+      "event": "enterprise/hospital/pulse_oximeter",
+      "propertyID": "temperature",
+      "eventFormat": "default",
+      "replay": false,
+      "id": "12345678-1234-5678-1234-56789abcdef4",
+      "type": "device",
+      "dataApps": [
+        {
+          "dataAppID": "12345678-1234-5678-1234-56789abcdef4",
+          "mqtt": {
+            "brokerURI": "mqtt.broker.com:8883",
+            "username": "user1",
+            "password": "password1",
+            "brokerCACert": "string"
+          }
+        }
+      ],
+      "technology": "ble"
+    }
+  ]
+}
+~~~~~
+{: #exgeteveresp title="Example get event response"}
+
+where-
+ - "id", "requestID" and "technology" are part of the standard {{success}}
+   definition
+ - "events" is an array of events
+
+where an event-
+ - "event" is the event identifier, which also maps to the MQTT topic name
+ - "eventFormat" is the format the data stream is delivered in, either default
+   (decorated with id and property) or just the payload
+ - "replay" defines whether the event should be cached for replay or not
+ - "id" is hte id of the device or group the event is valid for
+ - "type" is the type if the id, either device or group
+ - "dataApps" is an array of data appplications that can subscribe to the event
+ - "propertyID" is the propertyID that will be used in action APIs to activate
+   this event
+
+The dataApps array consists of following-
+ - "dataAppID" is the identity of the data application either configured
+   administratively or through SCIM.
+ - "mqtt" optional MQTT broker connection parameters, in case an external MQTT
+   needs to be configured
+
+The propertyID gets mapped to a protocol-specific property with a
+property mapping, through a protocol object-
+
+A failure will generate a standard failed response. Please refer to {{failure}}
+definition of failed response.
 
 #### Delete one or more topics
 
-Method: DELETE /registration/topic
+Method: DELETE /registration/event
 
-Description: Delete one or more topics
+Description: Delete one or more events
 
-Parameters: A topic name. Multiple topics can be added by 
-comma-separated attributes.
+Parameters: An event name. Multiple events can be added by comma-separated
+attributes. If no parameters are present, all events are returned.
 
-Response: A success response as in {{success}} with a "topics" object
-containing an array of returned topics names with attribute defined in
-{{topicname}}.
-For failed responses see {{failure}}.
+Response: A success response as in {{success}} with a "events" object
+containing an array of returned event names with attributes defined in
+{{exupdeve}}.
 
-### Topic registrations by id
+Example of a delete event response:
+~~~~~
+{
+  "status": "SUCCESS",
+  "requestID": "12345678-5678-1234-5578-abcdef1234",
+  "events": [
+    {
+      "ble": {
+        "type": "gatt",
+        "serviceID": "12345678-1234-5678-1234-56789abcdef0",
+        "characteristicID": "12345678-1234-5678-1234-56789abcdef1"
+      },
+      "event": "enterprise/hospital/pulse_oximeter",
+      "propertyID": "temperature",
+      "eventFormat": "default",
+      "replay": false,
+      "id": "12345678-1234-5678-1234-56789abcdef4",
+      "type": "device",
+      "dataApps": [
+        {
+          "dataAppID": "12345678-1234-5678-1234-56789abcdef4",
+          "mqtt": {
+            "brokerURI": "mqtt.broker.com:8883",
+            "username": "user1",
+            "password": "password1",
+            "brokerCACert": "string"
+          }
+        }
+      ],
+      "technology": "ble"
+    },
+    {
+      "zigbee": {
+        "endpointID": 1,
+        "clusterID": 6,
+        "propertyID": 16,
+        "type": 1
+      },
+      "event": "enterprise/hospital/pulse_oximeter",
+      "propertyID": "temperature",
+      "eventFormat": "default",
+      "replay": false,
+      "id": "12345678-1234-5678-1234-56789abcdef4",
+      "type": "device",
+      "dataApps": [
+        {
+          "dataAppID": "12345678-1234-5678-1234-56789abcdef4",
+          "mqtt": {
+            "brokerURI": "mqtt.broker.com:8883",
+            "username": "user1",
+            "password": "password1",
+            "brokerCACert": "string"
+          }
+        }
+      ],
+      "technology": "ble"
+    }
+  ]
+}
+~~~~~
+{: #exdeleveresp title="Example delete event response"}
 
-/registration/topic/id/{id}
+where-
+ - "id", "requestID" and "technology" are part of the standard {{success}}
+   definition
+ - "events" is an array of events
 
-The topic registration by id element allows an application to get or 
-delete topic registrations for a specific id. 
+where an event-
+ - "event" is the event identifier, which also maps to the MQTT topic name
+ - "eventFormat" is the format the data stream is delivered in, either default
+   (decorated with id and property) or just the payload
+ - "replay" defines whether the event should be cached for replay or not
+ - "id" is hte id of the device or group the event is valid for
+ - "type" is the type if the id, either device or group
+ - "dataApps" is an array of data appplications that can subscribe to the event
+ - "propertyID" is the propertyID that will be used in action APIs to activate
+   this event
 
-Operations:  
+The dataApps array consists of following-
+ - "dataAppID" is the identity of the data application either configured
+   administratively or through SCIM.
+ - "mqtt" optional MQTT broker connection parameters, in case an external MQTT
+   needs to be configured
 
- - Return active topics by id: GET
- - Delete all topics for an id: DELETE 
+The propertyID gets mapped to a protocol-specific property with a
+property mapping, through a protocol object-
 
-#### Return active topics by id
+A failure will generate a standard failed response. Please refer to {{failure}}
+definition of failed response.
 
-Method: GET /registration/topic/id/{id}
+## Property registration
 
-Description: Returns active topics by id 
+/registration/property
+  
+The property registration API allows an application to register a property
+mapping against a protocol-specific property as decribed in {{propertymap}}
 
-Parameters: id
+Operations:
 
-Response: A success response as in {{success}} with a "topics" object
-containing an array of returned topics names with attribute defined in
-{{topicname}}.
-For failed responses see {{failure}}.
+ - Register a property: POST
+ - Update a property: PUT
+ - Get a property: GET
+ - Delete a property: DELETE
 
-#### Delete active topics by id
+### Property registration API
 
-Method: DELETE /registration/topic/id/{id}
+#### Registering a property
 
-Description: Deletes active topics by id, will delete all topics that
-are associated with a specific object id. 
+Method: POST /registration/property
 
-Parameters: id
-
-Response: A success response as in {{success}} with a "topics" object
-containing an array of returned topics names with attribute defined in
-{{topicname}}.
-For failed responses see {{failure}}.
-
-### Topic registrations by data app
-
-/registration/topic/data-app/{data-app}
-
-The topic registration by data-app element allows an application to get
-or delete topic registrations for which a specific data-application is
-registered. 
-
-Operations:  
-
- - Return active topics by data-app: GET
- - Delete all topics for an data-app: DELETE 
-
-#### Return active topics by data-app
-
-Method: GET /registration/topic/data-app/{data-app}
-
-Description: Returns active topics by data-app 
-
-Parameters: data-app
-
-Response: A success response as in {{success}} with a "topics" object
-containing an array of returned topics names with attribute defined in
-{{topicname}}.
-For failed responses see {{failure}}.
-
-#### Delete active topics by data-app
-
-Method: DELETE /registration/topic/data-app/{data-app}
-
-Description: Deletes active topics by data-app, will delete all topics
-the specified data app is registered for. 
-
-Parameters: data-app
-
-Response: A success response as in {{success}} with a "topics" object
-containing an array of returned topics names with attribute defined in
-{{topicname}}.
-For failed responses see {{failure}}.
-
-### Topic registrations by topic name
-
-/registration/topic/{topic}
-
-The topic registration by topic element allows an application to get or 
-delete a topic registration by topic name. 
-
-Operations:  
-
- - Return active topics by topic name: GET
- - Delete all topics for a topic name: DELETE 
-
-#### Return active topics by topic name
-
-Method: GET /registration/topic/{topic}
-
-Description: Returns active topics by topic name 
-
-Parameters: topic
-
-Response: A success response as in {{success}} with a topic name as 
-defined in {{topicname}}.
-For failed responses see {{failure}}.
-
-#### Delete active topics by topic name
-
-Method: DELETE /registration/topic/{topic}
-
-Description: Deletes active topics by topic name 
-
-Parameters: topic
-
-Response: A success response as in {{success}} with a topic name as 
-defined in {{topicname}}.
-For failed responses see {{failure}}.
-
-
-### File registration 
-
-/registration/file
-
-The file registration element allows an application to register a file.
-a file can be used in operations to devices (such as an attribute)
-
-Operations:  
-
- - Register a file: POST
- - Update a file: PUT
- - Check if a file exists: GET
- - Delete a file: DELETE
-
-#### Registering a file
-
-Method: POST /registration/file
-
-Description: Register a file 
+Description: Register a property mapping to a protocol-specific property
 
 Parameters: None
 
-Request Body: a file or URL point to a file, as described in {{file}}
-below. 
+Request Body:
+ - a property ID
+ - a protocol object containing a protocol mapping
 
-File definition:
+Example body registering a property:
+~~~~~
+{
+  "propertyID": "temperature",
+  "ble": {
+    "serviceID": "12345678-1234-5678-1234-56789abcdef4",
+    "characteristicID": "12345678-1234-5678-1234-56789abcdef4",
+    "long": false
+  }
+}
+~~~~~
+{: #exregprop title="Example registering a property"}
 
-| Attribute     | Req |   Type  |          Example                     |
-+---------------+-----+---------+--------------------------------------|
-| filename      |  T  | string  | "firmware.dat"                       |
-| file          |  F  | binary  | file                                 |
-| bindings      |  F  | string  | "https://domain.com/firmware.dat"    |
-{: #file title="File"}
+where-
+ - "propertyID" is the propertyID that will be used in action APIs to refer
+   to this property mapping
+ - A protocol object with a protocol-specific property map, as decribed in
+   {{propertymap}}
 
-Response: See {{success}} for success, and {{failure}} for failed
-responses.
+Response:
+Success responses include standard success response properties
+as defined in {{success}} as well as all the attributes that were configured
+from the request.
 
-#### Updating a file
+Example of a register property response:
+~~~~~
+{
+  "status": "SUCCESS",
+  "requestID": "12345678-5678-1234-5578-abcdef1234",
+  "propertyID": "temperature",
+  "ble": {
+    "serviceID": "12345678-1234-5678-1234-56789abcdef4",
+    "characteristicID": "12345678-1234-5678-1234-56789abcdef4",
+    "long": false
+  }
+}
+~~~~~
+{: #exregpropresp title="Example register property response"}
 
-Method: PUT /registration/file
+where-
 
-Description: Update a file 
+ - "id", "requestID" and "technology" are part of the standard {{success}}
+   definition
+ - "propertyID" is the propertyID that will be used in action APIs to refer
+   to this property mapping
+ - A protocol object with a protocol-specific property map, as decribed in
+   {{propertymap}}
+
+A failure will generate a standard failed response. Please refer to {{failure}}
+definition of failed response.
+
+#### Updating a property
+
+Method: PUT /registration/property
+
+Description: Update a property mapping to a protocol-specific property
 
 Parameters: None
 
-Request Body: a file or URL point to a file, as described in {{file}}
-below. 
+Request Body:
+ - a property ID
+ - a protocol object containing a protocol mapping
 
-Response: See {{success}} for success, and {{failure}} for failed
-responses.
+Example body updating a property:
+~~~~~
+{
+  "propertyID": "temperature",
+  "ble": {
+    "serviceID": "12345678-1234-5678-1234-56789abcdef4",
+    "characteristicID": "12345678-1234-5678-1234-56789abcdef4",
+    "long": false
+  }
+}
+~~~~~
+{: #exupdprop title="Example registering a property"}
 
-#### check presence of a registered file
+where-
+ - "propertyID" is the propertyID that will be used in action APIs to refer
+   to this property mapping
+ - A protocol object with a protocol-specific property map, as decribed in
+   {{propertymap}}
 
-Method: GET /registration/file
+Response:
+Success responses include standard success response properties
+as defined in {{success}} as well as all the attributes that were configured
+from the request.
 
-Description: Check the presence of a specific file or get all files if
-no file name os present in parameters
+Example of ain update property response:
+~~~~~
+{
+  "status": "SUCCESS",
+  "requestID": "12345678-5678-1234-5578-abcdef1234",
+  "propertyID": "temperature",
+  "ble": {
+    "serviceID": "12345678-1234-5678-1234-56789abcdef4",
+    "characteristicID": "12345678-1234-5678-1234-56789abcdef4",
+    "long": false
+  }
+}
+~~~~~
+{: #exupdpropresp title="Example register property response"}
 
-Parameters: filename 
+where-
 
-Response: Success as in {{success}} including a "filesnames" object with
-an array of file names as shown in {{filename}} or a Failure Response
-as described in {{failure}}.
+ - "id", "requestID" and "technology" are part of the standard {{success}}
+   definition
+ - "propertyID" is the propertyID that will be used in action APIs to refer
+   to this property mapping
+ - A protocol object with a protocol-specific property map, as decribed in
+   {{propertymap}}
 
-A filenames object with an Array of file names:
+A failure will generate a standard failed response. Please refer to {{failure}}
+definition of failed response.
 
-| Attribute     | Req |   Type  |          Example                     |
-+---------------+-----+---------+--------------------------------------|
-| filename      |  T  | string  | "firmware.dat"                       |
-{: #filename title="File name"}
+#### Get property mapping of one or more properties
 
-#### delete a registered file
+Method: GET /registration/property
 
-Method: DELETE /registration/file
+Description: Gets the property mapping of one or more properties
 
-Description: Delete a registered file
+Parameters: A property name. Multiple properties can be added by
+comma-separated parameters. If no parameters are present, all properties
+are returned.
 
-Parameters: filename 
+Response: A success response as in {{success}} with an array of properties,
+containing propertyID with protocol object containing a protocol-specific 
+property mapping
 
-Response: See {{success}} for success, and {{failure}} for failed
-responses.
+Example of a get property response:
+~~~~~
+{
+  "status": "SUCCESS",
+  "requestID": "12345678-5678-1234-5578-abcdef1234",
+  "properties": [
+    {
+      "ble": {
+        "serviceID": "12345678-1234-5678-1234-56789abcdef4",
+        "characteristicID": "12345678-1234-5678-1234-56789abcdef4",
+        "long": false
+      },
+      "propertyID": "temperature"
+    },
+    {
+      "zigbee": {
+        "endpointID": 1,
+        "clusterID": 6,
+        "propertyID": 16,
+        "type": 1
+      },
+      "propertyID": "temperature"
+    }
+  ]
+}
+~~~~~
+{: #exgetpropresp title="Example get property response"}
 
-### file registrations by file name
+where-
+ - "id", "requestID" and "technology" are part of the standard {{success}}
+   definition
+ - "properties" is an array of properties
 
-/registration/file/{filename}
+where a property-
+ - "id", "requestID" and "technology" are part of the standard {{success}}
+   definition
+ - "propertyID" is the propertyID that will be used in action APIs to refer
+   to this property mapping
+ - A protocol object with a protocol-specific property map, as decribed in
+   {{propertymap}}
 
-The file registration by file name element allows an application to get
-or delete file registrations by file name. 
+A failure will generate a standard failed response. Please refer to {{failure}}
+definition of failed response.
 
-Operations:  
+#### Delete property mapping of one or more properties
 
- - Return file registrations by file name: GET
- - Delete file registrations by file name: DELETE
+Method: DELETE /registration/property
 
-#### Return file registrations by file name
+Description: Deletes the property mapping of one or more properties
 
-Method: GET /registration/file/{filename}
+Parameters: A property name. Multiple properties can be added by 
+comma-separated parameters. If no parameters are present, all properties
+are deleted.
 
-Description: Checks the presence of a file and returns its name 
+Response: A success response as in {{success}} with an array of properties, 
+containing propertyID with protocol object containing a protocol-specific   
+property mapping
 
-Parameters: filename
+Example of a delete property response:
+~~~~~
+{
+  "status": "SUCCESS",
+  "requestID": "12345678-5678-1234-5578-abcdef1234",
+  "properties": [
+    {
+      "ble": {
+        "serviceID": "12345678-1234-5678-1234-56789abcdef4",
+        "characteristicID": "12345678-1234-5678-1234-56789abcdef4",
+        "long": false
+      },
+      "propertyID": "temperature"
+    },
+    {
+      "zigbee": {
+        "endpointID": 1,
+        "clusterID": 6,
+        "propertyID": 16,
+        "type": 1
+      },
+      "propertyID": "temperature"
+    }
+  ]
+}
+~~~~~
+{: #exdelpropresp title="Example delete property response"}
 
-Response: Success as in {{success}} including a file name as shown in
-{{filename}} or a Failure Response as described in {{failure}}.
+where-
+ - "id", "requestID" and "technology" are part of the standard {{success}}
+   definition
+ - "properties" is an array of properties
 
-#### Delete file registrations by file name
+where a property-
+ - "id", "requestID" and "technology" are part of the standard {{success}}
+   definition
+ - "propertyID" is the propertyID that will be used in action APIs to refer
+   to this property mapping
+ - A protocol object with a protocol-specific property map, as decribed in
+   {{propertymap}}
 
-Method: DELETE /registration/file/{filename}
-
-Description: Delete file registrations by file name 
-
-Parameters: filename
-
-Response: See {{success}} for success, and {{failure}} for failed
-responses.
-
+A failure will generate a standard failed response. Please refer to {{failure}}
+definition of failed response.
 
 # NIPC Extensibility
 
 NIPC is extensible in two ways:
  
- - Protocol extensions: Protocol extensions can extend NIPC with support
+ - Protocol mapping: New protocol mapping can extend NIPC with support
    for new non-IP protocols
- - interface extensions: Interface extensions allow extensions that 
-   leverage compound statements of basic elements to simplify common 
-   operations for applications.
+ - API extensions: API extensions leverage compound statements of basic NIPC
+   action APIs to simplify common operations for applications.
  
-
 ## Protocol extensions
 
-As described in {{schema}} the NIPC interface supports protocol specific
-extensions that allow bi-directional communication of attributes
-that are specific to the protocol supported 
-by the device. This allows for extensions to the schema to 
-integrate new non-ip communications protocols, 
-without the need to update the base schema.
+As described in {{propertymap}} NIPC supports mapping protocol specific
+mapping to NIPC properties. BLE and Zigbee are used as examples, but protocol
+mapping is extensible to other protocols, so noew non-IP protocols can be 
+supported by NIPC without a schema change.
 
 ~~~~~
 
-    ID
-     - device/group attributes
+     -  property
         |
         |> BLE
-        |     - BLE attributes
+        |     - BLE  properties
         |
         |> Zigbee
-        |     - Zigbee attributes
+        |     - Zigbee properties
         |
-        |> Protocol extension
-        |     - Protocol extension attributes
+        |> New protocol 
+        |     -  New protocol properties
 
 ~~~~~
-{: #extschema title="Extended Schema"}
+{: #extprotmap title="Extended protocol mapping"}
 
-As shown in {{extschema}}, a protocol extension can be added by adding
+As shown in {{extprotmap}}, a protocol mapping can be added by adding
 a new technology specific extension to the schema. 
 
 This is performed by adding the new protocol to the technology enum in
-the base objext definition {{objectdef}}
+the base object definition {{objectdef}}
 
 Furthermore, the protocol objects need to be extended with the new
 protocol as well. Protocol objects will be extended as follows:
 
 | Attribute  | Req |   Type |          Example                         |
 +------------+-----+--------+------------------------------------------|
-| ble        |  T  | object | an object with BLE-specific attributes   |
-| zigbee     |  T  | object | an object with Zigbee-specific attributes|
-| newProtocol|  T  | object | an object with newProtocol-specific attr |
-{: #newprotext title="Adding Protocol extensions"}
+| ble        |  T  | object | an object with BLE-specific properties   |
+| zigbee     |  T  | object | an object with Zigbee-specific properties|
+| newProtocol|  T  | object | an object with newProtocol-specific props|
+{: #newprotext title="Adding Protocol mappings"}
 
-In the new protocol object, protocol specific attributes can be added.
+In the new protocol object, protocol specific properties can be added.
+
+Protocol mappings need to be IANA registered.
  
+## API extensions
 
-## Interface extensions
+/extension
 
-/extensions
-
-The interface extension elements are freely extendible interfaces. These
-elements leverage the basic NIPC defined elements and combine them in 
+The extension APIs allow for extensibility of the APIs, either IANA 
+registered extensions or vendor-specific extensions.
+Extension APIs must leverage the basic NIPC defined APIs and combine them in 
 compound statements in order to streamline application operation against
 devices, make operations more expediant and convenient in one API call.
 In principle they do not add any basic functionality. In
 the OpenAPI model {{openAPI}} below, we have defined a few example 
-extensions, and we will describe them here at a high level to provide 
-some context on other possible extensions.
-
-### Write file
-
-/extension/write/file
-
-This extension make use of multiple write operations (attribute post)
-to write an entire file to an attribute. The interface allows the 
-application to define the chunk size.
-
-Operations:  
-
- - Write file: POST
-
-### Read conditional file
-
-/extension/read/conditional
-
-This extension performs a read operation sequentially for a defined 
-amount of time until a specified value is read.
-
-Operations:  
-
- - Read Conditional: POST
-
-### Bulk
-
-/extension/bulk
-
-This extension allows you to create a compound operation made out of 
-multiple connection and data operations that are to be executed 
-sequentially until they all succeed or there is a failure.
-Supported operations are:
-
- - /extension/connection/create
- - /extension/connection/delete
- - /extension/attribute/read
- - /extension/attribute/write
- - /extension/attribute/write/file
- - /extension/attribute/write/blob
- - /extension/attribute/read/conditional
-
-Operations:  
-
- - Bulk: POST
-
+extensions.  
 
 # Publish/Subscribe Interface
 
@@ -1612,8 +1847,6 @@ depicted in CBOR diagnostic notation.
 ~~~
 {: title="Zigbee Attribute Notification" }
 
-
-
 # Examples
 
 This section contains a few examples on how applications can leverage 
@@ -1622,64 +1855,68 @@ NIPC operations to communicate with BLE and Zigbee devices.
 ## BLE Advertisement
 
 In this example, we will onboard a device, and setup an advertisement
-subscription topic for that device.
+subscription event for that device.
 
 The sequence of operations for this are:  
 
  - Onboard a device using the SCIM Interface (out of scope of this
    memo)
- - Register a topic with the device id to subscribe to advertisements
-   POST /register/topic 
+ - Register an eventc with the device id to subscribe to advertisements
+   POST /register/event 
  - Subscribe to the topic from the data receiver app 
    MQTT subscribe topic
 
-## BLE Attribute Read/Write
+## BLE Property Read/Write
 
-In this example, we will connect to a BLE device (BLE device does not
-require binding) and read and write from an attribute
+In this example, we will connect to a BLE device and read and write from a
+property.
 
 The sequence of operations for this are:  
 
  - Onboard a device using the SCIM Interface (out of scope of this
    memo)
  - Connect to the BLE device
-   POST /connectivity/connection 
- - Read an attribute from the BLE device
-   GET /data/attribute 
- - Write to an attribute on the BLE device
-   POST /data/attribute 
+   POST /action/connection 
+ - Read a property from the BLE device
+   GET  /action/property
+ - Write to a property on the BLE device
+   POST /action/property 
  - Disconnect from the BLE device
-   DELETE /connectivity/connection 
+   DELETE /action/connection 
 
-## Zigbee Attribute Read/Write
+## Zigbee Property Read/Write
 
-In this example, we will bind a zigbee device to a Zigbee mesh
-and read and write from an attribute
+In this example, we will connect a zigbee device to a Zigbee mesh
+and read and write from a property
 
 The sequence of operations for this are:  
 
  - Onboard a device using the SCIM Interface (out of scope of this
    memo)
- - Bind the Zigbee device
-   POST /connectivity/binding 
- - Read an attribute from the Zigbee device
-   GET /data/attribute 
- - Write to an attribute on the Zigbee device
-   POST /data/attribute 
+ - Connect the Zigbee device
+   POST /action/connection 
+ - Read a property from the Zigbee device
+   GET  /action/property  
+ - Write to a property on the Zigbee device
+   POST  /action/property  
  - Disconnect from the Zigbee device
-   DELETE /connectivity/connection
+   DELETE /action/connection 
 
 # Security Considerations
 
 TBD.
 
-
 # IANA Considerations
 
-TBD. 
+This section provides guidance to the Internet Assigned Numbers Authority
+(IANA) regarding registration of values related to NIPC, in accordancei
+with [RFC5226].
+
+## Protocol mapping
+
+## API extensions
 
 --- back
-
 
 # OpenAPI definition
 
