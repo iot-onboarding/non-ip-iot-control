@@ -28,7 +28,7 @@ info:
   license:
     name: TBD
     url: TBD
-  version: 0.3.5
+  version: 0.4.0
 externalDocs:
   description: NIPC IETF draft
   url: TBD
@@ -39,11 +39,19 @@ servers:
         default: localhost
         description: Gateway Host
 tags:
-  - name: action
+  - name: actions
     description: APIs that allow apps to perform actions on devices. 
+  - name: actions by id or property 
+    description: action APIs search by id or property
+  - name: actions with embedded protocol mapping
+    description: action APIs with embedded protocol mapping
   - name: registrations
     description: |-
       APIs that allow apps to register properties of devices.
+  - name:  registrations by id or property 
+    description: registration APIs search by id or property
+  - name: registrations with embedded protocol mapping
+    description: registration APIs with embedded protocol mapping    
   - name: extensions
     description: |-
       APIs that simplify application interaction by implementing one
@@ -54,7 +62,7 @@ paths:
   /action/connection:
     post:
       tags:
-        - action
+        - actions
       summary: |-
         Connect a device to the network, optionally with service
         discovery 
@@ -90,7 +98,7 @@ paths:
     
     get:
       tags:
-        - action
+        - actions
       summary: |-
         Get connection state devices for a device or group of
         devices
@@ -134,7 +142,7 @@ paths:
                 
     delete:
       tags:
-        - action
+        - actions
       summary: Disconnect a device or group of devices
       description: |-
         Disconnect a device or device group by object ID, Multiple
@@ -176,7 +184,7 @@ paths:
   /action/connection/id/{id}:
     post:
       tags:
-        - action
+        - actions by id or property
       summary: |-
         Connect a device by device id (device technology needs to
         support connection) 
@@ -216,7 +224,7 @@ paths:
   
     get:
       tags:
-        - action
+        - actions by id or property
       summary: Get connection by id for a device
       description: |-
         Get connection by id for a device, success when device
@@ -254,7 +262,7 @@ paths:
                 
     delete:
       tags:
-        - action
+        - actions by id or property
       summary: Delete connection by id for a device
       description: |-
         Disconnect a device by id, success when device
@@ -290,10 +298,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/FailureResponse' 
   
-  /action/services/:            
+  /action/services:            
     get:
       tags:
-        - action
+        - actions
       summary: Get all services for a device
       description: |-
         Get all services for a connected device, success
@@ -333,7 +341,7 @@ paths:
   /action/services/discover:
     post:
       tags:
-        - action
+        - actions with embedded protocol mapping
       summary: |-
         Selectively discover services on a device, limited 
         to services described in the parameters
@@ -371,7 +379,7 @@ paths:
   /action/property:
     post:
       tags:
-        - action
+        - actions
       summary: Write a value to an property on a device
       description: Write a value to an property on a device
       operationId: Write
@@ -403,7 +411,7 @@ paths:
     
     put:
       tags:
-        - action
+        - actions
       summary: Update a value of an property on a device
       description: Update a value of an property on a device
       operationId: Update
@@ -436,7 +444,7 @@ paths:
   /action/property/{property}:
     delete:
       tags:
-        - action
+        - actions
       summary: Delete a value from an property on a device
       description: Delete a value to an property on a device
       operationId: Delete
@@ -478,7 +486,7 @@ paths:
                 
     get:
       tags:
-        - action
+        - actions
       summary: Read a value from an property on a device
       description: Read a value to an property on a device
       operationId: Read
@@ -521,7 +529,7 @@ paths:
   /action/property/write:
     post:
       tags:
-        - action
+        - actions with embedded protocol mapping
       summary: Write a value to an property using technology extensions
       description: |-
         Write a value to an property directly, addressing the property
@@ -557,7 +565,7 @@ paths:
   /action/property/read:
     post:
       tags:
-        - action
+        - actions with embedded protocol mapping
       summary: Read a value to an property using technology extensions
       description: |-
         Read a value to an property directly, addressing the property
@@ -593,7 +601,7 @@ paths:
   /action/property/subscription:
     post:
       tags:
-        - action
+        - actions
       summary: |-
          Subscribe to streaming event action from an property on a device
       description: |-
@@ -628,7 +636,7 @@ paths:
   /action/property/subscription/{property}:
     delete:
       tags:
-        - action
+        - actions
       summary: |-
         Unsubscribe to streaming event action from an property on a device
       description: |-
@@ -672,7 +680,7 @@ paths:
                 
     get:
       tags:
-        - action
+        - actions
       summary: Get the status of an event subscription on a device
       description: Get the status of an event subscription on a device
       operationId: GetSubscription
@@ -716,7 +724,7 @@ paths:
   /action/property/subscription/event/{event}:    
     delete:
       tags:
-        - action
+        - actions by id or property
       summary: delete all active subscriptions by event
       description: delete all active subscriptions by event
       operationId: deleteSubscriptionbyEvent
@@ -751,7 +759,7 @@ paths:
 
     get:
       tags:
-        - action
+        - actions by id or property
       summary: get all active subscriptions by event
       description: get all active subscriptions by event
       operationId: getSubsciptionsbyEvent
@@ -788,7 +796,7 @@ paths:
   /action/property/subscription/id/{id}:
     delete:
       tags:
-        - action
+        - actions by id or property
       summary: delete all event subscriptions by id
       description: delete all event subscriptions by id
       operationId: deleteSubscriptionbyID
@@ -823,7 +831,7 @@ paths:
 
     get:
       tags:
-        - action
+        - actions by id or property
       summary: get all event subscriptions by object id
       description: get all event subscriptions by object id
       operationId: getSubscriptionbyID
@@ -859,7 +867,7 @@ paths:
   /action/property/subscription/start:
     post:
       tags:
-        - action
+        - actions with embedded protocol mapping
       summary: |-
          Subscribe to streaming action from an property on a device
          by directly addressing hte property (unregistered attr)
@@ -896,7 +904,7 @@ paths:
   /action/property/subscription/stop:
     post:
       tags:
-        - action
+        - actions with embedded protocol mapping
       summary: |-
          Stop streaming action from an property on a device
          by directly addressing hte property (unregistered attr)
@@ -933,7 +941,7 @@ paths:
   /action/broadcast:
     post:
       tags:
-        - action
+        - actions
       summary: Broadcast to a device
       description: Broadcast to a device
       operationId: Broadcast
@@ -1106,7 +1114,7 @@ paths:
   /registration/event/{event}:
     delete:
       tags:
-        - registrations
+        - registrations by id or property
       summary: delete a publish/subscribe event by name
       description: unregister a publish/subscribe event by Name
       operationId: deleteEventbyName
@@ -1140,7 +1148,7 @@ paths:
 
     get:
       tags:
-        - registrations
+        - registrations by id or property
       summary: get a publish/subscribe event by name
       description: get a publish/subscribe event by name
       operationId: getEventbyName
@@ -1175,7 +1183,7 @@ paths:
   /registration/event/data-app/{data-app}:
     delete:
       tags:
-        - registrations
+        - registrations by id or property
       summary: delete all publish/subscribe events by data-app
       description: |-
         unregister all publish/subscribe events by data-app
@@ -1210,7 +1218,7 @@ paths:
 
     get:
       tags:
-        - registrations
+        - registrations by id or property
       summary: get all publish/subscribe events by data-app
       description: get all publish/subscribe events by data-app
       operationId: getEventbyDataApp
@@ -1245,7 +1253,7 @@ paths:
   /registration/event/id/{id}:
     delete:
       tags:
-        - registrations
+        - registrations by id or property
       summary: delete all publish/subscribe events by object id
       description: unregister all publish/subscribe events by id
       operationId: deleteEventbyID
@@ -1279,7 +1287,7 @@ paths:
 
     get:
       tags:
-        - registrations
+        - registrations by id or property
       summary: get all publish/subscribe events by object id
       description: get all publish/subscribe events by object id
       operationId: getEventbyID
@@ -1450,15 +1458,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/FailureResponse'
 
-  /registration/property/{propertyname}:
+  /registration/property/{property}:
     delete:
       tags:
-        - registrations
+        - registrations by id or property
       summary: delete an property registration by name
       description: delete an property registration by name
       operationId: deletePropertyRegistrationbyName
       parameters:
-        - name: propertyname
+        - name: property
           in: path
           description: property that needs to be filtered
           required: true
@@ -1487,12 +1495,12 @@ paths:
 
     get:
       tags:
-        - registrations
+        - registrations by id or property
       summary: get an property registration by name
       description: get an property registration by name
       operationId: getAttirbuteRegistrationbyName
       parameters:
-        - name: propertyname
+        - name: property
           in: path
           description: property that needs to be filtered
           required: true
@@ -2194,13 +2202,13 @@ components:
           type: boolean
           example: true
         
-## An property ID
-    PropertyID:
+## An property name
+    PropertyName:
       required:
-        - propertyID
+        - property
       type: object
       properties:
-        propertyID:
+        property:
           type: string
           example: "temperature"
           
@@ -2208,7 +2216,7 @@ components:
     Property:
       allOf:
         - $ref: '#/components/schemas/Object'
-        - $ref: '#/components/schemas/PropertyID'
+        - $ref: '#/components/schemas/PropertyName'
 
 ## A value of an property of an Device
     PropertyValue:
@@ -2230,7 +2238,7 @@ components:
 ## An property registration
     PropertyRegistration:
       allOf:
-        - $ref: '#/components/schemas/PropertyID'
+        - $ref: '#/components/schemas/PropertyName'
       oneOf:
         - $ref: '#/components/schemas/BLEProperties'
         - $ref: '#/components/schemas/ZigbeeProperties'
@@ -2315,7 +2323,7 @@ components:
     Subscription:
       allOf:
         - $ref: '#/components/schemas/Object'
-        - $ref: '#/components/schemas/PropertyID'
+        - $ref: '#/components/schemas/PropertyName'
       type: object
       properties:
         forcedAck:
@@ -2373,7 +2381,7 @@ components:
     Event:
       allOf:
         - $ref: '#/components/schemas/EventName'  
-        - $ref: '#/components/schemas/PropertyID'
+        - $ref: '#/components/schemas/PropertyName'
       oneOf:
         - $ref: '#/components/schemas/BLEEvent'
         - $ref: '#/components/schemas/ZigbeeProperties'
@@ -2461,7 +2469,7 @@ components:
 ## File
     File:
       allOf:
-        - $ref: '#/components/schemas/PropertyID'
+        - $ref: '#/components/schemas/PropertyName'
       oneOf:
         - $ref: '#/components/schemas/FileURL'
         - $ref: '#/components/schemas/FileBin'
@@ -2647,7 +2655,7 @@ components:
     PropertyValueResponse:
       allOf:
         - $ref: '#/components/schemas/SuccessResponse'
-        - $ref: '#/components/schemas/PropertyID'
+        - $ref: '#/components/schemas/PropertyName'
       required:
        - value
       type: object
