@@ -2355,9 +2355,6 @@ components:
         broadcastInterval:
           type: integer
           example: 500
-        # optional external broker config
-        mqtt:
-          type: object
 
 ## Event Name
     EventName:

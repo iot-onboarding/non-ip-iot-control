@@ -434,7 +434,8 @@ where-
  - id is the id the operation was executed against, found in the request
  - requestID is a correlation ID that can be used for end-to-end 
    tracing.  
- - errorCode is a numerical value representing the error.
+ - errorCode is a numerical value representing the error. The various 
+   codes are defined in {{errorhandling}}.
  - reason is a human readable explanation of why the error occurred.
 
 Example failure response:
@@ -636,7 +637,7 @@ One of following options-
  - comma separated ids: return connection status for multiple ids
 
 Response: 
-A standard success ({{exsuccess}})i or failure ({{exfail}}) response, including
+A standard success ({{exsuccess}}) or failure ({{exfail}}) response, including
 an array of device objects and their connection status. Success if the device
 is connected, failure if the device is not connected.  
 
@@ -1809,6 +1810,89 @@ devices, make operations more expediant and convenient in one API call.
 In principle they do not add any basic functionality. In
 the OpenAPI model {{openAPI}} below, we have defined a few example 
 extensions.  
+
+# NIPC Error Handling
+{: #errorhandling}
+
+The error codes in the NIPC APIs can be generic or specific to the API. 
+The generic error codes reuse the HTTP status codes defined in {{!RFC9110}}.
+
+The API specific error codes are defined as ranges defined as follows:
+
+- 1000-1999: Errors related to NIPC action APIs
+- 2000-2999: Errors related to NIPC registration APIs
+- 4000-4999: Specific errors related to bad requests
+- 5000-5999: Specific errors related to server side errors
+
+The error codes for the action APIs are further divided into the following
+categories:  
+
+ - 1100-1199: Errors related to Connection APIs
+ - 1200-1299: Errors related to Property APIs
+ - 1300-1399: Errors related to Subscription APIs
+
+The error codes for the registration APIs are further divided into the following
+categories:  
+
+ - 2100-2199: Errors related to Event Registration APIs
+ - 2200-2299: Errors related to Property Registration APIs
+
+The error codes are also categorized according to the technology:  
+
+ - xx00 - xx09: Generic
+ - xx10 - xx29: BLE
+ - xx30 - xx49: Zigbee
+
+The specific error codes are defined in the table below:
+
+| Error Code | Description                                  | Category  |
+|------------|----------------------------------------------|-----------|
+| 1000       | Generic error code for action APIs           | action    |
+| 1100       | Generic error code for connection APIs       | action/connection |
+| 1101       | Device already connected                     | action/connection |
+| 1102       | No connection found for device               | action/connection |
+| 1110       | Generic BLE error                            | action/connection/ble |
+| 1111       | BLE connection already pending               | action/connection/ble |
+| 1112       | BLE connection timeout                       | action/connection/ble |
+| 1113       | BLE bonding failed                           | action/connection/ble |
+| 1114       | Failed to set BLE bonding data               | action/connection/ble |
+| 1115       | Unsupported bonding method                   | action/connection/ble |
+| 1116       | Failed to enable bonding                     | action/connection/ble |
+| 1117       | BLE response timeout                         | action/connection/ble |
+| 1130       | Generic Zigbee error                         | action/connection/zigbee |
+| 1131       | Zigbee connection already pending            | action/connection/zigbee |
+| 1132       | Zigbee connection timeout                    | action/connection/zigbee |
+| 1200       | Generic error code for property APIs         | action/property |
+| 1201       | Property not writeable                       | action/property |
+| 1202       | Property not readable                        | action/property |
+| 1203       | Cannot subscribe to property                 | action/property |
+| 1210       | Generic BLE error                            | action/property/ble |
+| 1211       | Invalid BLE service ID or characteristic ID  | action/property/ble |
+| 1230       | Generic Zigbee error                         | action/property/zigbee |
+| 1231       | Invalid Zigbee endpoint or cluster ID        | action/property/zigbee |
+| 1300       | Generic error code for subscription APIs     | action/subscription |
+| 1301       | Subscription not found                       | action/subscription |
+| 1302       | Subscription already started                 | action/subscription |
+| 1303       | Subscription already stopped                 | action/subscription |
+| 1304       | Subscription not started                     | action/subscription |
+| 1310       | Generic BLE error                            | action/subscription/ble |
+| 1311       | Invalid BLE service ID or characteristic ID  | action/subscription/ble |
+| 1330       | Generic Zigbee error                         | action/subscription/zigbee |
+| 1331       | Invalid Zigbee endpoint or cluster ID        | action/subscription/zigbee |
+| 2000       | Generic error code for registration APIs     | registration |
+| 2100       | Generic error code for event registration APIs | registration/event |
+| 2101       | Invalid event identifier                     | registration/event |
+| 2102       | Invalid data app ID                          | registration/event |
+| 2103       | Invalid MQTT broker configuration            | registration/event |
+| 2200       | Generic error code for property registration APIs | registration/property |
+| 2201       | Invalid property identifier                  | registration/property |
+| 400        | Generic error code for bad request           | generic   |
+| 4001       | Invalid device ID or gateway doesn't recognize the ID | generic   |
+| 4002       | Invalid property                             | generic   |
+| 500        | Generic error code for any server side error | generic   |
+{: #errorcodes title="Error Codes"}
+
+The appropriate HTTP status code is returned in the response. 
 
 # Publish/Subscribe Interface
 
