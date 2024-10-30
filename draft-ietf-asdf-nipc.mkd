@@ -725,7 +725,7 @@ Example body writing a property:
   "type": "device",
   "technology": "ble",
   "propertyID": "temperature",
-  "value": "1",
+  "value": "dGVzdA==",
   "forcedResponse": true
 }
 ~~~~~
@@ -736,7 +736,7 @@ where-
  - "id", "type" and "technology" are part of the object definition (device
    or group), as defined in {{objectdef}}
  - "propertyID" is the ID of a previously registered property mapping
- - "value" is the value to be written
+ - "value" is the bytes to be written in base64 encoding
  - "forcedresponse" requests a specific response behavior of the device
    that is not the default
 
@@ -752,7 +752,7 @@ Example of a write property response:
   "requestID": "12345678-5678-1234-5578-abcdef1234",
   "id": "12345678-1234-5678-1234-56789abcdef4",
   "propertyID": "temperature",
-  "value": "1"
+  "value": "dGVzdA=="
 }
 ~~~~~
 {: #exwrresp title="Example write property response"}
@@ -761,7 +761,7 @@ where-
 
  - "id", "requestID" and "technology" are part of the standard {{success}} definition 
  - "propertyID" is the ID of a previously registered property mapping
- - "value" is the value to be written
+ - "value" is the bytes to be written in base64 encoding
  - "propertyID" is the proper
 
 A failure will generate a standard failed response. Please refer to {{failure}}
@@ -790,7 +790,7 @@ Example body updating a property:
   "type": "device",
   "technology": "ble",
   "propertyID": "temperature",
-  "value": "1",
+  "value": "dGVzdA==",
   "forcedResponse": true
 }
 ~~~~~
@@ -801,7 +801,7 @@ where-
  - "id", "type" and "technology" are part of the object definition (device
    or group), as defined in {{objectdef}}
  - "propertyID" is the ID of a previously registered property mapping
- - "value" is the value to be updated
+ - "value" is the value to be updated in base64 encoding
  - "forcedresponse" requests a specific response behavior of the device
    that is not the default
 
@@ -817,7 +817,7 @@ Example of a write property response:
   "requestID": "12345678-5678-1234-5578-abcdef1234",
   "id": "12345678-1234-5678-1234-56789abcdef4",
   "propertyID": "temperature",
-  "value": "1"
+  "value": "dGVzdA=="
 }
 ~~~~~
 {: #exupresp title="Example update property response"}
@@ -853,7 +853,7 @@ Example of a read property response:
   "requestID": "12345678-5678-1234-5578-abcdef1234",                   
   "id": "12345678-1234-5678-1234-56789abcdef4",                        
   "propertyID": "temperature",
-  "value": "1"
+  "value": "dGVzdA=="
 }
 ~~~~~ 
 {: #exreresp title="Example read property response"}
@@ -885,7 +885,7 @@ Example of a delete property response:
   "requestID": "12345678-5678-1234-5578-abcdef1234",
   "id": "12345678-1234-5678-1234-56789abcdef4",
   "propertyID": "temperature",
-  "value": "1"
+  "value": "dGVzdA=="
 }
 ~~~~~
 {: #exdelresp title="Example delete property response"}

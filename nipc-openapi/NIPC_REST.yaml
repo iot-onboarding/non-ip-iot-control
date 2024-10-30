@@ -2077,9 +2077,9 @@ components:
               format: int32
               example: 1
             value:
-              type: integer
-              format: int32
-              example: 15
+              type: string
+              format: byte
+              example: dGVzdA==
 
 # Common objects
 ## A SCIM id, can be a  device or a group
@@ -2188,7 +2188,7 @@ components:
         value:
           type: string
           format: byte
-          example: 0001
+          example: dGVzdA==
         forcedResponse:
           description: do or do not wait for a response?
           type: boolean
@@ -2221,7 +2221,7 @@ components:
         value:
           type: string
           format: byte
-          example: 0001
+          example: dGVzdA==
         forcedResponse:
           description: do or do not wait for a response?
           type: boolean
@@ -2282,7 +2282,7 @@ components:
         value:
           type: string
           format: byte
-          example: 0001
+          example: dGVzdA==
         maxTime:
           description: |-
             maximum time the conditional read should run in seconds
@@ -2640,7 +2640,7 @@ components:
       properties:
         value:
           type: string
-          example: 01
+          example: dGVzdA==
           format: byte
           
 ## Returns an property value with ID
@@ -2654,7 +2654,7 @@ components:
       properties:
         value:
           type: string
-          example: 01
+          example: dGVzdA==
           format: byte
 
 ## Returns an property registration
