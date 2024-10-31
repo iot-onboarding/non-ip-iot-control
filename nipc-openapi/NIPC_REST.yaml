@@ -28,7 +28,7 @@ info:
   license:
     name: TBD
     url: TBD
-  version: 0.4.0
+  version: 0.4.2
 externalDocs:
   description: NIPC IETF draft
   url: TBD
@@ -2377,6 +2377,34 @@ components:
           type: string
           example: enterprise/hospital/pulse_oximeter
 
+## DataApp
+    dataApp:
+      type: object
+      properties: 
+        dataAppID:
+          type: string
+          format: uuid
+          example: 12345678-1234-5678-1234-56789abcdef4
+
+## DataAppMqtt
+    dataAppMqtt:
+      type: object
+      properties: 
+        mqtt:
+          type: object
+          properties: 
+            brokerURI: 
+              type: string
+              example: mqtt.broker.com:8883
+            username:
+              type: string
+              example: user1
+            password: 
+              type: string
+              example: password1
+            brokerCACert: 
+              type: string
+
 ## DataStream Event
     Event:
       allOf:
@@ -2418,26 +2446,9 @@ components:
         dataApps:
           type: array
           items:
-            type: object
-            properties:
-              dataAppID:
-                type: string
-                format: uuid
-                example: 12345678-1234-5678-1234-56789abcdef4
-              mqtt:
-                type: object
-                properties: 
-                  brokerURI: 
-                    type: string
-                    example: mqtt.broker.com:8883
-                  username:
-                    type: string
-                    example: user1
-                  password: 
-                    type: string
-                    example: password1
-                  brokerCACert: 
-                    type: string
+            oneOf:
+              - $ref: '#/components/schemas/dataApp'
+              - $ref: '#/components/schemas/dataAppMqtt'
         technology:
           type: string
           example: ble
