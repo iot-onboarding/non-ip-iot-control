@@ -2471,8 +2471,8 @@ components:
       properties:
         fileBin:
           type: string
-          format: binary
-          example: "firmware.dat"
+          format: byte
+          example: dGVzdA==
 
 ## File
     File:
