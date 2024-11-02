@@ -94,7 +94,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse' 
+                allOf:
+                  - $ref: '#/components/schemas/FailureResponse' 
+                  - $ref: '#/components/schemas/ConnectionErrorCodes'
     
     get:
       tags:
@@ -138,7 +140,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse' 
+                allOf:
+                  - $ref: '#/components/schemas/FailureResponse' 
+                  - $ref: '#/components/schemas/ConnectionErrorCodes'
                 
     delete:
       tags:
@@ -179,7 +183,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse' 
+                allOf:
+                  - $ref: '#/components/schemas/FailureResponse' 
+                  - $ref: '#/components/schemas/ConnectionErrorCodes'
 
   /action/connection/id/{id}:
     post:
@@ -220,7 +226,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse' 
+                allOf:
+                  - $ref: '#/components/schemas/FailureResponse' 
+                  - $ref: '#/components/schemas/ConnectionErrorCodes'
   
     get:
       tags:
@@ -258,7 +266,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse' 
+                allOf:
+                  - $ref: '#/components/schemas/FailureResponse' 
+                  - $ref: '#/components/schemas/ConnectionErrorCodes'
                 
     delete:
       tags:
@@ -296,7 +306,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse' 
+                allOf:
+                  - $ref: '#/components/schemas/FailureResponse' 
+                  - $ref: '#/components/schemas/ConnectionErrorCodes'
   
   /action/services:            
     get:
@@ -336,7 +348,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse' 
+                allOf:
+                  - $ref: '#/components/schemas/FailureResponse' 
+                  - $ref: '#/components/schemas/ConnectionErrorCodes'
 
   /action/services/discover:
     post:
@@ -374,7 +388,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse'
+                allOf:
+                  - $ref: '#/components/schemas/FailureResponse' 
+                  - $ref: '#/components/schemas/ConnectionErrorCodes'
 
   /action/property:
     post:
@@ -407,7 +423,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse' 
+                allOf:
+                  - $ref: '#/components/schemas/FailureResponse' 
+                  - $ref: '#/components/schemas/PropertyErrorCodes'
     
     put:
       tags:
@@ -482,7 +500,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse' 
+                allOf:
+                  - $ref: '#/components/schemas/FailureResponse' 
+                  - $ref: '#/components/schemas/PropertyErrorCodes'
                 
     get:
       tags:
@@ -524,7 +544,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse' 
+                allOf:
+                  - $ref: '#/components/schemas/FailureResponse' 
+                  - $ref: '#/components/schemas/PropertyErrorCodes'
 
   /action/property/write:
     post:
@@ -560,7 +582,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse'
+                allOf:
+                  - $ref: '#/components/schemas/FailureResponse' 
+                  - $ref: '#/components/schemas/PropertyErrorCodes'
                 
   /action/property/read:
     post:
@@ -596,7 +620,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse'
+                allOf:
+                  - $ref: '#/components/schemas/FailureResponse' 
+                  - $ref: '#/components/schemas/PropertyErrorCodes'
   
   /action/property/subscription:
     post:
@@ -631,7 +657,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse'   
+                allOf:
+                  - $ref: '#/components/schemas/FailureResponse' 
+                  - $ref: '#/components/schemas/SubscriptionErrorCodes'
   
   /action/property/subscription/{property}:
     delete:
@@ -676,7 +704,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse'
+                allOf:
+                  - $ref: '#/components/schemas/FailureResponse' 
+                  - $ref: '#/components/schemas/SubscriptionErrorCodes'
                 
     get:
       tags:
@@ -719,7 +749,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse'
+                allOf:
+                  - $ref: '#/components/schemas/FailureResponse' 
+                  - $ref: '#/components/schemas/SubscriptionErrorCodes'
 
   /action/property/subscription/event/{event}:    
     delete:
@@ -755,7 +787,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse'
+                allOf:
+                  - $ref: '#/components/schemas/FailureResponse' 
+                  - $ref: '#/components/schemas/SubscriptionErrorCodes'
 
     get:
       tags:
@@ -827,7 +861,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse'
+                allOf:
+                  - $ref: '#/components/schemas/FailureResponse' 
+                  - $ref: '#/components/schemas/SubscriptionErrorCodes'
 
     get:
       tags:
@@ -862,7 +898,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse'
+                allOf:
+                  - $ref: '#/components/schemas/FailureResponse' 
+                  - $ref: '#/components/schemas/SubscriptionErrorCodes'
 
   /action/property/subscription/start:
     post:
@@ -899,7 +937,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse'  
+                allOf:
+                  - $ref: '#/components/schemas/FailureResponse' 
+                  - $ref: '#/components/schemas/SubscriptionErrorCodes'
   
   /action/property/subscription/stop:
     post:
@@ -936,7 +976,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse'  
+                allOf:
+                  - $ref: '#/components/schemas/FailureResponse' 
+                  - $ref: '#/components/schemas/SubscriptionErrorCodes'
  
   /action/broadcast:
     post:
@@ -969,7 +1011,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse'
+                allOf:
+                  - $ref: '#/components/schemas/FailureResponse' 
+                  - $ref: '#/components/schemas/BroadcastErrorCodes'
+ 
 
 ### Registrations
   /registration/event:
@@ -1003,7 +1048,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse'
+                allOf:
+                  - $ref: '#/components/schemas/FailureResponse' 
+                  - $ref: '#/components/schemas/EventRegistrationErrorCodes'
+ 
 
     put:
       tags:
@@ -1035,7 +1083,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse'
+                allOf:
+                  - $ref: '#/components/schemas/FailureResponse' 
+                  - $ref: '#/components/schemas/EventRegistrationErrorCodes'
+ 
 
     delete:
       tags:
@@ -1072,7 +1123,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse'
+                allOf:
+                  - $ref: '#/components/schemas/FailureResponse' 
+                  - $ref: '#/components/schemas/EventRegistrationErrorCodes'
 
     get:
       tags:
@@ -1109,7 +1162,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse'
+                allOf:
+                  - $ref: '#/components/schemas/FailureResponse' 
+                  - $ref: '#/components/schemas/EventRegistrationErrorCodes'
 
   /registration/event/{event}:
     delete:
@@ -1144,7 +1199,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse'
+                allOf:
+                  - $ref: '#/components/schemas/FailureResponse' 
+                  - $ref: '#/components/schemas/EventRegistrationErrorCodes'
 
     get:
       tags:
@@ -1178,7 +1235,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse'
+                allOf:
+                  - $ref: '#/components/schemas/FailureResponse' 
+                  - $ref: '#/components/schemas/EventRegistrationErrorCodes'
 
   /registration/event/data-app/{data-app}:
     delete:
@@ -1214,7 +1273,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse'
+                allOf:
+                  - $ref: '#/components/schemas/FailureResponse' 
+                  - $ref: '#/components/schemas/EventRegistrationErrorCodes'
 
     get:
       tags:
@@ -1248,7 +1309,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse'
+                allOf:
+                  - $ref: '#/components/schemas/FailureResponse' 
+                  - $ref: '#/components/schemas/EventRegistrationErrorCodes'
 
   /registration/event/id/{id}:
     delete:
@@ -1283,7 +1346,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse'
+                allOf:
+                  - $ref: '#/components/schemas/FailureResponse' 
+                  - $ref: '#/components/schemas/EventRegistrationErrorCodes'
 
     get:
       tags:
@@ -1317,7 +1382,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse'
+                allOf:
+                  - $ref: '#/components/schemas/FailureResponse' 
+                  - $ref: '#/components/schemas/EventRegistrationErrorCodes'
 
   /registration/property:
     post:
@@ -1351,7 +1418,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse'
+                allOf:
+                  - $ref: '#/components/schemas/FailureResponse' 
+                  - $ref: '#/components/schemas/PropertyRegistrationErrorCodes'
 
     put:
       tags:
@@ -1384,7 +1453,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse'
+                allOf:
+                  - $ref: '#/components/schemas/FailureResponse' 
+                  - $ref: '#/components/schemas/PropertyRegistrationErrorCodes'
 
     delete:
       tags:
@@ -1419,7 +1490,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse'
+                allOf:
+                  - $ref: '#/components/schemas/FailureResponse' 
+                  - $ref: '#/components/schemas/PropertyRegistrationErrorCodes'
 
     get:
       tags:
@@ -1456,7 +1529,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse'
+                allOf:
+                  - $ref: '#/components/schemas/FailureResponse' 
+                  - $ref: '#/components/schemas/PropertyRegistrationErrorCodes'
 
   /registration/property/{property}:
     delete:
@@ -1491,7 +1566,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse'
+                allOf:
+                  - $ref: '#/components/schemas/FailureResponse' 
+                  - $ref: '#/components/schemas/PropertyRegistrationErrorCodes'
 
     get:
       tags:
@@ -1525,7 +1602,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse'
+                allOf:
+                  - $ref: '#/components/schemas/FailureResponse' 
+                  - $ref: '#/components/schemas/PropertyRegistrationErrorCodes'
                 
   /registration/property/file:
     post:
@@ -1558,7 +1637,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse'
+                allOf:
+                  - $ref: '#/components/schemas/FailureResponse' 
+                  - $ref: '#/components/schemas/PropertyRegistrationErrorCodes'
 
 ### Extensions
 
@@ -1594,7 +1675,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse'
+                allOf:
+                  - $ref: '#/components/schemas/FailureResponse' 
+                  - $ref: '#/components/schemas/PropertyErrorCodes'
 
   /extension/property/write/blob:
     post:
@@ -1629,7 +1712,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse'
+                allOf:
+                  - $ref: '#/components/schemas/FailureResponse' 
+                  - $ref: '#/components/schemas/PropertyErrorCodes'
 
   /extension/property/read/conditional:
     post:
@@ -1666,7 +1751,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse'
+                allOf:
+                  - $ref: '#/components/schemas/FailureResponse' 
+                  - $ref: '#/components/schemas/PropertyErrorCodes'
 
   /extension/property/firmware:
     post:
@@ -1700,7 +1787,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse'
+                allOf:
+                  - $ref: '#/components/schemas/FailureResponse' 
+                  - $ref: '#/components/schemas/PropertyRegistrationErrorCodes'
                 
     get:
       tags:
@@ -1734,7 +1823,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse'
+                allOf:
+                  - $ref: '#/components/schemas/FailureResponse' 
+                  - $ref: '#/components/schemas/PropertyRegistrationErrorCodes'
                 
   /extension/bulk:
     post:
@@ -1767,7 +1858,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FailureResponse'
+                allOf:
+                  - $ref: '#/components/schemas/FailureResponse' 
+                  - $ref: '#/components/schemas/ConnectionErrorCodes'
+                  - $ref: '#/components/schemas/PropertyErrorCodes'
+                  - $ref: '#/components/schemas/SubscriptionErrorCodes'
+                  - $ref: '#/components/schemas/BroadcastErrorCodes'
+                  - $ref: '#/components/schemas/EventRegistrationErrorCodes'
+                  - $ref: '#/components/schemas/PropertyRegistrationErrorCodes'
 
 components:
   schemas:
@@ -2614,10 +2712,79 @@ components:
         errorCode:
           type: integer
           format: int32
-          example: 12
+          enum: 
+            - 2000 # Generic catch-all error code for any API
+            - 2001 # Invalid device ID or gateway doesn't recognize the ID
+            - 2002 # Property not found
         requestID:
           type: string
           example: 12345678-5678-1234-5578-abcdef1234
+    
+    ConnectionErrorCodes:
+      type: object
+      properties:
+        errorCode:
+          type: integer
+          format: int32
+          enum:
+            - 1000 # Device already connected
+            - 1001 # No connection found for device
+            - 1010 # BLE connection timeout
+            - 1011 # BLE bonding failed
+            - 1012 # BLE connection failed
+            - 1013 # BLE service discovery failed
+            - 1020 # Zigbee connection timeout
+
+    PropertyErrorCodes:
+      type: object
+      properties:
+        errorCode:
+          type: integer
+          format: int32
+          enum:
+            - 1100 # Property not writeable
+            - 1101 # Property not readable
+            - 1110 # Invalid BLE service or characteristic ID
+            - 1120 # Invalid Zigbee endpoint or cluster ID
+
+    SubscriptionErrorCodes:
+      type: object
+      properties:
+        errorCode:
+          type: integer
+          format: int32
+          enum:
+            - 1200 # Subscription not found
+            - 1201 # Subscription already started
+            - 1210 # Invalid BLE service or characteristic ID
+            - 1220 # Invalid Zigbee endpoint or cluster ID
+
+    BroadcastErrorCodes:
+      type: object
+      properties:
+        errorCode:
+          type: integer
+          format: int32
+          enum:
+            - 1300 # Invalid broadcast data
+
+    EventRegistrationErrorCodes:
+      type: object
+      properties:
+        errorCode:
+          type: integer
+          format: int32
+          enum:
+            - 1400 # Invalid event identifier
+
+    PropertyRegistrationErrorCodes:
+      type: object
+      properties:
+        errorCode:
+          type: integer
+          format: int32
+          enum:
+            - 1500 # Invalid property identifier
 
 ## Response, success or failure
     Response:
