@@ -1601,9 +1601,9 @@ paths:
       tags:
         - extensions
       summary: |-
-        Write a binary blob to an property across multiple writes
+        Write a binary blob to a property across multiple writes
       description: |-
-        Write a binary blob to an property across multiple writes
+        Write a binary blob to a property across multiple writes
       operationId: WriteBlob
       requestBody:
         content:
@@ -2271,7 +2271,7 @@ components:
       properties:
         blob:
           type: string
-          format: binary
+          format: byte
         chunksize:
           type: integer
         forcedResponse:
@@ -2471,8 +2471,8 @@ components:
       properties:
         fileBin:
           type: string
-          format: binary
-          example: "firmware.dat"
+          format: byte
+          example: dGVzdA==
 
 ## File
     File:
@@ -2491,7 +2491,7 @@ components:
         upgradeType:
           type: string
           enum:
-            - nordics
+            - nordic
             - silabs
             - wiliot
 
