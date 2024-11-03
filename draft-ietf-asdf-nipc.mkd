@@ -615,8 +615,8 @@ Example of a BLE connection response with BLE discovered properties:
 
 where in the BLE protocol object:
 
- - "id", "requestID" and "technology" are part of hte standard {{success}} definition 
- - "ble" protocol object conatins an Array of BLE services as shown in
+ - "id", "requestID" and "technology" are part of the standard {{success}} definition 
+ - "ble" protocol object contains an Array of BLE services as shown in
    {{BLEservices}}
 
 A failure will generate a standard failed response. Please refer to {{failure}}
@@ -763,7 +763,7 @@ where-
  - "id", "requestID" and "technology" are part of the standard {{success}} definition 
  - "propertyID" is the ID of a previously registered property mapping
  - "value" is the bytes to be written in base64 encoding
- - "propertyID" is the proper
+ - "propertyID" is the ID of the property
 
 A failure will generate a standard failed response. Please refer to {{failure}}
 definition of failed response.
@@ -1064,9 +1064,9 @@ where-
  - "eventFormat" is the format the data stream is delivered in, either default
    (decorated with id and property) or just the payload 
  - "replay" defines whether the event should be cached for replay or not
- - "id" is hte id of the device or group the event is valid for
+ - "id" is the id of the device or group the event is valid for
  - "type" is the type if the id, either device or group
- - "dataApps" is an array of data appplications that can subscribe to the event
+ - "dataApps" is an array of data applications that can subscribe to the event
  - "propertyID" is the propertyID that will be used in action APIs to activate
    this event
 
@@ -1116,7 +1116,7 @@ where-
  - "eventFormat" is the format the data stream is delivered in, either default 
    (decorated with id and property) or just the payload
  - "replay" defines whether the event should be cached for replay or not
- - "dataApps" is an array of data appplications that can subscribe to the event
+ - "dataApps" is an array of data applications that can subscribe to the event
  - "propertyID" is the propertyID that will be used in action APIs to activate
    this event
 
@@ -1182,9 +1182,9 @@ where-
  - "eventFormat" is the format the data stream is delivered in, either default
    (decorated with id and property) or just the payload
  - "replay" defines whether the event should be cached for replay or not
- - "id" is hte id of the device or group the event is valid for
+ - "id" is the id of the device or group the event is valid for
  - "type" is the type if the id, either device or group
- - "dataApps" is an array of data appplications that can subscribe to the event
+ - "dataApps" is an array of data applications that can subscribe to the event
  - "propertyID" is the propertyID that will be used in action APIs to activate
    this event
 
@@ -1243,7 +1243,7 @@ where-
  - "eventFormat" is the format the data stream is delivered in, either default
    (decorated with id and property) or just the payload
  - "replay" defines whether the event should be cached for replay or not
- - "dataApps" is an array of data appplications that can subscribe to the event
+ - "dataApps" is an array of data applications that can subscribe to the event
  - "propertyID" is the propertyID that will be used in action APIs to activate
    this event
 
@@ -1348,9 +1348,9 @@ where an event-
  - "eventFormat" is the format the data stream is delivered in, either default
    (decorated with id and property) or just the payload
  - "replay" defines whether the event should be cached for replay or not
- - "id" is hte id of the device or group the event is valid for
+ - "id" is the id of the device or group the event is valid for
  - "type" is the type if the id, either device or group
- - "dataApps" is an array of data appplications that can subscribe to the event
+ - "dataApps" is an array of data applications that can subscribe to the event
  - "propertyID" is the propertyID that will be used in action APIs to activate
    this event
 
@@ -1455,9 +1455,9 @@ where an event-
  - "eventFormat" is the format the data stream is delivered in, either default
    (decorated with id and property) or just the payload
  - "replay" defines whether the event should be cached for replay or not
- - "id" is hte id of the device or group the event is valid for
+ - "id" is the id of the device or group the event is valid for
  - "type" is the type if the id, either device or group
- - "dataApps" is an array of data appplications that can subscribe to the event
+ - "dataApps" is an array of data applications that can subscribe to the event
  - "propertyID" is the propertyID that will be used in action APIs to activate
    this event
 
@@ -1759,7 +1759,7 @@ NIPC is extensible in two ways:
 
 As described in {{propertymap}} NIPC supports mapping protocol specific
 mapping to NIPC properties. BLE and Zigbee are used as examples, but protocol
-mapping is extensible to other protocols, so noew non-IP protocols can be 
+mapping is extensible to other protocols, so now non-IP protocols can be 
 supported by NIPC without a schema change.
 
 ~~~~~
@@ -1984,7 +1984,7 @@ The sequence of operations for this are:
 
  - Onboard a device using the SCIM Interface (out of scope of this
    memo)
- - Register an eventc with the device id to subscribe to advertisements
+ - Register an event with the device id to subscribe to advertisements
    POST /register/event 
  - Subscribe to the topic from the data receiver app 
    MQTT subscribe topic
