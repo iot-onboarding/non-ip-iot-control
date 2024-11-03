@@ -261,7 +261,7 @@ an application to register them. NIPC defines 2 types of registrations:
 ### Extensions
 
 The final set of operations are not fundamental NIPC operations, but are
-extensions. Extensions are compound API's. They leverage basic NIPC operations
+extensions. Extensions are compound APIs. They leverage basic NIPC operations
 but combine multiple operations in to one API call for efficiency.
 An example of this is the the bulk operation, allowing to send multiple
 operations in one operation. Extension allows for extensions, either generic
@@ -379,8 +379,8 @@ Example property mapping:
 Protocol mapping allows applications to perform a one-time registration to
 a propertyID for a property, and leverage the propertyID in all API calls 
 that perform an operation on this property. It might be useful for applications
-to directly use protocol objects in action API's as well, therefore there are 
-a limited set of API's available that have protocol objects directly embedded 
+to directly use protocol objects in action APIs as well, therefore there are 
+a limited set of APIs available that have protocol objects directly embedded 
 in the API, in order to perform operations on properties without having to 
 first register them.
 
@@ -994,7 +994,7 @@ Please refer to {{failure}} definition of failed response.
 
 # NIPC Registrations
 
-NIPC allows an application to register properties to use in action API's. NIPC
+NIPC allows an application to register properties to use in action APIs. NIPC
 supports 2 types of registrations: Registrations for properties and 
 registrations for events.
 
