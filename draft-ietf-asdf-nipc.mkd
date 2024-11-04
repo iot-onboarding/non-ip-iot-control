@@ -1885,7 +1885,7 @@ to the MQTT broker.
 
 The DataSubscription struct is a CBOR map that will contain the raw data
 in bytes and a timestamp of the data. Optionally, the message will also
-have a deviceId that corresponds to the SCIM ID of the device if the 
+have a deviceID that corresponds to the SCIM ID of the device if the 
 payload is associated to a known device.
 
 Other fields in the CDDL such as apMacAddress and rssi can be optionally
@@ -1907,7 +1907,7 @@ depicted in CBOR diagnostic notation.
 ~~~
 {
     "data": h'02011A020A0C16FF4C001007721F41B0392078',
-    "deviceId": "75fde96d-886f-4ac0-a1d5-df79f76e7c9c",
+    "deviceID": "75fde96d-886f-4ac0-a1d5-df79f76e7c9c",
     "timestamp": 1727484393,
     "bleAdvertisement": {
         "macAddress": "C1:5C:00:00:00:01",
@@ -1932,11 +1932,11 @@ depicted in CBOR diagnostic notation.
 ~~~
 {
     "data": h'434630374346303739453036',
-    "deviceId": "75fde96d-886f-4ac0-a1d5-df79f76e7c9c",
+    "deviceID": "75fde96d-886f-4ac0-a1d5-df79f76e7c9c",
     "timestamp": 1727484393,
     "bleSubscription": {
-        "serviceId": "a4e649f4-4be5-11e5-885d-feff819cdc9f",
-        "characteristicId": "c4c1f6e2-4be5-11e5-885d-feff819cdc9f"
+        "serviceID": "a4e649f4-4be5-11e5-885d-feff819cdc9f",
+        "characteristicID": "c4c1f6e2-4be5-11e5-885d-feff819cdc9f"
     }
 }
 ~~~
@@ -1945,7 +1945,7 @@ depicted in CBOR diagnostic notation.
 ~~~
 {
     "data": h'434630374346303739453036',
-    "deviceId": "75fde96d-886f-4ac0-a1d5-df79f76e7c9c",
+    "deviceID": "75fde96d-886f-4ac0-a1d5-df79f76e7c9c",
     "timestamp": 1727484393,
     "bleConnectionStatus": {
         "macAddress": "C1:5C:00:00:00:01",
@@ -1958,12 +1958,12 @@ depicted in CBOR diagnostic notation.
 ~~~
 {
     "data": h'434630374346303739453036',
-    "deviceId": "75fde96d-886f-4ac0-a1d5-df79f76e7c9c",
+    "deviceID": "75fde96d-886f-4ac0-a1d5-df79f76e7c9c",
     "timestamp": 1727484393,
     "zigbeeSubscription": {
-        "endpointId": 1,
-        "clusterId": 6,
-        "attributeId": 12,
+        "endpointID": 1,
+        "clusterID": 6,
+        "attributeID": 12,
         "type": 1
     }
 }
