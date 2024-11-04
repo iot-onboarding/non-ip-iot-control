@@ -1,7 +1,7 @@
 DataSubscription = {
-  data: bytes,
+  ? data: bytes,
   timestamp: float, ; epoch in seconds
-  ? deviceId: text,
+  ? deviceID: text,
   ? apMacAddress: text,
   subscription
 }
@@ -15,8 +15,8 @@ subscription = (
 )
 
 BleSubscription = {
-  serviceId: text,
-  characteristicId: text
+  serviceID: text,
+  characteristicID: text
 }
 
 BleAdvertisement = {
@@ -31,12 +31,12 @@ BleConnectionStatus = {
 }
 
 ZigbeeSubscription = {
-  endpointId: int,
-  clusterId: int,
-  attributeId: int
+  endpointID: int,
+  clusterID: int,
+  attributeID: int
   attributeType: int
 }
 
 RawPayload = {
-  contextId: text
+  contextID: text
 }
