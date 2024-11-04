@@ -1944,7 +1944,6 @@ depicted in CBOR diagnostic notation.
 
 ~~~
 {
-    "data": h'434630374346303739453036',
     "deviceID": "75fde96d-886f-4ac0-a1d5-df79f76e7c9c",
     "timestamp": 1727484393,
     "bleConnectionStatus": {
