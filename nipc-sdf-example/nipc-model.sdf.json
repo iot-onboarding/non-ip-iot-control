@@ -1,4 +1,3 @@
-i```json
 {
     "namespace": {
         "heartrate_example": "https://example.com/heartrate"
@@ -11,9 +10,9 @@ i```json
                     "description": "The current measured heart rate",
                     "type": "number",
                     "unit": "beat/min",
-                    "observable": true,
+                    "observable": false,
                     "writable": false,
-                    "protocolmap": {
+                    "protocolMap": {
                         "ble": {
                             "serviceID": "12345678-1234-5678-1234-56789abcdef4",
                             "characteristicID": "12345678-1234-5678-1234-56789abcdef4"
@@ -25,7 +24,7 @@ i```json
                 "fallDetected": {
                     "sdfOutputData": {
                         "type": "boolean",
-                        "protocolmap": {
+                        "protocolMap": {
                             "ble": {
                                 "type": "gatt",
                                 "serviceID": "12345678-1234-5678-1234-56789abcdef1",
@@ -45,7 +44,7 @@ i```json
                                 "type": "number"
                             }
                         },
-                        "protocolmap": {
+                        "protocolMap": {
                             "ble": {
                                 "type": "advertisement"
                             }
@@ -55,18 +54,18 @@ i```json
                 "isConnected": {
                     "sdfOutputData": {
                         "type": "boolean",
-                        "protocolmap": {
+                        "protocolMap": {
                             "ble": {
                                 "type": "connection_events"
                             }
                         }
                     }
                 }
-            }
+            },
             "sdfAction": {
                 "start": {
-                    "description": "Start heartrate monitoring"
-                    "protocolmap": {
+                    "description": "Start heartrate monitoring",
+                    "protocolMap": {
                         "ble": {
                             "serviceID": "12345678-1234-5678-1234-56789abcdef8",
                             "characteristicID": "12345678-1234-5678-1234-56789abcdef8"
@@ -74,8 +73,8 @@ i```json
                     }
                 },
                 "stop": {
-                    "description": "Stop heartrate monitoring"
-                    "protocolmap": {
+                    "description": "Stop heartrate monitoring",
+                    "protocolMap": {
                         "ble": {
                             "serviceID": "12345678-1234-5678-1234-56789abcdef9",
                             "characteristicID": "12345678-1234-5678-1234-56789abcdef9"
@@ -86,4 +85,3 @@ i```json
         }
     }
 }
-```

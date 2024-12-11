@@ -14,7 +14,7 @@ externalDocs:
   description: NIPC IETF draft
   url: https://datatracker.ietf.org/doc/draft-ietf-asdf-nipc/
 servers:
-  - url: "{gw-host}/nipc-draft04"
+  - url: "{gw_host}/nipc/draft-04"
     variables:
       gw_host:
         default: localhost
@@ -385,7 +385,7 @@ paths:
                   - $ref: '#/components/schemas/FailureResponse' 
                   - $ref: '#/components/schemas/EventErrorCodes'
 
-  /{id}/event/:
+  /{id}/event:
     get:
       tags:
         - NIPC event APIs
@@ -1319,7 +1319,8 @@ components:
       properties:
         event:
           type: string
-          example: enterprise/hospital/pulse_oximeter
+          description: percent-encoded JSON pointer to the SDF event object
+          example: https%3A%2F%2Fexample.com%2Fheartrate%23%2FsdfObject%2Fhealthsensor%2FsdfEvent%2FfallDetected
             
 ## A Connection
     Connection:
@@ -1379,13 +1380,13 @@ components:
     DataAppMqttClient:
       type: object
       properties: 
-        mqttclient:
+        mqttClient:
           type: object
 
     DataAppMqttBroker:
       type: object
       properties: 
-        mqttbroker:
+        mqttBroker:
           type: object
           properties: 
             URI: 
@@ -1434,39 +1435,52 @@ components:
     SdfObject:
       type: object
       description: Sample SDF object
-      properties: 
-        object-name:
-          anyOf:
-            - $ref: '#/components/schemas/SdfProperty'
-            - $ref: '#/components/schemas/SdfEvent'
-            - $ref: '#/components/schemas/SdfAction'
+      properties:
+        namespace:
+          type: object
+          additionalProperties:
+            type: string
+          example:
+            heartrate: https://example.com/heartrate
+        defaultNamespace:
+          type: string
+          example: heartrate
+        sdfObject:
+          additionalProperties:
+            anyOf:
+              - $ref: '#/components/schemas/SdfProperty'
+              - $ref: '#/components/schemas/SdfEvent'
+              - $ref: '#/components/schemas/SdfAction'
 
     SdfProperty:
       type: object
       description: Sample SDF property
-      properties: 
-        property-name: #example, this will be the registered property
-          allOf:
-            - $ref: './protocolmaps/ProtocolMap.yaml#/components/schemas/ProtocolMap-Property'
+      properties:
+        sdfProperty:
+          additionalProperties: 
+            allOf:
+              - $ref: './protocolmaps/ProtocolMap.yaml#/components/schemas/ProtocolMap-Property'
           
     SdfEvent:
       type: object
       description: Sample SDF property
-      properties: 
-        event-name: #example, this will be the registered event
-          type: object
-          properties:
-            sdfOutputData:
-              allOf:
-                - $ref: './protocolmaps/ProtocolMap.yaml#/components/schemas/ProtocolMap-Event'
+      properties:
+        sdfEvent:
+          additionalProperties: #example, this will be the registered event
+            type: object
+            properties:
+              sdfOutputData:
+                allOf:
+                  - $ref: './protocolmaps/ProtocolMap.yaml#/components/schemas/ProtocolMap-Event'
     
     SdfAction:
       type: object
       description: Sample SDF property
-      properties: 
-        action-name: #example, this will be the registered action
-          allOf:
-            - $ref: './protocolmaps/ProtocolMap.yaml#/components/schemas/ProtocolMap-Property'
+      properties:
+        sdfAction:
+          additionalProperties: 
+            allOf:
+              - $ref: './protocolmaps/ProtocolMap.yaml#/components/schemas/ProtocolMap-Property'
 
 # responses
 ## Baseline success reponse
