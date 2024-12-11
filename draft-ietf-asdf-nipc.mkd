@@ -91,7 +91,7 @@ a particular protocol, such as a BLE GATT REST API for BLE Gateways
 ({{https://www.bluetooth.com/bluetooth-resources/gatt-rest-api/}}), however 
 they have been limited to a single protocol or a particular use case. In
 absence of an open standard describing how applications on an IP network
-communicate with non-IP devices, bespoke and vendors specifia implementations
+communicate with non-IP devices, bespoke and vendors specific implementations
 have proliferated. This results in parallel infrastructure of both gateways 
 and non-IP networks being deployed on a case by case basis, each connecting
 separately into the IP network, with a distinct set of APIs. At the same time,
@@ -135,8 +135,8 @@ by a provisioning interface such as {{!RFC7644}} leveraging
 {{!I-D.ietf-scim-device-model}}. All other defined functions are
 supported by Non IP-Control (NIPC).
 
-The Application gateway is a network functions, so its goal is to proxy payloads 
-between Non-IP and IP networks. It is not intended to be a middleware functioni
+The Application gateway is a network function, so its goal is to proxy payloads 
+between Non-IP and IP networks. It is not intended to be a middleware function
 that interprets, decodes or modifies these payloads.
 
 ~~~~~
@@ -191,7 +191,7 @@ In order for application to perform a NIPC operation on a device, the device
 must be first onboarded, for example by means of SCIM.
 
 Previous steps are prerequisites and not within the scope of this specification, 
-but are provided for context.i Subsequent operations are defined by NIPC.
+but are provided for context. Subsequent operations are defined by NIPC.
 
 1. An application authorized for Control can perform NIPC calls to the
    gateway in order to establish bi-directional communication to one or more
@@ -221,7 +221,7 @@ APIs. NIPC Also defines events, which are implemented as MQTT topics.
 
 In case NIPC is not leveraged in combination with a data model such as ASDF
 {{!I-D.ietf-asdf-sdf}}, which can define the properties of a devices,
-NIPC also support registrationsr. REgistrations perform mapping of 
+NIPC also support registrations. Registrations perform mapping of 
 properties to protocol-specific attributes.
 
 All operations pertain to a devices or a group of devices, which are addressed
@@ -261,11 +261,11 @@ an application to register them. NIPC defines 2 types of registrations:
 ### Extensions
 
 The final set of operations are not fundamental NIPC operations, but are
-extensions. Extensions are compound API's. They leverage basic NIPC operations
+extensions. Extensions are compound APIs. They leverage basic NIPC operations
 but combine multiple operations in to one API call for efficiency.
 An example of this is the the bulk operation, allowing to send multiple
-operations is one operation. extension allows for extensions, either generic
-extensions that anre IANA registered, or vendor specific extensions 
+operations in one operation. Extension allows for extensions, either generic
+extensions that are IANA registered, or vendor specific extensions 
 
 ### Events
 
@@ -274,7 +274,7 @@ broadcasts or connection events.
 
 ## Protocols
 
-NIPC actions, registrations and extensions are request/response APIs. They makes
+NIPC actions, registrations and extensions are request/response APIs. They make
 use of a JSON schema over RESTful HTTP{{!RFC9114}}. 
 
 NIPC events are encoded in CBOR ({{!RFC8949}}) and delivered over MQTT.
@@ -379,9 +379,9 @@ Example property mapping:
 Protocol mapping allows applications to perform a one-time registration to
 a propertyID for a property, and leverage the propertyID in all API calls 
 that perform an operation on this property. It might be useful for applications
-to directly use protocol objects in action API's as well, therefore there are 
-a limited set of API's avaialbe that have protocol objects directly embedded 
-in the API, in ordur to perform operations on properties without having to 
+to directly use protocol objects in action APIs as well, therefore there are 
+a limited set of APIs available that have protocol objects directly embedded 
+in the API, in order to perform operations on properties without having to 
 first register them.
 
 ### Response
@@ -434,7 +434,8 @@ where-
  - id is the id the operation was executed against, found in the request
  - requestID is a correlation ID that can be used for end-to-end 
    tracing.  
- - errorCode is a numerical value representing the error.
+ - errorCode is a numerical value representing the error. The various 
+   codes are defined in {{errorhandling}}.
  - reason is a human readable explanation of why the error occurred.
 
 Example failure response:
@@ -614,8 +615,8 @@ Example of a BLE connection response with BLE discovered properties:
 
 where in the BLE protocol object:
 
- - "id", "requestID" and "technology" are part of hte standard {{success}} definition 
- - "ble" protocol object conatins an Array of BLE services as shown in
+ - "id", "requestID" and "technology" are part of the standard {{success}} definition 
+ - "ble" protocol object contains an Array of BLE services as shown in
    {{BLEservices}}
 
 A failure will generate a standard failed response. Please refer to {{failure}}
@@ -636,7 +637,7 @@ One of following options-
  - comma separated ids: return connection status for multiple ids
 
 Response: 
-A standard success ({{exsuccess}})i or failure ({{exfail}}) response, including
+A standard success ({{exsuccess}}) or failure ({{exfail}}) response, including
 an array of device objects and their connection status. Success if the device
 is connected, failure if the device is not connected.  
 
@@ -725,7 +726,7 @@ Example body writing a property:
   "type": "device",
   "technology": "ble",
   "propertyID": "temperature",
-  "value": "1",
+  "value": "dGVzdA==",
   "forcedResponse": true
 }
 ~~~~~
@@ -736,7 +737,7 @@ where-
  - "id", "type" and "technology" are part of the object definition (device
    or group), as defined in {{objectdef}}
  - "propertyID" is the ID of a previously registered property mapping
- - "value" is the value to be written
+ - "value" is the bytes to be written in base64 encoding
  - "forcedresponse" requests a specific response behavior of the device
    that is not the default
 
@@ -752,7 +753,7 @@ Example of a write property response:
   "requestID": "12345678-5678-1234-5578-abcdef1234",
   "id": "12345678-1234-5678-1234-56789abcdef4",
   "propertyID": "temperature",
-  "value": "1"
+  "value": "dGVzdA=="
 }
 ~~~~~
 {: #exwrresp title="Example write property response"}
@@ -761,8 +762,8 @@ where-
 
  - "id", "requestID" and "technology" are part of the standard {{success}} definition 
  - "propertyID" is the ID of a previously registered property mapping
- - "value" is the value to be written
- - "propertyID" is the proper
+ - "value" is the bytes to be written in base64 encoding
+ - "propertyID" is the ID of the property
 
 A failure will generate a standard failed response. Please refer to {{failure}}
 definition of failed response.
@@ -790,7 +791,7 @@ Example body updating a property:
   "type": "device",
   "technology": "ble",
   "propertyID": "temperature",
-  "value": "1",
+  "value": "dGVzdA==",
   "forcedResponse": true
 }
 ~~~~~
@@ -801,7 +802,7 @@ where-
  - "id", "type" and "technology" are part of the object definition (device
    or group), as defined in {{objectdef}}
  - "propertyID" is the ID of a previously registered property mapping
- - "value" is the value to be updated
+ - "value" is the value to be updated in base64 encoding
  - "forcedresponse" requests a specific response behavior of the device
    that is not the default
 
@@ -817,7 +818,7 @@ Example of a write property response:
   "requestID": "12345678-5678-1234-5578-abcdef1234",
   "id": "12345678-1234-5678-1234-56789abcdef4",
   "propertyID": "temperature",
-  "value": "1"
+  "value": "dGVzdA=="
 }
 ~~~~~
 {: #exupresp title="Example update property response"}
@@ -853,7 +854,7 @@ Example of a read property response:
   "requestID": "12345678-5678-1234-5578-abcdef1234",                   
   "id": "12345678-1234-5678-1234-56789abcdef4",                        
   "propertyID": "temperature",
-  "value": "1"
+  "value": "dGVzdA=="
 }
 ~~~~~ 
 {: #exreresp title="Example read property response"}
@@ -885,7 +886,7 @@ Example of a delete property response:
   "requestID": "12345678-5678-1234-5578-abcdef1234",
   "id": "12345678-1234-5678-1234-56789abcdef4",
   "propertyID": "temperature",
-  "value": "1"
+  "value": "dGVzdA=="
 }
 ~~~~~
 {: #exdelresp title="Example delete property response"}
@@ -993,7 +994,7 @@ Please refer to {{failure}} definition of failed response.
 
 # NIPC Registrations
 
-NIPC allows an application to register properties to use in action API's. NIPC
+NIPC allows an application to register properties to use in action APIs. NIPC
 supports 2 types of registrations: Registrations for properties and 
 registrations for events.
 
@@ -1063,9 +1064,9 @@ where-
  - "eventFormat" is the format the data stream is delivered in, either default
    (decorated with id and property) or just the payload 
  - "replay" defines whether the event should be cached for replay or not
- - "id" is hte id of the device or group the event is valid for
+ - "id" is the id of the device or group the event is valid for
  - "type" is the type if the id, either device or group
- - "dataApps" is an array of data appplications that can subscribe to the event
+ - "dataApps" is an array of data applications that can subscribe to the event
  - "propertyID" is the propertyID that will be used in action APIs to activate
    this event
 
@@ -1115,7 +1116,7 @@ where-
  - "eventFormat" is the format the data stream is delivered in, either default 
    (decorated with id and property) or just the payload
  - "replay" defines whether the event should be cached for replay or not
- - "dataApps" is an array of data appplications that can subscribe to the event
+ - "dataApps" is an array of data applications that can subscribe to the event
  - "propertyID" is the propertyID that will be used in action APIs to activate
    this event
 
@@ -1181,9 +1182,9 @@ where-
  - "eventFormat" is the format the data stream is delivered in, either default
    (decorated with id and property) or just the payload
  - "replay" defines whether the event should be cached for replay or not
- - "id" is hte id of the device or group the event is valid for
+ - "id" is the id of the device or group the event is valid for
  - "type" is the type if the id, either device or group
- - "dataApps" is an array of data appplications that can subscribe to the event
+ - "dataApps" is an array of data applications that can subscribe to the event
  - "propertyID" is the propertyID that will be used in action APIs to activate
    this event
 
@@ -1242,7 +1243,7 @@ where-
  - "eventFormat" is the format the data stream is delivered in, either default
    (decorated with id and property) or just the payload
  - "replay" defines whether the event should be cached for replay or not
- - "dataApps" is an array of data appplications that can subscribe to the event
+ - "dataApps" is an array of data applications that can subscribe to the event
  - "propertyID" is the propertyID that will be used in action APIs to activate
    this event
 
@@ -1347,9 +1348,9 @@ where an event-
  - "eventFormat" is the format the data stream is delivered in, either default
    (decorated with id and property) or just the payload
  - "replay" defines whether the event should be cached for replay or not
- - "id" is hte id of the device or group the event is valid for
+ - "id" is the id of the device or group the event is valid for
  - "type" is the type if the id, either device or group
- - "dataApps" is an array of data appplications that can subscribe to the event
+ - "dataApps" is an array of data applications that can subscribe to the event
  - "propertyID" is the propertyID that will be used in action APIs to activate
    this event
 
@@ -1454,9 +1455,9 @@ where an event-
  - "eventFormat" is the format the data stream is delivered in, either default
    (decorated with id and property) or just the payload
  - "replay" defines whether the event should be cached for replay or not
- - "id" is hte id of the device or group the event is valid for
+ - "id" is the id of the device or group the event is valid for
  - "type" is the type if the id, either device or group
- - "dataApps" is an array of data appplications that can subscribe to the event
+ - "dataApps" is an array of data applications that can subscribe to the event
  - "propertyID" is the propertyID that will be used in action APIs to activate
    this event
 
@@ -1758,7 +1759,7 @@ NIPC is extensible in two ways:
 
 As described in {{propertymap}} NIPC supports mapping protocol specific
 mapping to NIPC properties. BLE and Zigbee are used as examples, but protocol
-mapping is extensible to other protocols, so noew non-IP protocols can be 
+mapping is extensible to other protocols, so now non-IP protocols can be 
 supported by NIPC without a schema change.
 
 ~~~~~
@@ -1810,6 +1811,64 @@ In principle they do not add any basic functionality. In
 the OpenAPI model {{openAPI}} below, we have defined a few example 
 extensions.  
 
+# NIPC Error Handling
+{: #errorhandling}
+
+The error codes in the NIPC APIs can be generic or specific to the API. 
+The generic error codes reuse the HTTP status codes defined in {{!RFC9110}}.
+The error codes for the action APIs are divided into the following
+categories:  
+
+ - 1000-1099: Errors related to Connection APIs
+ - 1100-1199: Errors related to Property APIs
+ - 1200-1299: Errors related to Subscription APIs
+ - 1300-1399: Errors related to Broadcast APIs
+
+The error codes for the registration APIs are further divided into the following
+categories:  
+
+ - 1400-1499: Errors related to Event Registration APIs
+ - 1500-1599: Errors related to Property Registration APIs
+
+For errors that are not specific to any API, the error codes have a 
+value of 2000 or higher.
+
+The error codes are also categorized according to the technology:  
+
+ - xx00 - xx09: Generic
+ - xx10 - xx19: BLE
+ - xx20 - xx29: Zigbee
+ - xx30 - xx99: Reserved for future use
+
+The specific error codes are defined in the table below:
+
+| Error Code | Description                                  | Category  |
+|------------|----------------------------------------------|-----------|
+| 1000       | Device already connected                     | action/connection |
+| 1001       | No connection found for device               | action/connection |
+| 1010       | BLE connection timeout                       | action/connection/ble |
+| 1011       | BLE bonding failed                           | action/connection/ble |
+| 1012       | BLE connection failed                        | action/connection/ble |
+| 1013       | BLE service discovery failed                 | action/connection/ble |
+| 1020       | Zigbee connection timeout                    | action/connection/zigbee |
+| 1100       | Property not writeable                       | action/property |
+| 1101       | Property not readable                        | action/property |
+| 1110       | Invalid BLE service or characteristic ID     | action/property/ble |
+| 1120       | Invalid Zigbee endpoint or cluster ID        | action/property/zigbee |
+| 1200       | Subscription not found                       | action/subscription |
+| 1201       | Subscription already started                 | action/subscription |
+| 1210       | Invalid BLE service or characteristic ID     | action/subscription/ble |
+| 1220       | Invalid Zigbee endpoint or cluster ID        | action/subscription/zigbee |
+| 1300       | Invalid broadcast data                       | action/broadcast |
+| 1400       | Invalid event identifier                     | registration/event |
+| 1500       | Invalid property identifier                  | registration/property |
+| 2000       | Generic catch-all error code for any API     | generic   |
+| 2001       | Invalid device ID or gateway doesn't recognize the ID | generic   |
+| 2002       | Property not found                           | generic   |
+{: #errorcodes title="Error Codes"}
+
+The appropriate HTTP status code is returned in the response. 
+
 # Publish/Subscribe Interface
 
 The publish/subscribe interface, or data streaming interface, is an MQTT
@@ -1826,7 +1885,7 @@ to the MQTT broker.
 
 The DataSubscription struct is a CBOR map that will contain the raw data
 in bytes and a timestamp of the data. Optionally, the message will also
-have a deviceId that corresponds to the SCIM ID of the device if the 
+have a deviceID that corresponds to the SCIM ID of the device if the 
 payload is associated to a known device.
 
 Other fields in the CDDL such as apMacAddress and rssi can be optionally
@@ -1848,7 +1907,7 @@ depicted in CBOR diagnostic notation.
 ~~~
 {
     "data": h'02011A020A0C16FF4C001007721F41B0392078',
-    "deviceId": "75fde96d-886f-4ac0-a1d5-df79f76e7c9c",
+    "deviceID": "75fde96d-886f-4ac0-a1d5-df79f76e7c9c",
     "timestamp": 1727484393,
     "bleAdvertisement": {
         "macAddress": "C1:5C:00:00:00:01",
@@ -1873,11 +1932,11 @@ depicted in CBOR diagnostic notation.
 ~~~
 {
     "data": h'434630374346303739453036',
-    "deviceId": "75fde96d-886f-4ac0-a1d5-df79f76e7c9c",
+    "deviceID": "75fde96d-886f-4ac0-a1d5-df79f76e7c9c",
     "timestamp": 1727484393,
     "bleSubscription": {
-        "serviceId": "a4e649f4-4be5-11e5-885d-feff819cdc9f",
-        "characteristicId": "c4c1f6e2-4be5-11e5-885d-feff819cdc9f"
+        "serviceID": "a4e649f4-4be5-11e5-885d-feff819cdc9f",
+        "characteristicID": "c4c1f6e2-4be5-11e5-885d-feff819cdc9f"
     }
 }
 ~~~
@@ -1885,8 +1944,7 @@ depicted in CBOR diagnostic notation.
 
 ~~~
 {
-    "data": h'434630374346303739453036',
-    "deviceId": "75fde96d-886f-4ac0-a1d5-df79f76e7c9c",
+    "deviceID": "75fde96d-886f-4ac0-a1d5-df79f76e7c9c",
     "timestamp": 1727484393,
     "bleConnectionStatus": {
         "macAddress": "C1:5C:00:00:00:01",
@@ -1899,12 +1957,12 @@ depicted in CBOR diagnostic notation.
 ~~~
 {
     "data": h'434630374346303739453036',
-    "deviceId": "75fde96d-886f-4ac0-a1d5-df79f76e7c9c",
+    "deviceID": "75fde96d-886f-4ac0-a1d5-df79f76e7c9c",
     "timestamp": 1727484393,
     "zigbeeSubscription": {
-        "endpointId": 1,
-        "clusterId": 6,
-        "attributeId": 12,
+        "endpointID": 1,
+        "clusterID": 6,
+        "attributeID": 12,
         "type": 1
     }
 }
@@ -1925,7 +1983,7 @@ The sequence of operations for this are:
 
  - Onboard a device using the SCIM Interface (out of scope of this
    memo)
- - Register an eventc with the device id to subscribe to advertisements
+ - Register an event with the device id to subscribe to advertisements
    POST /register/event 
  - Subscribe to the topic from the data receiver app 
    MQTT subscribe topic
