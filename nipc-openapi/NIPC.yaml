@@ -1451,6 +1451,26 @@ components:
               - $ref: '#/components/schemas/SdfProperty'
               - $ref: '#/components/schemas/SdfEvent'
               - $ref: '#/components/schemas/SdfAction'
+          example:
+            healthsensor:
+              sdfProperty:
+                heartrate:
+                  protocolMap:
+                    ble:
+                      serviceID: 12345678-1234-5678-1234-56789abcdef4
+                      characteristicID: 12345678-1234-5678-1234-56789abcdef4
+              sdfEvent:
+                fallDetected:
+                  protocolMap:
+                    ble:
+                      serviceID: 12345678-1234-5678-1234-56789abcdef4
+                      characteristicID: 12345678-1234-5678-1234-56789abcdef4
+              sdfAction:
+                start:
+                  protocolMap:
+                    ble:
+                      serviceID: 12345678-1234-5678-1234-56789abcdef4
+                      characteristicID: 12345678-1234-5678-1234-56789abcdef4
 
     SdfProperty:
       type: object
@@ -1460,6 +1480,12 @@ components:
           additionalProperties: 
             allOf:
               - $ref: './protocolmaps/ProtocolMap.yaml#/components/schemas/ProtocolMap-Property'
+          example:
+            heartrate:
+              protocolMap:
+                ble:
+                  serviceID: 12345678-1234-5678-1234-56789abcdef4
+                  characteristicID: 12345678-1234-5678-1234-56789abcdef4
           
     SdfEvent:
       type: object
@@ -1472,6 +1498,12 @@ components:
               sdfOutputData:
                 allOf:
                   - $ref: './protocolmaps/ProtocolMap.yaml#/components/schemas/ProtocolMap-Event'
+          example:
+            fallDetected:
+              protocolMap:
+                ble:
+                  serviceID: 12345678-1234-5678-1234-56789abcdef4
+                  characteristicID: 12345678-1234-5678-1234-56789abcdef4
     
     SdfAction:
       type: object
@@ -1481,6 +1513,12 @@ components:
           additionalProperties: 
             allOf:
               - $ref: './protocolmaps/ProtocolMap.yaml#/components/schemas/ProtocolMap-Property'
+          example:
+            start:
+              protocolMap:
+                ble:
+                  serviceID: 12345678-1234-5678-1234-56789abcdef4
+                  characteristicID: 12345678-1234-5678-1234-56789abcdef4
 
 # responses
 ## Baseline success reponse
