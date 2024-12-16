@@ -817,100 +817,9 @@ paths:
                   - $ref: '#/components/schemas/FailureResponse' 
                   - $ref: '#/components/schemas/PropertyErrorCodes'
 
-  /{id}/action/event/start:
-    post:
-      tags:
-        - NIPC action APIs with embedded protocol mapping
-      summary: Tell a device to start reporting an event using a protocol mapping
-      description: |-
-        Tell a device to start reporting an event, embedding property protocol mapping in the API, this does not require
-        property registration. You cannot read from a group id.
-      operationId: ActionEventStart
-      parameters:
-        - name: id
-          in: path
-          description: device id that need to be filtered, group id not allowed
-          required: true
-          schema:
-            type: string
-            format: uuid
-            example: 12345678-1234-5678-1234-56789abcdef4
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: './protocolmaps/ProtocolMap.yaml#/components/schemas/ProtocolMap-Property'
-        required: true
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SuccessResponse'          
-        '400':
-          description: Bad request
-        '401':
-          description: Unauthorized
-        '405':
-          description: Invalid request 
-        '500':
-          description: Server-side failure
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/FailureResponse' 
-                  - $ref: '#/components/schemas/EventErrorCodes'
-  
-  /{id}/action/event/stop:
-    post:
-      tags:
-        - NIPC action APIs with embedded protocol mapping
-      summary: Tell a device to stop reporting an event using a protocol mapping
-      description: |-
-        Tell a device to stop reporting an event, embedding property protocol mapping in the API, this does not require
-        property registration. You cannot read from a group id.
-      operationId: ActionEventStop
-      parameters:
-        - name: id
-          in: path
-          description: device id that need to be filtered, group id not allowed
-          required: true
-          schema:
-            type: string
-            format: uuid
-            example: 12345678-1234-5678-1234-56789abcdef4
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: './protocolmaps/ProtocolMap.yaml#/components/schemas/ProtocolMap-Property'
-        required: true
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SuccessResponse'          
-        '400':
-          description: Bad request
-        '401':
-          description: Unauthorized
-        '405':
-          description: Invalid request 
-        '500':
-          description: Server-side failure
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/FailureResponse' 
-                  - $ref: '#/components/schemas/EventErrorCodes'
- 
+
 ### Registrations
-  /registration/sdfobject/{sdfobject}:
+  /{id}/registration/model:
     post:
       tags:
         - NIPC registration APIs
@@ -919,20 +828,19 @@ paths:
         Register an sdfObject, including Properties, Events and actions
       operationId: registerSdfObject
       parameters:
-        - name: sdfobject
+        - name: id
           in: path
-          description: sdfObject name
+          description: device or group id the model is to be registered for
           required: true
           schema:
             type: string
-            example: "temperature-sensor"
+            format: uuid
+            example: 12345678-1234-5678-1234-56789abcdef4
       requestBody:
         content:
-          application/json:
+          application/sdf+json:
             schema:
-              allOf:
-                - $ref: '#/components/schemas/SdfObject'
-                - $ref: '#/components/schemas/Id'
+              $ref: '#/components/schemas/SdfObject'
         required: true
       responses:
         '200':
@@ -959,6 +867,7 @@ paths:
                   - $ref: '#/components/schemas/FailureResponse' 
                   - $ref: '#/components/schemas/RegistrationErrorCodes'
  
+  /{id}/registration/model/{sdfobject}:
     put:
       tags:
         - NIPC registration APIs
@@ -967,13 +876,21 @@ paths:
         Update an sdfObject, including Properties, Events and actions
       operationId: updateSdfObject
       parameters:
+        - name: id
+          in: path
+          description: device or group id the model is to be registered for
+          required: true
+          schema:
+            type: string
+            format: uuid
+            example: 12345678-1234-5678-1234-56789abcdef4
         - name: sdfobject
           in: path
           description: sdfObject name
           required: true
           schema:
             type: string
-            example: "temperature-sensor"
+            example: "https://example.com/heartrate/sdfObject/healthsensor"
       requestBody:
         content:
           application/json:
@@ -1015,13 +932,21 @@ paths:
         Delete an sdfObject, including Properties, Events and actions
       operationId: deleteSdfObject
       parameters:
+        - name: id
+          in: path
+          description: device or group id the model is to be registered for
+          required: true
+          schema:
+            type: string
+            format: uuid
+            example: 12345678-1234-5678-1234-56789abcdef4
         - name: sdfobject
           in: path
           description: sdfObject name
           required: true
           schema:
             type: string
-            example: "temperature-sensor"
+            example: "https://example.com/heartrate/sdfObject/healthsensor"
       responses:
         '200':
           description: Success
@@ -1055,13 +980,21 @@ paths:
         Get an sdfObject, including Properties, Events and actions
       operationId: getSdfObject
       parameters:
+        - name: id
+          in: path
+          description: device or group id the model is to be registered for
+          required: true
+          schema:
+            type: string
+            format: uuid
+            example: 12345678-1234-5678-1234-56789abcdef4
         - name: sdfobject
           in: path
           description: sdfObject name
           required: true
           schema:
             type: string
-            example: "temperature-sensor"
+            example: "https://example.com/heartrate/sdfObject/healthsensor"
       responses:
         '200':
           description: Success
@@ -1087,7 +1020,7 @@ paths:
                   - $ref: '#/components/schemas/FailureResponse' 
                   - $ref: '#/components/schemas/RegistrationErrorCodes'
 
-  /registration/data-app/{data-app}:
+  /{id}/registration/data-app/{data-app}:
     post:
       tags:
         - NIPC registration APIs
@@ -1096,6 +1029,14 @@ paths:
         Register a dataApp that is able to receive device data. 
       operationId: registerDataApp
       parameters:
+        - name: id
+          in: path
+          description: device or group id the data-app is to be registered for
+          required: true
+          schema:
+            type: string
+            format: uuid
+            example: 12345678-1234-5678-1234-56789abcdef4
         - name: data-app
           in: path
           description: id of the data app that will be registered
@@ -1142,6 +1083,14 @@ paths:
         Update registration of a dataApp that is able to receive device data. 
       operationId: UpdateDataApp
       parameters:
+        - name: id
+          in: path
+          description: device or group id the data-app is to be registered for
+          required: true
+          schema:
+            type: string
+            format: uuid
+            example: 12345678-1234-5678-1234-56789abcdef4
         - name: data-app
           in: path
           description: id of the data app that will be updated
@@ -1188,6 +1137,14 @@ paths:
         Delete registration of a dataApp that is able to receive device data. 
       operationId: DeleteDataApp
       parameters:
+        - name: id
+          in: path
+          description: device or group id the data-app is to be registered for
+          required: true
+          schema:
+            type: string
+            format: uuid
+            example: 12345678-1234-5678-1234-56789abcdef4
         - name: data-app
           in: path
           description: id of the data app that will be updated
@@ -1228,6 +1185,14 @@ paths:
         Get registrationdetails of a dataApp that is able to receive device data. 
       operationId: GetDataApp
       parameters:
+        - name: id
+          in: path
+          description: device or group id the data-app is to be registered for
+          required: true
+          schema:
+            type: string
+            format: uuid
+            example: 12345678-1234-5678-1234-56789abcdef4
         - name: data-app
           in: path
           description: id of the data app that will be updated
